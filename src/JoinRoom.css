@@ -1,0 +1,130 @@
+/* JoinRoom.css */
+
+/* --- Main Container --- */
+.join-room-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--content-bg, #f9fafb);
+    padding: 24px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+}
+
+/* --- The Card --- */
+.join-room-card {
+    background-color: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 16px;
+    padding: 48px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* --- Card Content --- */
+.join-room-card h1 {
+    font-size: 2rem;
+    color: var(--text-dark, #1f2937);
+    margin: 8px 0;
+}
+.join-room-card h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-muted, #6b7280);
+    margin: 0;
+}
+.join-room-card .room-description {
+    color: var(--text-muted, #6b7280);
+    margin: 8px 0 32px 0;
+    line-height: 1.6;
+}
+
+.room-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background-color: var(--primary-blue, #3b82f6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 auto 24px auto;
+}
+
+/* --- Buttons --- */
+.join-btn, .dashboard-btn {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.join-btn {
+    background-color: var(--primary-blue, #3b82f6);
+    color: white;
+}
+.join-btn:hover {
+    background-color: var(--primary-blue-hover, #2563eb);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+.dashboard-btn {
+    background-color: transparent;
+    color: var(--text-dark, #1f2937);
+    border: 1px solid var(--border-color, #e5e7eb);
+}
+.dashboard-btn:hover {
+    background-color: var(--content-bg, #f9fafb);
+}
+
+/* --- Status Messages --- */
+.error-message {
+    color: #ef4444; /* red-500 */
+    font-weight: 500;
+}
+.already-joined-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+    color: #16a34a; /* green-600 */
+    margin-bottom: 16px;
+}
+
+/* --- Spinner for Loading State --- */
+.spinner-container {
+    padding: 40px 0;
+}
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid var(--border-color, #e5e7eb);
+    border-bottom-color: var(--primary-blue, #3b82f6);
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

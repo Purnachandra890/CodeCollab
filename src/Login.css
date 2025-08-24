@@ -1,0 +1,227 @@
+/* Login.css */
+
+/* --- Base Styles --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    margin: 0;
+}
+
+/* --- Main Wrapper --- */
+.login-page-wrapper {
+    display: flex;
+    flex-direction: column; /* Stack panels vertically on mobile */
+    min-height: 100vh;
+}
+
+/* --- Branding Panel (Top on Mobile, Left on Desktop) --- */
+.branding-panel {
+    display: flex; /* Changed from none to flex */
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    background-color: #111827;
+    color: white;
+    padding: 2.5rem 1.5rem; /* Adjusted padding for mobile */
+    text-align: center; /* Center text for mobile */
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: center; /* Center logo on mobile */
+}
+
+.logo-icon-wrapper {
+    background-color: #3b82f6;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.logo-icon {
+    width: 2rem;
+    height: 2rem;
+    color: white;
+}
+
+.app-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+}
+
+.tagline {
+    font-size: 2.25rem; /* Reduced font size for mobile */
+    font-weight: 800;
+    margin-top: 2rem; /* Reduced margin */
+    line-height: 1.25;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #9ca3af;
+    margin-top: 1rem;
+    max-width: 40ch; /* Limit line length for readability */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Hide features list on mobile to save space */
+.features-list {
+    display: none;
+}
+
+/* --- Login Form (Bottom on Mobile, Right on Desktop) --- */
+.login-form-panel {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #f8fafc; /* Match body background */
+    flex-grow: 1; /* Allow this panel to take remaining space */
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.login-form-container {
+    width: 100%;
+    max-width: 28rem;
+    text-align: center;
+}
+
+.login-header {
+    margin-bottom: 2rem; /* Reduced margin */
+}
+
+.welcome-title {
+    font-size: 1.875rem; /* Reduced font size */
+    font-weight: 700;
+    color: #111827;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    margin-top: 0.75rem;
+}
+
+.google-login-button {
+    width: 100%;
+    max-width: 24rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.google-login-button:hover {
+    background-color: #f9fafb;
+    transform: scale(1.02); /* More subtle hover effect */
+    box-shadow: 0 4px 10px -3px rgba(0, 0, 0, 0.1);
+}
+
+.google-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.google-button-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.terms-text {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 2rem;
+    max-width: 20rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* --- Desktop Styles (Large Screens) --- */
+/* This is a media query, the equivalent of Tailwind's 'lg:' prefix */
+@media (min-width: 1024px) {
+    .login-page-wrapper {
+        flex-direction: row; /* Switch to side-by-side layout */
+    }
+
+    .branding-panel {
+        width: 50%;
+        padding: 3rem;
+        text-align: left; /* Align text to the left */
+        justify-content: space-between; /* Space out content vertically */
+    }
+
+    .logo-container {
+        justify-content: flex-start; /* Align logo to the left */
+    }
+
+    .tagline {
+        font-size: 3rem; /* Restore original font size */
+        margin-top: 3rem;
+    }
+
+    .subtitle {
+        margin-left: 0; /* Align subtitle to the left */
+        margin-right: 0;
+    }
+
+    .features-list {
+        display: flex; /* Show the features list again */
+        flex-direction: column;
+        gap: 1.5rem; /* space-y-6 */
+    }
+    
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .feature-icon-wrapper {
+        background-color: #1f2937;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+    }
+
+    .feature-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: #60a5fa;
+    }
+
+    .feature-title {
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .feature-description {
+        color: #9ca3af;
+        font-size: 0.875rem;
+        margin: 0;
+    }
+
+    .login-form-panel {
+        width: 50%;
+        padding: 3rem;
+        background-color: #f3f4f6; /* Restore original background */
+    }
+    
+    .login-header {
+        margin-bottom: 3rem;
+    }
+
+    .welcome-title {
+        font-size: 2.25rem;
+    }
+}

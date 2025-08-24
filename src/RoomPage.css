@@ -1,0 +1,362 @@
+/* RoomPage.css */
+
+/* --- Custom Properties (Theme Variables) --- */
+:root {
+  --sidebar-bg: #111827;
+  --main-bg: #ffffff;
+  --content-bg: #f9fafb;
+  --card-bg: #ffffff;
+  --primary-blue: #3b82f6;
+  --primary-blue-hover: #2563eb;
+  --text-light: #f9fafb;
+  --text-dark: #1f2937;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+}
+
+/* --- Main Room Detail View Layout --- */
+.room-detail-view {
+  padding: 32px 48px;
+  animation: fadeIn 0.3s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* --- Room Header --- */
+.room-header {
+  flex-shrink: 0;
+}
+.room-header h1 {
+  font-size: 2.25rem;
+  margin: 0;
+}
+.room-header .room-description {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: 8px 0 24px 0;
+  max-width: 60ch;
+}
+.room-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* --- General Button Styles --- */
+.primary-btn,
+.secondary-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.primary-btn {
+  background-color: var(--primary-blue);
+  color: white;
+}
+.primary-btn:hover {
+  background-color: var(--primary-blue-hover);
+}
+.secondary-btn {
+  background-color: #ffffff;
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
+}
+.secondary-btn:hover {
+  background-color: var(--content-bg);
+}
+
+/* --- Tabs --- */
+.room-tabs {
+  display: flex;
+  margin-top: 32px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tab-btn.active {
+  color: var(--primary-blue);
+  border-bottom-color: var(--primary-blue);
+}
+
+/* --- Tab Content --- */
+.tab-content {
+  margin-top: 24px;
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.tab-content .card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* This is good for most tabs */
+}
+
+/* --- FIX: Allow Leaderboard podium to overflow its card --- */
+/* This rule targets only the card that has a leaderboard inside it. */
+.tab-content .card:has(.leaderboard-container) {
+  overflow: visible; /* Allow the tall podium item to be visible */
+  /* Add space at the top so the overflowing item doesn't hit the tabs */
+  padding-top: 2rem;
+}
+
+.tab-content .card .leaderboard-container {
+  padding: 0;
+  background-color: transparent;
+  min-height: auto;
+}
+
+/* --- Problems Tab --- */
+.problems-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+.problems-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+.problems-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.problems-table th,
+.problems-table td {
+  padding: 16px 24px;
+  text-align: left;
+  vertical-align: middle;
+}
+.problems-table th {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.problems-table th:last-child {
+  text-align: right;
+}
+.problems-table td {
+  border-top: 1px solid var(--border-color);
+}
+.problems-table a {
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 500;
+}
+.problems-table a:hover {
+  color: var(--primary-blue);
+  text-decoration: underline;
+}
+.actions-cell {
+  text-align: right !important;
+  white-space: nowrap;
+}
+.action-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  margin-left: 8px;
+  border-radius: 4px;
+  transition: color 0.2s, background-color 0.2s;
+}
+.action-icon-btn:hover {
+  color: var(--primary-blue);
+  background-color: #eef2ff;
+}
+
+/* --- Members Tab --- */
+.members-container {
+  padding: 24px;
+}
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.member-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: var(--content-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+.member-card img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.member-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.member-name {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.member-id {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.owner-badge {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* --- Modal Styles --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.modal-content h2 {
+  margin-top: 0;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+.modal-submit-btn {
+  width: 100%;
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Custom Scrollbar Styles --- */
+.tab-content::-webkit-scrollbar {
+  width: 8px;
+}
+.tab-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tab-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+.tab-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+.welcome-placeholder {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card {
+  animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.member-grid {
+  animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.problems-table {
+  animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

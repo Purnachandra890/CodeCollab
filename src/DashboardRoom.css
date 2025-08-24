@@ -1,0 +1,236 @@
+/* General Main Content Styles */
+.main-content {
+  /* border: 2px solid green; */
+  padding: 2rem;
+  width: 100vw-20;
+  height: calc(
+    100vh - 125px
+  ); /*"Full window height" − "Header height" = Remaining area for content.*/
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(136, 136, 136, 0.5) transparent;
+}
+/* Chrome, Edge, Safari */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.5);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(85, 85, 85, 0.7);
+}
+
+/* Header Styles */
+.main-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
+  /* border: 2px solid blue; */
+  padding: 1rem 2rem 1rem 2rem;
+}
+
+.welcome-message {
+  padding-left: 2rem;
+  flex: 1; /* Takes up remaining space and pushes profile to right */
+}
+
+.welcome-message h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.welcome-message p {
+  margin: 0;
+  color: #6c757d;
+}
+
+/* User Profile */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--card-bg);
+  padding: 8px 12px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  margin-left: auto; /* Ensures it's always at the far right */
+}
+
+.user-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info span {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.user-info strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.dropdown-arrow {
+  font-size: 0.8rem;
+}
+
+/* Rooms Grid */
+.rooms-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
+}
+
+/* Room Card Styles */
+.room-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.card-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.invite-link-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #f8f9fa;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.invite-link-container svg {
+  flex-shrink: 0;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  margin-top: auto;
+}
+
+/* Buttons */
+.delete-btn,
+.copy-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-btn {
+  background-color: transparent;
+  color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #f8d7da;
+}
+
+.copy-link-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.copy-link-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-profile {
+    margin-left: 0; /* No need to push on small screens */
+    margin-top: 1rem;
+  }
+
+  .rooms-grid {
+    flex-direction: column;
+  }
+}
+.loading-container {
+  height: 100vh;
+  width: 82vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 2px solid  blue; */
+}
+
+.loading {
+  /* border: 2px solid green; */
+  display: inline-block;
+}
+
+.dashboard {
+  margin-left: 10px;
+  width: 100vw-20;
+  /* border: 2px solid green; */
+  animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
