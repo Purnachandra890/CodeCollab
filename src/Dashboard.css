@@ -65,7 +65,7 @@ body {
 .sidebar.closed .hamburger-btn {
   color: black;
   background-color: white;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   margin-left: 0%;
   position: relative;
   z-index: 11;
