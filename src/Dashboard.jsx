@@ -40,7 +40,6 @@ const Dashboard = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-
   const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
@@ -154,6 +153,14 @@ const Dashboard = () => {
               </ul>
             </nav>
             <div className="sidebar-footer">
+              <button
+                className="logout-btn"
+                onClick={() => navigate("/editProfile")}
+              >
+                Edit Profile
+              </button>
+              <br />
+              <br />
               <button className="logout-btn" onClick={handleLogout}>
                 Logout
               </button>

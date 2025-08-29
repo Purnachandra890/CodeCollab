@@ -11,6 +11,7 @@ import ChatMessage from "./ChatMessage";
 import DashboardRoom from "./DashboardRoom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
+import EditProfile from "./EditProfile";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<LoginPage />} /> */}
         <Route
           path="/"
           element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
@@ -77,6 +77,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/editProfile" element={<EditProfile />} />
       </Routes>
     </BrowserRouter>
   );
