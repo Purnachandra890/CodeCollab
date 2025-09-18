@@ -114,7 +114,6 @@ export default function ProblemList() {
   const [solvedSlugs, setSolvedSlugs] = useState([]);
   const [leetcodeUsername, setLeetcodeUsername] = useState(null); // <-- from Firestore
 
-  const username = "__purna_chandra__"; // default username
 
   // Load room name + problems
   useEffect(() => {
@@ -151,7 +150,6 @@ export default function ProblemList() {
     if (!leetcodeUsername) return;
     const fetchSolved = async () => {
       try {
-        console.log("leetcode username is :",leetcodeUsername);
         const res = await axios.get(
           `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`
         );

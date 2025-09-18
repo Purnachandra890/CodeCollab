@@ -58,22 +58,25 @@ const ListIcon = () => (
   </svg>
 );
 const ChatIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2z"></path>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M20 2H4C2.9 2 2 2.9 2 4V18L6 14H20C21.1 14 22 13.1 22 12V4C22 2.9 21.1 2 20 2Z" />
   </svg>
 );
 
 // --- Add/Edit Problem Modal ---
 const ProblemModal = ({ isOpen, onClose, onSave, problem }) => {
-  const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
 
   useEffect(() => {
     if (problem) {
-      setTitle(problem.title);
-      setLink(problem.link);
+      setLink(problem.link || "");
     } else {
-      setTitle("");
       setLink("");
     }
   }, [problem, isOpen]);
@@ -82,7 +85,7 @@ const ProblemModal = ({ isOpen, onClose, onSave, problem }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ title, link });
+    onSave({ link }); // pass only link; title will be derived
   };
 
   return (
@@ -94,22 +97,11 @@ const ProblemModal = ({ isOpen, onClose, onSave, problem }) => {
         <h2>{problem ? "Edit Problem" : "Add New Problem"}</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="title">Problem Title</label>
-            <input
-              id="title"
-              type="text"
-              placeholder="e.g., Reverse Integer"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
             <label htmlFor="link">Problem Link</label>
             <input
               id="link"
               type="url"
-              placeholder="https://leetcode.com/problems/..."
+              placeholder="https://leetcode.com/problems/palindrome-number/"
               value={link}
               onChange={(e) => setLink(e.target.value)}
               required
@@ -174,16 +166,30 @@ const RoomPage = () => {
     };
   }, [roomId]);
 
-  const handleSaveProblem = async (problemData) => {
+  const handleSaveProblem = async ({ link }) => {
     try {
+      const normalized = normalizeLink(link);
+      const slug = extractTitleFromLink(normalized); // e.g., "palindrome-number"
+
+      if (!slug) {
+        alert("Invalid LeetCode problem link. Please check and try again.");
+        return;
+      }
+
+      const problemToSave = {
+        title: slug, // store with hyphens
+        titleSlug: slug, // optional but handy elsewhere
+        link: normalized,
+      };
+
       if (editingProblem) {
         await updateDoc(
           doc(db, "rooms", roomId, "problems", editingProblem.id),
-          problemData
+          problemToSave
         );
       } else {
         await addDoc(collection(db, "rooms", roomId, "problems"), {
-          ...problemData,
+          ...problemToSave,
           addedBy: user.displayName,
           addedById: user.uid,
           createdAt: serverTimestamp(),
@@ -280,9 +286,13 @@ const RoomPage = () => {
             <div className="member-grid">
               {members.map((m) => (
                 <div key={m.id} className="member-card">
-                  <img src={m.photoURL} 
-                  alt={m.name} 
-                  onError={(e) => { e.target.onerror = null; e.target.src = defaultPhoto; }}
+                  <img
+                    src={m.photoURL}
+                    alt={m.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = defaultPhoto;
+                    }}
                   />
                   <div className="member-info">
                     <span className="member-name">{m.name}</span>
@@ -309,6 +319,30 @@ const RoomPage = () => {
         <h3>Loading Room...</h3>
       </div>
     );
+
+  // --- Helpers ---
+  const normalizeLink = (link) => {
+    if (!link) return "";
+    return link.startsWith("http://") || link.startsWith("https://")
+      ? link
+      : `https://${link}`;
+  };
+
+  const extractTitleFromLink = (rawLink) => {
+    try {
+      const link = normalizeLink(rawLink);
+      const url = new URL(link);
+      const parts = url.pathname.split("/").filter(Boolean); // e.g. ["problems","palindrome-number","description"]
+      const idx = parts.indexOf("problems");
+      if (idx !== -1 && parts[idx + 1]) return parts[idx + 1]; // keep hyphens
+      // Fallback regex in case of odd paths
+      const m = link.match(/problems\/([^/]+)/i);
+      return m ? m[1] : "";
+    } catch {
+      const m = String(rawLink || "").match(/problems\/([^/]+)/i);
+      return m ? m[1] : "";
+    }
+  };
 
   return (
     <div className="room-detail-view">
