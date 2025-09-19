@@ -529,8 +529,21 @@ body {
   animation: fadeIn 0.3s ease;
 }
 
+
+.mobile-sidebar-is-open .mobile-hamburger-btn {
+  display: none;
+}
+
+
 /* --- MOBILE OVERRIDES (for screens 768px or less) --- */
 @media (max-width: 768px) {
+  /* --- LAYOUT FIX --- */
+  .dashboard-container {
+    /* Switch from two columns to a single column for the main content */
+    grid-template-columns: 1fr;
+  }
+
+  /* --- SIDEBAR STYLES --- */
   /* Show the mobile hamburger button */
   .mobile-hamburger-btn {
     display: block;
@@ -556,25 +569,15 @@ body {
   .sidebar.open {
     transform: translateX(0);
   }
-  
+
   /* Slide the sidebar out of view when closed */
   .sidebar.closed {
     /* Override desktop inline style */
-    width: 260px !important; 
+    width: 260px !important;
     transform: translateX(-100%);
   }
   
-  /* The main content area no longer needs specific padding,
-     as the mobile hamburger is out of the document flow. */
-}
-
-.mobile-sidebar-is-open .mobile-hamburger-btn {
-  display: none;
-}
-/* Paste this at the very end of your CSS file */
-
-/* --- CENTER DASHBOARD TITLE ON MOBILE --- */
-@media (max-width: 768px) {
+  /* --- TITLE CENTERING --- */
   .sidebar-header {
     /* Create a positioning context for the title */
     position: relative;

@@ -366,10 +366,10 @@
 @media (max-width: 768px) {
   /* 1. Make the overall page padding smaller on mobile */
   .room-detail-view {
-    /* We're increasing the left padding from 16px to 56px */
-    /* This creates a 40px space for the menu button */
-    padding: 24px 16px 24px 56px;
-  }
+  /* We're reducing the top padding from 24px to 16px to move the title up */
+  /* This creates a 40px space for the menu button */
+  padding: 16px 16px 24px 56px; 
+}
 
   /* 2. Reduce padding inside the table cells to save space */
   .problems-table th,
