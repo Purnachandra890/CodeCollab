@@ -157,7 +157,12 @@ body {
   background-color: #374151;
   color: var(--text-light);
 }
-
+/* In Dashboard.css */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* This creates space between the buttons */
+}
 .sidebar-footer .logout-btn {
   width: 100%;
   padding: 10px;

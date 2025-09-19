@@ -163,6 +163,7 @@ const Dashboard = () => {
                 ))}
               </ul>
             </nav>
+            
             <div className="sidebar-footer">
               <button
                 className="logout-btn"
@@ -170,8 +171,6 @@ const Dashboard = () => {
               >
                 Edit Profile
               </button>
-              <br />
-              <br />
               <button className="logout-btn" onClick={handleLogout}>
                 Logout
               </button>
