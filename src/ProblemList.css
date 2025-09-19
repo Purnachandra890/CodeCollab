@@ -99,7 +99,6 @@
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   transition: transform 0.2s, box-shadow 0.2s;
-  /* 👇 ADDED THIS LINE to ensure proper spacing between items */
   gap: 16px;
 }
 .problem-item-card:hover {
@@ -113,7 +112,6 @@
   border-left-color: #22c55e; /* Green */
 }
 
-/* 👇 ADDED THIS RULE to make the left side grow */
 .problem-item-info {
   flex-grow: 1;
 }
@@ -133,7 +131,6 @@
   text-decoration: none;
 }
 
-/* 👇 ADDED THIS RULE to prevent the right side from shrinking */
 .problem-item-action {
   flex-shrink: 0;
 }
@@ -163,4 +160,27 @@
 .completed-btn {
   background-color: #dcfce7; /* Light green */
   color: #166534; /* Dark green */
+}
+
+/* --- Status Labels (To Do / Completed) --- */
+.todo-label,
+.completed-label {
+  padding: 6px 12px;
+  border-radius: 99px; /* Pill shape */
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.completed-label {
+  background-color: #dcfce7; /* Light green */
+  color: #166534; /* Dark green text */
+}
+
+.todo-label {
+  background-color: #fee2e2; /* Light red */
+  color: #991b1b; /* Dark red text */
 }
