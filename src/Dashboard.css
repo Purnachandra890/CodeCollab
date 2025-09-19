@@ -127,8 +127,10 @@ body {
   background-color: #0056b3;
 }
 
+/* In Dashboard.css */
 .your-rooms-section {
   flex-grow: 1;
+  overflow-y: auto; /* <--- ADD THIS LINE */
 }
 
 .your-rooms-section h2 {
@@ -556,7 +558,7 @@ body {
     display: none;
   }
 
-  /* Make the sidebar a fixed overlay that slides */
+  /* In Dashboard.css, inside the @media block */
   .sidebar {
     position: fixed;
     top: 0;
@@ -565,7 +567,6 @@ body {
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
     border-right: 1px solid var(--border-color);
-    overflow-y: auto; /* <-- ADD THIS LINE */
   }
 
   /* Slide the sidebar into view when open */
