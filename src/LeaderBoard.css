@@ -196,3 +196,118 @@
     opacity: 1;
   }
 }
+
+
+/* ========================================= */
+/* ---         Mobile Responsive         --- */
+/* ========================================= */
+@media (max-width: 768px) {
+  .leaderboard-container {
+    padding: 24px 12px; /* Reduce padding on smaller screens */
+  }
+
+  /* --- Responsive Podium --- */
+  .podium {
+    flex-direction: column; /* Stack cards vertically */
+    align-items: center;   /* Center the stacked cards */
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .podium-card {
+    width: 90%;          /* Make cards wider on mobile */
+    max-width: 350px;
+    min-height: auto;    /* Allow height to be determined by content */
+  }
+
+  /* Reset the special desktop positioning for mobile */
+  .podium-card.rank-1 {
+    transform: translateY(0);
+    order: 1; /* Rank 1 appears first */
+  }
+  .podium-card.rank-2 {
+    order: 2; /* Rank 2 appears second */
+  }
+  .podium-card.rank-3 {
+    order: 3; /* Rank 3 appears third */
+  }
+
+  .podium-avatar {
+    width: 70px; /* Slightly smaller avatar */
+    height: 70px;
+    margin-top: 24px;
+  }
+
+  /* --- Responsive Table --- */
+  .leaderboard-table-card {
+      padding: 0; /* Remove padding from the card wrapper */
+  }
+
+  /* Hide the table header, as we will add labels to each cell */
+  .leaderboard-table thead {
+    display: none;
+  }
+
+  .leaderboard-table tr {
+    display: block; /* Make each row a block-level element */
+    margin-bottom: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px;
+  }
+  
+  .leaderboard-table td {
+    display: flex; /* Use flexbox for easy alignment */
+    justify-content: space-between; /* Pushes the label and value apart */
+    align-items: center;
+    padding: 12px 8px;
+    border-top: none; /* Remove default borders */
+    text-align: right; /* Align the data value to the right */
+  }
+
+  .leaderboard-table tbody tr:first-child td:first-child {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+  }
+    .leaderboard-table tbody tr:last-child td:last-child {
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+  }
+
+
+  /* Add data labels using the ::before pseudo-element */
+  .leaderboard-table td::before {
+    content: attr(data-label); /* We'll need to add a data-label attribute */
+    font-weight: 600;
+    color: #6b7280;
+    text-align: left;
+    margin-right: 16px;
+  }
+
+  /* Specify the label for each column */
+  .leaderboard-table td:nth-of-type(1)::before { content: "Rank"; }
+  .leaderboard-table td:nth-of-type(2)::before { content: "User"; }
+  .leaderboard-table td:nth-of-type(3)::before { content: "Problems"; }
+  .leaderboard-table td:nth-of-type(4)::before { content: "Completion"; }
+  .leaderboard-table td:nth-of-type(5)::before { content: "Last Activity"; }
+  
+  /* Special handling for the user cell to keep it left-aligned */
+  .leaderboard-table td:nth-of-type(2) {
+      justify-content: flex-start; /* Don't push user content to the right */
+  }
+  .leaderboard-table td:nth-of-type(2)::before {
+    display: none; /* Hide the "User" label for the cell with avatar */
+  }
+
+  /* Adjust the user cell content */
+  .user-cell {
+    gap: 16px;
+  }
+  .user-name {
+    font-size: 1rem;
+  }
+
+  .completion-cell {
+      justify-content: flex-end; /* Ensure completion bar stays on the right */
+  }
+}
