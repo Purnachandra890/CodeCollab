@@ -360,3 +360,29 @@
     opacity: 1;
   }
 }
+/* ========================================= */
+/* ---      Room Page Mobile Styles      --- */
+/* ========================================= */
+@media (max-width: 768px) {
+  /* 1. Make the overall page padding smaller on mobile */
+  .room-detail-view {
+    /* We're increasing the left padding from 16px to 56px */
+    /* This creates a 40px space for the menu button */
+    padding: 24px 16px 24px 56px;
+  }
+
+  /* 2. Reduce padding inside the table cells to save space */
+  .problems-table th,
+  .problems-table td {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* 3. This is the magic: Hide the 2nd header and 2nd cell in each row */
+  .problems-table th:nth-child(2),
+  .problems-table td:nth-child(2) {
+    display: none;
+  }
+
+
+}
