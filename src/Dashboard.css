@@ -13,7 +13,8 @@
   --border-color: #e5e7eb;
   --danger-red: #ef4444;
   --danger-red-hover: #dc2626;
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 /* --- Base & Body Styles --- */
@@ -60,7 +61,6 @@ body {
   background-color: white;
   width: 10px; /* keeps hamburger visible */
   align-items: center;
-  
 }
 .sidebar.closed .hamburger-btn {
   color: black;
@@ -99,7 +99,6 @@ body {
   align-items: center;
   gap: 12px;
   margin-bottom: 32px;
-  
 }
 
 .sidebar-header h1 {
@@ -253,7 +252,8 @@ body {
   background-color: var(--card-bg);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -346,7 +346,8 @@ body {
   width: 90%;
   max-width: 450px;
   position: relative;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
 .modal-close-btn {
@@ -413,7 +414,8 @@ body {
 
 .room-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
 /* Styles for the new Room Detail View */
@@ -469,7 +471,7 @@ body {
   }
 }
 
-.room-list{
+.room-list {
   animation: fadeIn 0.3s ease-in-out;
 }
 @keyframes fadeIn {
@@ -480,7 +482,7 @@ body {
     opacity: 1;
   }
 }
-.modal-overlay{
+.modal-overlay {
   animation: fadeIn 0.2s ease-in-out;
 }
 @keyframes fadeIn {
@@ -491,9 +493,6 @@ body {
     opacity: 1;
   }
 }
-
-
-
 
 /* Paste this at the very end of your existing Dashboard.css file */
 
@@ -514,7 +513,7 @@ body {
   height: 40px;
   font-size: 1.25rem;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* 2. Overlay for dimming the background on mobile */
@@ -529,11 +528,9 @@ body {
   animation: fadeIn 0.3s ease;
 }
 
-
 .mobile-sidebar-is-open .mobile-hamburger-btn {
   display: none;
 }
-
 
 /* --- MOBILE OVERRIDES (for screens 768px or less) --- */
 @media (max-width: 768px) {
@@ -563,6 +560,7 @@ body {
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
     border-right: 1px solid var(--border-color);
+    overflow-y: auto; /* <-- ADD THIS LINE */
   }
 
   /* Slide the sidebar into view when open */
@@ -576,7 +574,7 @@ body {
     width: 260px !important;
     transform: translateX(-100%);
   }
-  
+
   /* --- TITLE CENTERING --- */
   .sidebar-header {
     /* Create a positioning context for the title */
@@ -587,7 +585,7 @@ body {
     /* Position the title absolutely within the header */
     position: absolute;
     left: 50%;
-    
+
     /* This transform trick ensures it's perfectly centered */
     transform: translateX(-50%);
 
