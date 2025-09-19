@@ -1,6 +1,6 @@
 // Dashboard.jsx
 import React, { useState, useEffect } from "react";
-import { auth, db } from "./firebase"; // Combined imports
+import { auth, db } from "./firebase";
 import { signOut } from "firebase/auth";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
@@ -12,8 +12,6 @@ import {
   query,
   where,
   getDocs,
-  deleteDoc,
-  doc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
@@ -35,13 +33,21 @@ const Dashboard = () => {
   const { user } = useAuth();
   const [userRooms, setUserRooms] = useState([]);
   const [roomName, setRoomName] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for create room modal
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // NEW state for sidebar
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // --- MODIFIED: State is now responsive ---
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
+  const isMobile = window.innerWidth <= 768;
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const defaultPhoto =
-    "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
+  // --- NEW: Effect to handle initial mobile state ---
+  useEffect(() => {
+    // On initial load, if it's mobile, ensure the sidebar is closed.
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [isMobile]); // Re-run only if the mobile state changes (e.g. on resize, though not explicitly handled here for simplicity)
 
   // Fetch rooms on component mount or when user changes
   useEffect(() => {
@@ -51,14 +57,12 @@ const Dashboard = () => {
         const q = query(
           collection(db, "rooms"),
           where("members", "array-contains", user.uid)
-          // Optional: You might want to order by creation time
-          // orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(q);
         const rooms = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate().toLocaleDateString(), // Format timestamp
+          createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
         }));
         setUserRooms(rooms);
       } catch (error) {
@@ -84,9 +88,7 @@ const Dashboard = () => {
       alert("Please enter a room name.");
       return;
     }
-
-    const inviteCode = uuidv4().slice(0, 8); // unique invite code
-
+    const inviteCode = uuidv4().slice(0, 8);
     try {
       const docRef = await addDoc(collection(db, "rooms"), {
         name: roomName,
@@ -95,7 +97,6 @@ const Dashboard = () => {
         members: [user.uid],
         createdAt: serverTimestamp(),
       });
-
       const newRoom = {
         id: docRef.id,
         name: roomName,
@@ -103,29 +104,39 @@ const Dashboard = () => {
         adminId: user.uid,
         createdAt: new Date().toLocaleDateString(),
       };
-
       setUserRooms((prev) => [...prev, newRoom]);
       setRoomName("");
-      setIsModalOpen(false); // Close modal on success
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Error creating room:", error);
       alert("Failed to create room.");
     }
   };
 
-  // Gets the first 6 characters of user's UID for display
-  const shortUserId = user?.uid.substring(0, 6).toUpperCase();
-
   return (
-    <div className="dashboard-container">
-      {/* Sidebar */}
+    <div
+      className={`dashboard-container ${
+        isMobile && isSidebarOpen ? "mobile-sidebar-is-open" : ""
+      }`}
+    >
+      {/* --- NEW: Separate hamburger button ONLY for mobile view --- */}
+      <button className="mobile-hamburger-btn" onClick={toggleSidebar}>
+        ☰
+      </button>
+
+      {/* --- NEW: Overlay for mobile view when sidebar is open --- */}
+      {isMobile && isSidebarOpen && (
+        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
+      )}
+
+      {/* Sidebar (Original structure) */}
       <aside className={`sidebar ${isSidebarOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <LogoIcon />
           {isSidebarOpen && (
             <h1 onClick={() => navigate("/dashboard/rooms")}>Dashboard</h1>
           )}
-          {/* Hamburger inside sidebar header */}
+          {/* This is the original hamburger for desktop view */}
           <button className="hamburger-btn" onClick={toggleSidebar}>
             ☰
           </button>
@@ -171,8 +182,6 @@ const Dashboard = () => {
 
       <Outlet />
 
-      {/* don't change fix create room */}
-      {/* Create Room Modal */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">

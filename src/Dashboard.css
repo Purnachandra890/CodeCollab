@@ -494,4 +494,100 @@ body {
 
 
 
+/* Paste this at the very end of your existing Dashboard.css file */
 
+/* --- NEW STYLES FOR RESPONSIVE BEHAVIOR --- */
+
+/* 1. Mobile-only hamburger button (hidden on desktop) */
+.mobile-hamburger-btn {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1001; /* Above everything */
+  background: white;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* 2. Overlay for dimming the background on mobile */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* Below sidebar, above content */
+  animation: fadeIn 0.3s ease;
+}
+
+/* --- MOBILE OVERRIDES (for screens 768px or less) --- */
+@media (max-width: 768px) {
+  /* Show the mobile hamburger button */
+  .mobile-hamburger-btn {
+    display: block;
+  }
+
+  /* Hide the original hamburger button that's inside the sidebar */
+  .sidebar .hamburger-btn {
+    display: none;
+  }
+
+  /* Make the sidebar a fixed overlay that slides */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+    border-right: 1px solid var(--border-color);
+  }
+
+  /* Slide the sidebar into view when open */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  /* Slide the sidebar out of view when closed */
+  .sidebar.closed {
+    /* Override desktop inline style */
+    width: 260px !important; 
+    transform: translateX(-100%);
+  }
+  
+  /* The main content area no longer needs specific padding,
+     as the mobile hamburger is out of the document flow. */
+}
+
+.mobile-sidebar-is-open .mobile-hamburger-btn {
+  display: none;
+}
+/* Paste this at the very end of your CSS file */
+
+/* --- CENTER DASHBOARD TITLE ON MOBILE --- */
+@media (max-width: 768px) {
+  .sidebar-header {
+    /* Create a positioning context for the title */
+    position: relative;
+  }
+
+  .sidebar-header h1 {
+    /* Position the title absolutely within the header */
+    position: absolute;
+    left: 50%;
+    
+    /* This transform trick ensures it's perfectly centered */
+    transform: translateX(-50%);
+
+    /* Remove any default margins that might affect positioning */
+    margin: 0;
+  }
+}
