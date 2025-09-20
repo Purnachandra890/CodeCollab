@@ -131,7 +131,7 @@ body {
 
 /* In Dashboard.css */
 .your-rooms-section {
-  flex-grow: 1;
+  /* flex-grow: 1; */
   overflow-y: auto; /* <--- ADD THIS LINE */
 }
 
@@ -165,7 +165,9 @@ body {
 .sidebar-footer {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* This creates space between the buttons */
+  gap: 16px; 
+  margin-top: auto;
+  padding-top: 16px; 
 }
 .sidebar-footer .sidebar-btn {
   width: 100%;
@@ -570,6 +572,8 @@ body {
     height: 100vh;
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+    
   }
 
   /* Slide the sidebar into view when open */
