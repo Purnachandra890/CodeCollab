@@ -62,13 +62,10 @@ const CheckIcon = () => (
 const slugFromLink = (link) => {
   if (!link || typeof link !== "string") return "";
   try {
-    // Works for: https://leetcode.com/problems/{slug}/... (any suffix)
     const m = link.match(/\/problems\/([^\/?#]+)/i);
     if (m && m[1]) return m[1].toLowerCase();
-    // Fallback: last non-empty segment (still handle trailing "/")
     const parts = link.split("/").filter(Boolean);
     const last = (parts[parts.length - 1] || "").toLowerCase();
-    // If last is a generic page like "description", take the previous one
     if (
       [
         "description",
@@ -95,10 +92,8 @@ const slugifyTitle = (title) =>
     .replace(/^-+|-+$/g, "");
 
 const getProblemSlug = (problem) => {
-  // Prefer link-derived slug
   const fromLink = slugFromLink(problem?.link);
   if (fromLink) return fromLink;
-  // Fallback to slug-looking title or slugify it
   const t = problem?.title || "";
   if (!t) return "";
   const looksSlugAlready = t.includes("-") || t === t.toLowerCase();
@@ -112,8 +107,7 @@ export default function ProblemList() {
   const [problems, setProblems] = useState([]);
   const [roomName, setRoomName] = useState("");
   const [solvedSlugs, setSolvedSlugs] = useState([]);
-  const [leetcodeUsername, setLeetcodeUsername] = useState(null); // <-- from Firestore
-
+  const [leetcodeUsername, setLeetcodeUsername] = useState(null);
 
   // Load room name + problems
   useEffect(() => {
@@ -145,14 +139,36 @@ export default function ProblemList() {
     load();
   }, [user?.uid]);
 
-  // Fetch solved slugs when username available
+  // Fetch solved slugs when username is available (WITH FAILOVER)
   useEffect(() => {
     if (!leetcodeUsername) return;
+
+    // Helper function to handle API requests with failover
+    const fetchWithFailover = async (endpoints) => {
+      let lastError = null;
+      for (const url of endpoints) {
+        try {
+          const response = await axios.get(url);
+          // console.log(`Successfully fetched from ${url}`);
+          return response; // Success
+        } catch (error) {
+          // console.warn(`Request to ${url} failed. Trying next server...`);
+          lastError = error;
+        }
+      }
+      // If loop completes, all have failed
+      throw new Error("All API servers are unavailable.", { cause: lastError });
+    };
+
     const fetchSolved = async () => {
       try {
-        const res = await axios.get(
-          `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`
-        );
+        const endpoints = [
+          `https://leetcode-api-xesz.onrender.com/${leetcodeUsername}/acSubmission`,
+          `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`,
+        ];
+        
+        const res = await fetchWithFailover(endpoints);
+        
         const arr = Array.isArray(res.data?.submission)
           ? res.data.submission
           : [];
@@ -163,10 +179,11 @@ export default function ProblemList() {
         );
         setSolvedSlugs(slugs);
       } catch (err) {
-        console.error("Error fetching solved problems:", err);
+        console.error("Error fetching solved problems from all servers:", err);
         setSolvedSlugs([]);
       }
     };
+
     fetchSolved();
   }, [leetcodeUsername]);
 

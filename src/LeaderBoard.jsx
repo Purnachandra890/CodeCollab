@@ -1,5 +1,3 @@
-// LeaderBoard.jsx
-
 import React, { useEffect, useState } from "react";
 import { db } from "./firebase";
 import {
@@ -32,7 +30,7 @@ const LogoIcon = () => (
 const defaultPhoto =
   "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
-// ----- HELPER FUNCTIONS (Copied from ProblemList.jsx) -----
+// ----- HELPER FUNCTIONS -----
 const slugFromLink = (link) => {
   if (!link || typeof link !== "string") return "";
   try {
@@ -82,6 +80,23 @@ export default function LeaderBoard() {
 
   // ----- useEffect to sync LeetCode submissions for the current user -----
   useEffect(() => {
+    // Helper function to handle API requests with failover
+    const fetchWithFailover = async (endpoints) => {
+      let lastError = null;
+      for (const url of endpoints) {
+        try {
+          const response = await axios.get(url);
+          // console.log(`Successfully fetched from ${url}`);
+          return response; // Success
+        } catch (error) {
+          // console.warn(`Request to ${url} failed. Trying next server...`);
+          lastError = error;
+        }
+      }
+      // If loop completes, all have failed
+      throw new Error("All API servers are unavailable.", { cause: lastError });
+    };
+
     const syncSubmissions = async () => {
       if (!user?.uid || !roomId) return;
 
@@ -91,9 +106,13 @@ export default function LeaderBoard() {
       if (!leetcodeUsername) return;
 
       try {
-        const res = await axios.get(
-          `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`
-        );
+        const endpoints = [
+          `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`,
+          `https://leetcode-api-xesz.onrender.com/${leetcodeUsername}/acSubmission`,
+        ];
+        
+        const res = await fetchWithFailover(endpoints);
+        
         const submissions = Array.isArray(res.data?.submission)
           ? res.data.submission
           : [];
@@ -134,14 +153,14 @@ export default function LeaderBoard() {
           await Promise.all(updates);
         }
       } catch (err) {
-        console.error("Error syncing LeetCode submissions:", err);
+        console.error("Error syncing LeetCode submissions from all servers:", err);
       }
     };
 
     syncSubmissions();
   }, [roomId, user?.uid]);
 
-  // ----- useEffect to fetch and display leaderboard data -----
+  // ----- useEffect to fetch and display leaderboard data (NO CHANGES HERE) -----
   useEffect(() => {
     if (!roomId) return;
 
