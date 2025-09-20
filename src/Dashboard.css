@@ -167,7 +167,7 @@ body {
   flex-direction: column;
   gap: 16px; /* This creates space between the buttons */
 }
-.sidebar-footer .logout-btn {
+.sidebar-footer .sidebar-btn {
   width: 100%;
   padding: 10px;
   background-color: #374151;

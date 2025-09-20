@@ -113,6 +113,40 @@ const Dashboard = () => {
     }
   };
 
+  // In Dashboard.jsx, add this function alongside your other handlers
+  const handleReportBug = () => {
+    // IMPORTANT: Replace this with your actual support email address
+    const recipientEmail = "npurnachandra9948265246@gmail.com";
+
+    const subject = "Bug Report: Code Collab Application";
+
+    // Pre-fill the body with a helpful template and user info
+    const body = `
+Hello Support Team,
+
+I'd like to report a bug.
+
+- **Description of Bug:**
+[Please describe the issue here]
+
+- **Steps to Reproduce:**
+1.
+2.
+3.
+
+
+Thank you.
+  `;
+
+    // Construct the mailto link and encode the components
+    const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body.trim())}`;
+
+    // Open the user's default email client
+    window.location.href = mailtoLink;
+  };
+
   return (
     <div
       className={`dashboard-container ${
@@ -165,14 +199,16 @@ const Dashboard = () => {
             </nav>
 
             <div className="sidebar-footer">
-              
+              <button className="sidebar-btn" onClick={handleReportBug}>
+                Report Bug
+              </button>
               <button
-                className="logout-btn"
+                className="sidebar-btn"
                 onClick={() => navigate("/editProfile")}
               >
                 Edit Profile
               </button>
-              <button className="logout-btn" onClick={handleLogout}>
+              <button className="sidebar-btn" onClick={handleLogout}>
                 Logout
               </button>
             </div>
