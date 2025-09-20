@@ -433,3 +433,11 @@
   background-color: var(--card-bg); /* Match the card's background */
   z-index: 1;
 }
+
+@media (max-width: 768px) {
+  .tab-content{
+    /* border: 2px solid black; */
+    margin-left: -2.5rem;
+    margin-right: -2.5rem;
+  }
+}
