@@ -30,8 +30,11 @@
   flex-shrink: 0;
 }
 .room-header h1 {
+  
   font-size: 2.25rem;
   margin: 0;
+  /* border: 2px solid black; */
+  
 }
 .room-header .room-description {
   font-size: 1rem;
@@ -80,6 +83,7 @@
   margin-top: 32px;
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
+  
 }
 .tab-btn {
   background: none;
@@ -99,6 +103,8 @@
 
 /* --- Tab Content --- */
 .tab-content {
+  display: flex;
+  justify-content: center;
   margin-top: 24px;
   flex-grow: 1;
   overflow-y: auto;
@@ -364,11 +370,27 @@
 /* ---      Room Page Mobile Styles      --- */
 /* ========================================= */
 @media (max-width: 768px) {
-  /* 1. Make the overall page padding smaller on mobile */
-  .room-detail-view {
-  /* We're reducing the top padding from 24px to 16px to move the title up */
-  /* This creates a 40px space for the menu button */
-  padding: 16px 16px 24px 56px; 
+  /* .room-detail-view {
+
+} */
+
+.room-tabs{
+  display: flex;
+  margin-top: 32px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.room-header h1{
+  display: flex;
+  justify-content: center;
+  font-size: 2.25rem;
+  margin: 0;
+  /* border: 2px solid black; */
+  
 }
 
   /* 2. Reduce padding inside the table cells to save space */
