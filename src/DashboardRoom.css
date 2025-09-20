@@ -37,6 +37,7 @@
   flex-wrap: wrap; /* Allows wrapping on small screens */
   /* border: 2px solid blue; */
   padding: 1rem 2rem 1rem 2rem;
+  margin-top: 1.3rem;
 }
 
 .welcome-message {
@@ -213,6 +214,11 @@
   justify-content: center;
   align-items: center;
   /* border: 2px solid  blue; */
+}
+@media (max-width: 768px) {
+  .loading-container {
+    width: 100vw;
+  }
 }
 
 .loading {

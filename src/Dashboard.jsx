@@ -1,4 +1,3 @@
-// Dashboard.jsx
 import React, { useState, useEffect } from "react";
 import { auth, db } from "./firebase";
 import { signOut } from "firebase/auth";
@@ -35,21 +34,17 @@ const Dashboard = () => {
   const [roomName, setRoomName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // --- MODIFIED: State is now responsive ---
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const isMobile = window.innerWidth <= 768;
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  // --- NEW: Effect to handle initial mobile state ---
   useEffect(() => {
-    // On initial load, if it's mobile, ensure the sidebar is closed.
     if (isMobile) {
       setIsSidebarOpen(false);
     }
-  }, [isMobile]); // Re-run only if the mobile state changes (e.g. on resize, though not explicitly handled here for simplicity)
+  }, [isMobile]);
 
-  // Fetch rooms on component mount or when user changes
   useEffect(() => {
     const fetchUserRooms = async () => {
       if (!user) return;
@@ -69,7 +64,6 @@ const Dashboard = () => {
         console.error("Error fetching user rooms:", error);
       }
     };
-
     fetchUserRooms();
   }, [user]);
 
@@ -113,39 +107,37 @@ const Dashboard = () => {
     }
   };
 
-  // In Dashboard.jsx, add this function alongside your other handlers
   const handleReportBug = () => {
-    // IMPORTANT: Replace this with your actual support email address
     const recipientEmail = "purnachandra.n17@gmail.com";
-
     const subject = "Bug Report: Code Collab Application";
-
-    // Pre-fill the body with a helpful template and user info
     const body = `
 Hello Support Team,
-
 I'd like to report a bug.
-
 - **Description of Bug:**
 [Please describe the issue here]
-
 - **Steps to Reproduce:**
 1.
 2.
 3.
-
-
 Thank you.
-  `;
-
-    // Construct the mailto link and encode the components
+    `;
     const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body.trim())}`;
-
-    // Open the user's default email client
     window.location.href = mailtoLink;
   };
+
+  // --- MODIFIED: Reusable navigation handler ---
+  const handleNavigate = (path) => {
+    // 1. Navigate to the provided path
+    navigate(path);
+    
+    // 2. If it's mobile, close the sidebar
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  };
+
 
   return (
     <div
@@ -153,24 +145,20 @@ Thank you.
         isMobile && isSidebarOpen ? "mobile-sidebar-is-open" : ""
       }`}
     >
-      {/* --- NEW: Separate hamburger button ONLY for mobile view --- */}
       <button className="mobile-hamburger-btn" onClick={toggleSidebar}>
         ☰
       </button>
 
-      {/* --- NEW: Overlay for mobile view when sidebar is open --- */}
       {isMobile && isSidebarOpen && (
         <div className="sidebar-overlay" onClick={toggleSidebar}></div>
       )}
 
-      {/* Sidebar (Original structure) */}
       <aside className={`sidebar ${isSidebarOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <LogoIcon />
           {isSidebarOpen && (
-            <h1 onClick={() => navigate("/dashboard/rooms")}>Dashboard</h1>
+            <h1 onClick={() => handleNavigate("/dashboard/rooms")}>Dashboard</h1>
           )}
-          {/* This is the original hamburger for desktop view */}
           <button className="hamburger-btn" onClick={toggleSidebar}>
             ☰
           </button>
@@ -190,7 +178,7 @@ Thank you.
                 {userRooms.map((room) => (
                   <li
                     key={room.id}
-                    onClick={() => navigate(`/dashboard/room/${room.id}`)}
+                    onClick={() => handleNavigate(`/dashboard/room/${room.id}`)}
                   >
                     {room.name}
                   </li>
