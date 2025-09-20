@@ -113,12 +113,15 @@ const Dashboard = () => {
     const body = `
 Hello Support Team,
 I'd like to report a bug.
+
 - **Description of Bug:**
 [Please describe the issue here]
+
 - **Steps to Reproduce:**
 1.
 2.
 3.
+
 Thank you.
     `;
     const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(

@@ -570,7 +570,6 @@ body {
     height: 100vh;
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
-    border-right: 1px solid var(--border-color);
   }
 
   /* Slide the sidebar into view when open */
