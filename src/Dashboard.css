@@ -38,12 +38,14 @@ body {
 
 /* --- Sidebar Styles --- */
 /* Sidebar base */
+/* In Dashboard.css */
 .sidebar {
   background-color: var(--sidebar-bg);
   color: var(--text-light);
   padding: 24px 12px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* This is already here, which is correct */
+  height: 100vh;         /* <-- ADD THIS CRUCIAL LINE */
   transition: width 0.3s ease-in-out;
   flex-shrink: 0;
   position: relative;
@@ -598,4 +600,33 @@ body {
     /* Remove any default margins that might affect positioning */
     margin: 0;
   }
+}
+/* --- Custom Scrollbar Styles for the Sidebar --- */
+
+/* Target the scrolling element for Firefox */
+.your-rooms-section {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #1f2937; /* thumb-color track-color */
+}
+
+/* Target the scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+.your-rooms-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* The track (the background of the scrollbar) */
+.your-rooms-section::-webkit-scrollbar-track {
+  background: #1f2937; /* A very dark gray, slightly lighter than the sidebar */
+}
+
+/* The draggable scrolling handle */
+.your-rooms-section::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* A muted gray that matches your footer buttons */
+  border-radius: 10px;       /* Makes the scrollbar thumb rounded */
+  border: 2px solid #1f2937; /* Creates a padding effect */
+}
+
+/* The handle on hover */
+.your-rooms-section::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280; /* A slightly lighter gray for interactivity */
 }

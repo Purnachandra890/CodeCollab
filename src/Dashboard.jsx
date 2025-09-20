@@ -163,8 +163,9 @@ const Dashboard = () => {
                 ))}
               </ul>
             </nav>
-            
+
             <div className="sidebar-footer">
+              
               <button
                 className="logout-btn"
                 onClick={() => navigate("/editProfile")}
