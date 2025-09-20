@@ -228,47 +228,49 @@ const RoomPage = () => {
                 + Add Problem
               </button>
             </div>
-            <table className="problems-table">
-              <thead>
-                <tr>
-                  <th>Problem Title</th>
-                  <th>Added By</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {problems.map((p) => (
-                  <tr key={p.id}>
-                    <td>
-                      <a
-                        href={p.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {p.title}
-                      </a>
-                    </td>
-                    <td>{p.addedBy}</td>
-                    <td className="actions-cell">
-                      <button
-                        className="action-icon-btn"
-                        title="Edit"
-                        onClick={() => openModal(p)}
-                      >
-                        <EditIcon />
-                      </button>
-                      <button
-                        className="action-icon-btn"
-                        title="Delete"
-                        onClick={() => handleDeleteProblem(p.id)}
-                      >
-                        <TrashIcon />
-                      </button>
-                    </td>
+            <div className="table-scroll-container">
+              <table className="problems-table">
+                <thead>
+                  <tr>
+                    <th>Problem Title</th>
+                    <th>Added By</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {problems.map((p) => (
+                    <tr key={p.id}>
+                      <td>
+                        <a
+                          href={p.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {p.title}
+                        </a>
+                      </td>
+                      <td>{p.addedBy}</td>
+                      <td className="actions-cell">
+                        <button
+                          className="action-icon-btn"
+                          title="Edit"
+                          onClick={() => openModal(p)}
+                        >
+                          <EditIcon />
+                        </button>
+                        <button
+                          className="action-icon-btn"
+                          title="Delete"
+                          onClick={() => handleDeleteProblem(p.id)}
+                        >
+                          <TrashIcon />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         );
       case "Leaderboard":

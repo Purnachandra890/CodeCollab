@@ -408,3 +408,28 @@
 
 
 }
+
+
+/* In RoomPage.css */
+
+/* 1. Make the problems card a flex container */
+.problems-container.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure the card fills the available space */
+}
+
+/* 2. Make the new container grow and handle scrolling */
+.table-scroll-container {
+  flex-grow: 1; /* Allows this container to fill the remaining space in the card */
+  overflow-y: auto; /* Adds a scrollbar ONLY when the table is too tall */
+  min-height: 0; /* A key property for ensuring flex-grow works correctly */
+}
+
+/* 3. Ensure the table header stays put (for some browsers) */
+.problems-table thead {
+  position: sticky;
+  top: 0;
+  background-color: var(--card-bg); /* Match the card's background */
+  z-index: 1;
+}
