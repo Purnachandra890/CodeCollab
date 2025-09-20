@@ -116,7 +116,7 @@ const Dashboard = () => {
   // In Dashboard.jsx, add this function alongside your other handlers
   const handleReportBug = () => {
     // IMPORTANT: Replace this with your actual support email address
-    const recipientEmail = "npurnachandra9948265246@gmail.com";
+    const recipientEmail = "purnachandra.n17@gmail.com";
 
     const subject = "Bug Report: Code Collab Application";
 
