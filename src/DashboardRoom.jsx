@@ -12,6 +12,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import RoomInvitesCard from "./RoomInvitesCard"; 
 
 export default function DashboardRoom() {
   const { user } = useAuth(); //  Get current user
@@ -129,6 +130,7 @@ export default function DashboardRoom() {
               </div>
             </header>
             <main className="main-content">
+              <RoomInvitesCard />
               <section className="rooms-grid">
                 {userRooms.map((room) => (
                   <div className="room-card" key={room.id}>

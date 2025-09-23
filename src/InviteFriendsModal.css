@@ -1,0 +1,80 @@
+/* InviteFriendsModal.css */
+
+.invite-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  padding-right: 15px; /* Added padding to align with the checkbox */
+}
+
+.invite-list-header span {
+  font-weight: 600;
+  color: var(--text-color-primary);
+}
+
+.select-all-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.friend-invite-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 20px;
+}
+
+/* This is the key element for the layout */
+.invite-friend-item {
+  display: flex;
+  justify-content: space-between; /* Pushes content to the ends */
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.invite-friend-item:last-child {
+  border-bottom: none;
+}
+
+.invite-friend-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.invite-friend-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.invite-checkbox {
+  transform: scale(1.2);
+}
+
+.invite-send-btn {
+  width: 100%;
+  margin-top: 10px; /* Add some space above the button */
+}
+
+/* Modal-specific styles for the modal content */
+.modal-content {
+  color: var(--text-color-primary);
+  /* other styles... */
+}
+
+.modal-content h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}

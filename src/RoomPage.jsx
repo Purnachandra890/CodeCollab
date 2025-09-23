@@ -15,9 +15,13 @@ import {
   serverTimestamp,
   query,
   orderBy,
+  where,
 } from "firebase/firestore";
 import "./RoomPage.css";
 import Leaderboard from "./LeaderBoard";
+import RequestsTab from "./RequestsTab";
+import FriendsTab from "./FriendsTab";
+import InviteFriendsModal from "./InviteFriendsModal"; // <-- Import the modal component
 
 // --- Icon Components ---
 const EditIcon = () => (
@@ -66,6 +70,11 @@ const ChatIcon = () => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <path d="M20 2H4C2.9 2 2 2.9 2 4V18L6 14H20C21.1 14 22 13.1 22 12V4C22 2.9 21.1 2 20 2Z" />
+  </svg>
+);
+const InviteIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M16 11h-3V8h-2v3H8v2h3v3h2v-3h3v-2zM21 17h-2v2h-2v-2h-2v-2h2v-2h2v2h2v2zM12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
   </svg>
 );
 
@@ -126,9 +135,14 @@ const RoomPage = () => {
   const [members, setMembers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProblem, setEditingProblem] = useState(null);
+  const [friends, setFriends] = useState([]);
+  const [sentRequests, setSentRequests] = useState([]);
+  const [pendingRequestCount, setPendingRequestCount] = useState(0); 
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false); // <-- Already here
   const navigate = useNavigate();
   const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
+
   useEffect(() => {
     if (!roomId) return;
 
@@ -146,7 +160,7 @@ const RoomPage = () => {
         const userSnap = await getDoc(doc(db, "users", uid));
         return userSnap.exists()
           ? { id: uid, ...userSnap.data() }
-          : { id: uid, name: "Unknown User", photoURL: "" };
+          : { id: uid, name: "Unknown User", photoURL: defaultPhoto };
       });
       setMembers(await Promise.all(memberPromises));
     });
@@ -164,12 +178,53 @@ const RoomPage = () => {
       unsubRoom();
       unsubProblems();
     };
-  }, [roomId]);
+  }, [roomId, defaultPhoto]);
+
+  useEffect(() => {
+    if (!user || !user.uid) return;
+
+    // Listener for Friends
+    const unsubFriends = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        setFriends(userData.friends || []);
+      }
+    });
+
+    // Listener for Outgoing Friend Requests
+    const qSentRequests = query(
+      collection(db, "friend_requests"),
+      where("senderId", "==", user.uid),
+      where("status", "==", "pending")
+    );
+    const unsubSentRequests = onSnapshot(qSentRequests, (snapshot) => {
+      setSentRequests(
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      );
+    });
+
+    // Listener for Incoming Friend Requests (for the badge)
+    const qIncomingRequests = query(
+        collection(db, "friend_requests"),
+        where("receiverId", "==", user.uid),
+        where("status", "==", "pending")
+    );
+
+    const unsubIncomingRequests = onSnapshot(qIncomingRequests, (snapshot) => {
+        setPendingRequestCount(snapshot.size);
+    });
+
+    return () => {
+      unsubFriends();
+      unsubSentRequests();
+      unsubIncomingRequests();
+    };
+  }, [user]);
 
   const handleSaveProblem = async ({ link }) => {
     try {
       const normalized = normalizeLink(link);
-      const slug = extractTitleFromLink(normalized); // e.g., "palindrome-number"
+      const slug = extractTitleFromLink(normalized); 
 
       if (!slug) {
         alert("Invalid LeetCode problem link. Please check and try again.");
@@ -177,8 +232,8 @@ const RoomPage = () => {
       }
 
       const problemToSave = {
-        title: slug, // store with hyphens
-        titleSlug: slug, // optional but handy elsewhere
+        title: slug, 
+        titleSlug: slug, 
         link: normalized,
       };
 
@@ -204,6 +259,21 @@ const RoomPage = () => {
   const handleDeleteProblem = async (problemId) => {
     if (window.confirm("Are you sure you want to delete this problem?")) {
       await deleteDoc(doc(db, "rooms", roomId, "problems", problemId));
+    }
+  };
+
+  const handleAddFriend = async (receiverId) => {
+    try {
+      await addDoc(collection(db, "friend_requests"), {
+        senderId: user.uid,
+        receiverId: receiverId,
+        status: "pending",
+        createdAt: serverTimestamp(),
+      });
+      alert("Friend request sent!");
+    } catch (error) {
+      console.error("Error sending friend request:", error);
+      alert("Failed to send friend request.");
     }
   };
 
@@ -274,9 +344,6 @@ const RoomPage = () => {
           </div>
         );
       case "Leaderboard":
-        // --- FIX ---
-        // The Leaderboard component is now wrapped in a generic 'card' div.
-        // This ensures it has the same border and background as the other tabs.
         return (
           <div className="card">
             <Leaderboard />
@@ -286,28 +353,60 @@ const RoomPage = () => {
         return (
           <div className="members-container card">
             <div className="member-grid">
-              {members.map((m) => (
-                <div key={m.id} className="member-card">
-                  <img
-                    src={m.photoURL}
-                    alt={m.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = defaultPhoto;
-                    }}
-                  />
-                  <div className="member-info">
-                    <span className="member-name">{m.name}</span>
-                    <span className="member-id">
-                      {m.id.substring(0, 6).toUpperCase()}
-                    </span>
+              {members.map((m) => {
+                const isCurrentUser = m.id === user?.uid;
+                const isFriend = friends.includes(m.id);
+                const hasSentRequest = sentRequests.some(
+                  (req) => req.receiverId === m.id
+                );
+
+                return (
+                  <div key={m.id} className="member-card">
+                    <img
+                      src={m.photoURL}
+                      alt={m.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = defaultPhoto;
+                      }}
+                    />
+                    <div className="member-info">
+                      <span className="member-name">{m.name}</span>
+                      <span className="member-id">
+                        {m.id.substring(0, 6).toUpperCase()}
+                      </span>
+                    </div>
+                    {m.id === room?.adminId && (
+                      <span className="owner-badge">OWNER</span>
+                    )}
+
+                    {!isCurrentUser && !isFriend && !hasSentRequest && (
+                      <button
+                        className="add-friend-btn"
+                        onClick={() => handleAddFriend(m.id)}
+                      >
+                        +
+                      </button>
+                    )}
+                    {hasSentRequest && (
+                      <span className="pending-badge">Pending</span>
+                    )}
                   </div>
-                  {m.id === room?.adminId && (
-                    <span className="owner-badge">OWNER</span>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
+          </div>
+        );
+      case "Requests":
+        return (
+          <div className="card">
+            <RequestsTab user={user} />
+          </div>
+        );
+      case "Friends":
+        return (
+          <div className="card">
+            <FriendsTab user={user} />
           </div>
         );
       default:
@@ -354,6 +453,13 @@ const RoomPage = () => {
         onSave={handleSaveProblem}
         problem={editingProblem}
       />
+      {/* NEW: Render the InviteFriendsModal */}
+      <InviteFriendsModal
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+        user={user}
+        roomId={roomId}
+      />
       <header className="room-header">
         <h1>{room.name}</h1>
         <p className="room-description">{room.description}</p>
@@ -369,6 +475,12 @@ const RoomPage = () => {
             onClick={() => navigate(`/room/${roomId}/chatMessages`)}
           >
             <ChatIcon /> Open Room Chat
+          </button>
+          <button
+            className="secondary-btn"
+            onClick={() => setIsInviteModalOpen(true)}
+          >
+            <InviteIcon /> Invite Friends
           </button>
         </div>
       </header>
@@ -390,6 +502,21 @@ const RoomPage = () => {
           className={`tab-btn ${activeTab === "Members" && "active"}`}
         >
           Members
+        </button>
+        <button
+          onClick={() => setActiveTab("Requests")}
+          className={`tab-btn ${activeTab === "Requests" && "active"}`}
+        >
+          Requests
+          {pendingRequestCount > 0 && (
+            <span className="notification-badge">{pendingRequestCount}</span>
+          )}
+        </button>
+        <button
+          onClick={() => setActiveTab("Friends")}
+          className={`tab-btn ${activeTab === "Friends" && "active"}`}
+        >
+          Friends
         </button>
       </nav>
       <div className="tab-content">{renderContent()}</div>

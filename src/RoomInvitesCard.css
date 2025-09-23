@@ -1,0 +1,102 @@
+/* RoomInvitesCard.css */
+
+.room-invites-card {
+  margin-top: 2rem;
+}
+
+.room-invites-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color-primary);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.invites-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.invite-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  /* Use a background that matches the other cards */
+  background-color: var(--card-dark-bg-color); 
+  color: var(--text-color-light);
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm); /* Add a subtle shadow */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.invite-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md); /* Enhance shadow on hover */
+}
+
+.invite-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-from {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+}
+
+.invite-room-name {
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.invite-actions {
+  display: flex;
+  gap: 10px;
+  /* Align items vertically centered */
+  align-items: center; 
+}
+
+/* Styles for the Accept button */
+.accept-invite-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  /* Use your primary color for the background */
+  background-color: #2b70d7; 
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.accept-invite-btn:hover {
+  /* Darken the primary color on hover */
+  background-color: #2b70d7; 
+}
+
+/* Styles for the Decline button */
+.decline-invite-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  /* Use your primary color for the background */
+  background-color: #2b70d7; 
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.decline-invite-btn:hover {
+  /* Fill the button with color on hover */
+  background-color: #2b70d7; 
+}
+
+.room-invites-card {
+  /* Change the top margin to remove the gap */
+  /* border: 2px solid blue; */
+  margin-top: 0;
+}

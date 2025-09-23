@@ -1,0 +1,101 @@
+.friends-container {
+  /* Remove background, padding, and box shadow from this container */
+  /* This container will now be a simple wrapper for the friend grid */
+  padding: 0;
+  background-color: transparent;
+  box-shadow: none;
+  /* Add some margin to the top if needed for spacing from the heading */
+  margin-top: 20px;
+}
+
+.friends-container h3 {
+  color: var(--text-color-primary);
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  /* Use a subtle border to separate the heading from the content */
+  /* border-bottom: 1px solid var(--border-color); */
+  padding-bottom: 10px;
+}
+
+.friend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.friend-card {
+  background-color: var(--background-color-dark); /* This should be a slightly darker shade */
+  /* border: 1px solid var(--border-color); */
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.friend-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md); /* Enhance shadow on hover */
+}
+
+.friend-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%; /* Circular images */
+  object-fit: cover;
+  margin-bottom: 10px;
+  /* border: 2px solid var(--primary-color); Highlight with primary color */
+}
+
+.friend-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.friend-name {
+  font-weight: 600;
+  color: var(--text-color-primary);
+  margin-bottom: 5px;
+  font-size: 1.1em;
+  word-break: break-word; /* Prevents long names from overflowing */
+}
+
+.friend-id {
+  font-size: 0.85em;
+  color: var(--text-color-secondary); /* Lighter color for ID */
+  font-family: monospace; /* Monospace for UIDs */
+  letter-spacing: 0.5px;
+}
+
+/* Styles for when there are no friends */
+.friends-container p {
+  color: var(--text-color-secondary);
+  text-align: center;
+  padding: 30px;
+  font-style: italic;
+  font-size: 1.1em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .friend-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  .friend-photo {
+    width: 60px;
+    height: 60px;
+  }
+  .friend-name {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .friend-grid {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+  }
+}
