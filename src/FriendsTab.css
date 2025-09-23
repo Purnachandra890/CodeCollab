@@ -15,6 +15,7 @@
   /* Use a subtle border to separate the heading from the content */
   /* border-bottom: 1px solid var(--border-color); */
   padding-bottom: 10px;
+  margin-left: 2.5rem;
 }
 
 .friend-grid {
@@ -82,15 +83,21 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  /* Change the grid to a flex container that allows wrapping */
   .friend-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    display: flex;
+    flex-wrap: wrap; /* This is the key change: it allows items to wrap */
+    overflow-x: hidden; /* This hides the horizontal scrollbar */
+    justify-content: center; /* Centers the cards in the container */
+    gap: 16px; /* Space between the cards */
+    padding: 0 16px; /* Padding for the container */
   }
-  .friend-photo {
-    width: 60px;
-    height: 60px;
-  }
-  .friend-name {
-    font-size: 1em;
+
+  /* Style the individual cards within the grid */
+  .friend-card {
+    flex-shrink: 0;
+    width: 150px; /* Adjust a fixed width for a better mobile card size */
+    box-sizing: content-box;
   }
 }
 
