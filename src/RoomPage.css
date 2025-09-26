@@ -141,7 +141,13 @@
 }
 
 /* --- Problems Tab --- */
+.problems-container {
+  display: flex; /* Make it a flex container */
+  flex-direction: column; /* Stack its children vertically */
+  height: 100%; /* Ensure it takes up all available vertical space */
+}
 .problems-header {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -155,6 +161,19 @@
 .problems-table {
   width: 100%;
   border-collapse: collapse;
+}
+.table-scroll-container {
+  flex-grow: 1; /* Allows this container to grow and fill remaining space */
+  overflow-y: auto; /* This is the key: makes the container vertically scrollable */
+  min-height: 0; /* Prevents flexbox from overriding the height and causing overflow */
+}
+.problems-table thead {
+  position: sticky;
+  top: 0;
+  background-color: var(
+    --card-bg
+  ); /* Match the card background to avoid transparency issues */
+  z-index: 1; /* Ensure the header stays on top of the scrolling content */
 }
 .problems-table th,
 .problems-table td {
@@ -205,11 +224,16 @@
 /* --- Members Tab --- */
 .members-container {
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 .member-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
+  overflow-y: auto;
+  max-height: calc(100vh - 300px);
 }
 .member-card {
   display: flex;
@@ -382,14 +406,14 @@
     padding: 1rem;
     height: auto;
   }
-  
+
   /* 2. Center the room name */
   .room-header h1 {
     text-align: center;
     font-size: 1.5rem;
     margin-top: 1rem; /* Add some space from the top */
   }
-  
+
   /* 3. Make buttons and tabs horizontally scrollable */
   .room-header-actions,
   .room-tabs {
@@ -401,7 +425,7 @@
     margin-top: 1rem;
     border-bottom: 1px solid var(--border-color);
   }
-  
+
   .room-tabs {
     margin-top: 2rem;
   }
@@ -425,14 +449,14 @@
   .problems-table td:nth-child(2) {
     display: none;
   }
-  
+
   /* 6. Fix for the tab-content overflow */
   .tab-content {
     /* REMOVE the negative margins that cause the shift */
     margin: 1rem 0 0 0;
     justify-content: flex-start;
   }
-  
+
   /* 7. Force the member cards to stack in a single column */
   .member-grid {
     grid-template-columns: 1fr;

@@ -1,27 +1,25 @@
 .friends-container {
-  /* Remove background, padding, and box shadow from this container */
-  /* This container will now be a simple wrapper for the friend grid */
-  padding: 0;
-  background-color: transparent;
-  box-shadow: none;
-  /* Add some margin to the top if needed for spacing from the heading */
-  margin-top: 20px;
+   display: flex; /* Enables flexbox layout */
+  flex-direction: column; /* Stacks children vertically */
+  height: 100%; /* Ensures container fills available vertical space */
+  padding: 24px; /* Adjust padding to apply to the whole card */
 }
 
 .friends-container h3 {
-  color: var(--text-color-primary);
+  flex-shrink: 0; /* Prevents the heading from shrinking */
   margin-bottom: 20px;
-  font-size: 1.5em;
-  /* Use a subtle border to separate the heading from the content */
-  /* border-bottom: 1px solid var(--border-color); */
-  padding-bottom: 10px;
-  margin-left: 2.5rem;
+}
+
+.friend-grid-scroll-container {
+  flex-grow: 1; /* Allows this container to grow and fill remaining space */
+  overflow-y: auto; /* **This is the key to enable vertical scrolling** */
+  min-height: 0; /* Prevents flexbox from overriding height */
 }
 
 .friend-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
+  gap: 2rem;
 }
 
 .friend-card {

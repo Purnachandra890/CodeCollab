@@ -6,9 +6,9 @@ import "./FriendsTab.css";
 
 const FriendsTab = ({ user }) => {
   const [friendsList, setFriendsList] = useState([]);
-  
+
   // Define the default photo URL here
-   const defaultPhoto =
+  const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
   useEffect(() => {
@@ -39,24 +39,26 @@ const FriendsTab = ({ user }) => {
 
   return (
     <div className="friends-container card">
+      {/* Fixed Header */}
       <h3>Your Friends</h3>
+
+      {/* Scrollable Content */}
       {friendsList.length > 0 ? (
-        <div className="friend-grid">
-          {friendsList.map((friend) => (
-            <div key={friend.id} className="friend-card">
-              <img
-                src={friend.photoURL || defaultPhoto} // Use the default photo if photoURL is not available
-                alt={friend.name}
-                className="friend-photo"
-              />
-              <div className="friend-info">
-                <span className="friend-name">{friend.name}</span>
-                {/* <span className="friend-id">
-                  {friend.id.substring(0, 6).toUpperCase()}
-                </span> */}
+        <div className="friend-grid-scroll-container">
+          <div className="friend-grid">
+            {friendsList.map((friend) => (
+              <div key={friend.id} className="friend-card">
+                <img
+                  src={friend.photoURL || defaultPhoto} // Use the default photo if photoURL is not available
+                  alt={friend.name}
+                  className="friend-photo"
+                />
+                <div className="friend-info">
+                  <span className="friend-name">{friend.name}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : (
         <p>You don't have any friends yet. Add some from the Members tab!</p>
