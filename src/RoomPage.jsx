@@ -168,7 +168,7 @@ const RoomPage = () => {
     // Listener for Problems subcollection
     const qProblems = query(
       collection(db, "rooms", roomId, "problems"),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "asc")
     );
     const unsubProblems = onSnapshot(qProblems, (snapshot) => {
       setProblems(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
