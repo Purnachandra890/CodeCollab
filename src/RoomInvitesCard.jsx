@@ -57,7 +57,7 @@ const RoomInvitesCard = () => {
       });
 
       alert("You have joined the room!");
-      navigate(`/room/${roomId}`);
+      navigate(`/dashboard/room/${roomId}`);
     } catch (error) {
       console.error("Error accepting room invite:", error);
       alert("Failed to accept invite.");

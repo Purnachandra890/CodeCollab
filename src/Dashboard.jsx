@@ -33,6 +33,7 @@ const Dashboard = () => {
   const [userRooms, setUserRooms] = useState([]);
   const [roomName, setRoomName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const isMobile = window.innerWidth <= 768;
@@ -130,17 +131,12 @@ Thank you.
     window.location.href = mailtoLink;
   };
 
-  // --- MODIFIED: Reusable navigation handler ---
   const handleNavigate = (path) => {
-    // 1. Navigate to the provided path
     navigate(path);
-    
-    // 2. If it's mobile, close the sidebar
     if (isMobile) {
       setIsSidebarOpen(false);
     }
   };
-
 
   return (
     <div
@@ -160,7 +156,9 @@ Thank you.
         <div className="sidebar-header">
           <LogoIcon />
           {isSidebarOpen && (
-            <h1 onClick={() => handleNavigate("/dashboard/rooms")}>Dashboard</h1>
+            <h1 onClick={() => handleNavigate("/dashboard/rooms")}>
+              Dashboard
+            </h1>
           )}
           <button className="hamburger-btn" onClick={toggleSidebar}>
             ☰
@@ -199,7 +197,10 @@ Thank you.
               >
                 Edit Profile
               </button>
-              <button className="sidebar-btn" onClick={handleLogout}>
+              <button
+                className="sidebar-btn"
+                onClick={() => setIsLogoutModalOpen(true)}
+              >
                 Logout
               </button>
             </div>
@@ -209,6 +210,7 @@ Thank you.
 
       <Outlet />
 
+      {/* --- MODAL FOR CREATING ROOMS --- */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -232,6 +234,33 @@ Thank you.
                 Create Room
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* --- NEW: LOGOUT CONFIRMATION MODAL --- */}
+      {isLogoutModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content logout-modal">
+            <button
+              className="modal-close-btn"
+              onClick={() => setIsLogoutModalOpen(false)}
+            >
+              &times;
+            </button>
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to logout</p>
+            <div className="modal-actions">
+              <button className="primary-btn" onClick={handleLogout}>
+                Yes, Log Out
+              </button>
+              <button
+                className="secondary-btn"
+                onClick={() => setIsLogoutModalOpen(false)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

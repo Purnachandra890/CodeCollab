@@ -11,6 +11,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  getDoc, 
 } from "firebase/firestore";
 import RoomInvitesCard from "./RoomInvitesCard"; 
 
@@ -19,6 +20,7 @@ export default function DashboardRoom() {
   const [userRooms, setUserRooms] = useState([]); //  Store rooms
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true); //  loading state
+  const [leetcodeUsername, setLeetcodeUsername] = useState("");
 
   const shortUserId = user?.uid?.slice(0, 6); //  Shortened ID
   const defaultPhoto =
@@ -54,6 +56,13 @@ export default function DashboardRoom() {
     const fetchUserRooms = async () => {
       if (!user) return;
       try {
+        // Fetch user's LeetCode username
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setLeetcodeUsername(userData.leetcodeUsername || "");
+        }
         const q = query(
           collection(db, "rooms"),
           where("members", "array-contains", user.uid)
@@ -130,6 +139,14 @@ export default function DashboardRoom() {
               </div>
             </header>
             <main className="main-content">
+              {/* Conditional rendering for the notification */}
+              {leetcodeUsername === "" && (
+                <div className="notification-message">
+                  <p>
+                    Please enter your LeetCode username to enable LeetCode-related features and leaderboard tracking.
+                  </p>
+                </div>
+              )}
               <RoomInvitesCard />
               <section className="rooms-grid">
                 {userRooms.map((room) => (

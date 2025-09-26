@@ -183,7 +183,10 @@ body {
 .sidebar-footer .logout-btn:hover {
   background-color: #4b5563;
 }
-
+.modal-actions{
+  display: flex;
+  justify-content:space-between;
+}
 /* --- Main Content Styles --- */
 /* Find this rule and REMOVE the flex-grow line */
 .main-content {
