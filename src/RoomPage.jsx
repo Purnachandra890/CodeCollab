@@ -372,9 +372,6 @@ const RoomPage = () => {
                     />
                     <div className="member-info">
                       <span className="member-name">{m.name}</span>
-                      <span className="member-id">
-                        {m.id.substring(0, 6).toUpperCase()}
-                      </span>
                     </div>
                     {m.id === room?.adminId && (
                       <span className="owner-badge">OWNER</span>

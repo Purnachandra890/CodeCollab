@@ -22,7 +22,10 @@ export default function DashboardRoom() {
   const [loading, setLoading] = useState(true); //  loading state
   const [leetcodeUsername, setLeetcodeUsername] = useState("");
 
-  const shortUserId = user?.uid?.slice(0, 6); //  Shortened ID
+  // const shortUserId = user?.uid?.slice(0, 6); //  Shortened ID
+  const userName = user.displayName;
+  // console.log(user);
+
   const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg"; //  Path to placeholder image
 
@@ -133,8 +136,8 @@ export default function DashboardRoom() {
                   onError={(e) => (e.target.src = defaultPhoto)}
                 />
                 <div className="user-info">
-                  <span>User ID</span>
-                  <strong>{shortUserId || "N/A"}</strong>
+                  {/* <span>User ID</span> */}
+                  <strong>{userName || "N/A"}</strong>
                 </div>
               </div>
             </header>
