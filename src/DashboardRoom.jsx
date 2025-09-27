@@ -22,7 +22,7 @@ export default function DashboardRoom() {
   const [loading, setLoading] = useState(true); //  loading state
   const [leetcodeUsername, setLeetcodeUsername] = useState("");
 
-  // const shortUserId = user?.uid?.slice(0, 6); //  Shortened ID
+  const shortUserId = user?.uid?.slice(0, 6); //  Shortened ID
   const userName = user.displayName;
   // console.log(user);
 
@@ -138,6 +138,8 @@ export default function DashboardRoom() {
                 <div className="user-info">
                   {/* <span>User ID</span> */}
                   <strong>{userName || "N/A"}</strong>
+                  <strong>{shortUserId || "N/A"}</strong>
+                  
                 </div>
               </div>
             </header>
