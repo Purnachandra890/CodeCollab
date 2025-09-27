@@ -313,9 +313,9 @@ export default function LeaderBoard() {
                     />
                     <div>
                       <span className="user-name">{player.username}</span>
-                      <span className="user-id">
+                      {/* <span className="user-id">
                         {player.uid.substring(0, 6).toUpperCase()}
-                      </span>
+                      </span> */}
                     </div>
                   </div>
                 </td>
