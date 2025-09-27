@@ -11,9 +11,9 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  getDoc, 
+  getDoc,
 } from "firebase/firestore";
-import RoomInvitesCard from "./RoomInvitesCard"; 
+import RoomInvitesCard from "./RoomInvitesCard";
 
 export default function DashboardRoom() {
   const { user } = useAuth(); //  Get current user
@@ -138,8 +138,8 @@ export default function DashboardRoom() {
                 <div className="user-info">
                   {/* <span>User ID</span> */}
                   <strong>{userName || "N/A"}</strong>
-                  <strong>{shortUserId || "N/A"}</strong>
-                  
+                  {/* <strong>{shortUserId || "N/A"}</strong> */}
+                  <span className="user-email">{user?.email}</span>
                 </div>
               </div>
             </header>
@@ -148,7 +148,8 @@ export default function DashboardRoom() {
               {leetcodeUsername === "" && (
                 <div className="notification-message">
                   <p>
-                    Please enter your LeetCode username to enable LeetCode-related features and leaderboard tracking.
+                    Please enter your LeetCode username to enable
+                    LeetCode-related features and leaderboard tracking.
                   </p>
                 </div>
               )}

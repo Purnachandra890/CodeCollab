@@ -8,6 +8,8 @@
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 10px;
   padding-right: 15px; /* Added padding to align with the checkbox */
+  /* border: 1px solid red; */
+  margin-top: -8px;
 }
 
 .invite-list-header span {
@@ -78,3 +80,125 @@
   font-size: 1.5rem;
   font-weight: bold;
 }
+
+/* ... (existing styles) ... */
+
+.direct-invite-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.direct-invite-form label {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* InviteFriendsModal.css */
+
+/* ... (other styles) ... */
+
+.direct-invite-input-group {
+  display: flex;
+  gap: 10px;
+  align-items: center; /* This is the key property for vertical alignment */
+}
+
+.direct-invite-input-group input {
+  flex-grow: 1;
+  /* Use explicit padding and height to ensure consistent sizing */
+  padding: 10px;
+  height: 40px; /* Set a consistent height */
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+.direct-invite-input-group button {
+  margin-top:-15px ;
+  
+  padding: 10px 16px;
+  height: 40px; /* Set a consistent height */
+  border-radius: 6px;
+}
+.invite-separator {
+  border: 0;
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 20px 0;
+}
+
+.send-btn {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: 6px; /* Corrected to a rectangular shape */
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.send-btn:hover {
+  background-color: var(--primary-blue-hover);
+}
+
+
+/* ... (existing styles) ... */
+
+.email-check-status {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.email-status-checking {
+  color: var(--text-muted);
+}
+
+.email-status-found {
+  color: #22c55e; /* Green for success */
+}
+
+.email-status-not-found,
+.email-status-error {
+  color: #ef4444; /* Red for errors */
+}
+
+/* Spinner styles */
+.spinner {
+  animation: rotate 2s linear infinite;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+.spinner .path {
+  stroke: var(--primary-blue);
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+

@@ -3,7 +3,6 @@ import { db } from "./firebase";
 import {
   doc,
   getDoc,
-  arrayUnion,
   onSnapshot,
   updateDoc,
   addDoc,
@@ -11,26 +10,80 @@ import {
   where,
   query,
   collection,
+  getDocs,
 } from "firebase/firestore";
-import "./RoomPage.css"; // Reuse existing styles
-import "./InviteFriendsModal.css"; // We'll create this next
+import "./RoomPage.css";
+import "./InviteFriendsModal.css";
+
+// A simple loading spinner component
+const Spinner = () => (
+  <svg className="spinner" viewBox="0 0 50 50">
+    <circle
+      className="path"
+      cx="25"
+      cy="25"
+      r="20"
+      fill="none"
+      strokeWidth="5"
+    ></circle>
+  </svg>
+);
 
 const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
   const [friendsList, setFriendsList] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [newInviteRecipient, setNewInviteRecipient] = useState("");
+  const [emailCheckStatus, setEmailCheckStatus] = useState("idle");
   const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
+  // Debounce logic to check email/UID in real-time
+  useEffect(() => {
+    if (!newInviteRecipient || newInviteRecipient.length < 3) {
+      setEmailCheckStatus("idle");
+      return;
+    }
+
+    setEmailCheckStatus("checking");
+    const timer = setTimeout(async () => {
+      try {
+        let userExists = false;
+        // Check if the recipient is an email
+        if (newInviteRecipient.includes("@")) {
+          const usersRef = collection(db, "users");
+          const q = query(usersRef, where("email", "==", newInviteRecipient));
+          const querySnapshot = await getDocs(q);
+          if (!querySnapshot.empty) {
+            userExists = true;
+          }
+        } else {
+          // Assume recipient is a UID and check the document directly
+          const userDoc = await getDoc(doc(db, "users", newInviteRecipient));
+          if (userDoc.exists()) {
+            userExists = true;
+          }
+        }
+
+        if (userExists) {
+          setEmailCheckStatus("found");
+        } else {
+          setEmailCheckStatus("not-found");
+        }
+      } catch (error) {
+        console.error("Error checking user:", error);
+        setEmailCheckStatus("error");
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [newInviteRecipient]);
+
   useEffect(() => {
     if (!isOpen || !user?.uid) return;
-
-    // Fetch the current user's friends list
     const unsub = onSnapshot(doc(db, "users", user.uid), async (userSnap) => {
       if (userSnap.exists()) {
         const userData = userSnap.data();
         const friendUIDs = userData.friends || [];
-
-        // Fetch details for each friend UID
         const friendsDetails = await Promise.all(
           friendUIDs.map(async (friendId) => {
             const friendDoc = await getDoc(doc(db, "users", friendId));
@@ -42,7 +95,6 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
         setFriendsList(friendsDetails.filter(Boolean));
       }
     });
-
     return () => unsub();
   }, [isOpen, user]);
 
@@ -67,9 +119,7 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
       alert("Please select at least one friend to invite.");
       return;
     }
-
     try {
-      // Step 1: Fetch the room document to get the list of current members
       const roomSnap = await getDoc(doc(db, "rooms", roomId));
       if (!roomSnap.exists()) {
         alert("Room not found!");
@@ -78,20 +128,14 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
       const roomData = roomSnap.data();
       const currentMembers = roomData.members || [];
       const roomName = roomData.name || "the room";
-
-      // Step 2: Filter out friends who are already members of the room
       const friendsToSendInviteTo = selectedFriends.filter(
         (friendId) => !currentMembers.includes(friendId)
       );
-
-      // If all selected friends are already members, alert the user and exit
       if (friendsToSendInviteTo.length === 0) {
-        alert("selected friends are already members of this room.");
+        alert("Selected friends are already members of this room.");
         onClose();
         return;
       }
-
-      // Step 3: Send invitations only to the filtered list
       const invitePromises = friendsToSendInviteTo.map(async (friendId) => {
         await addDoc(collection(db, "room_invites"), {
           senderId: user.uid,
@@ -102,17 +146,102 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
           createdAt: serverTimestamp(),
         });
       });
-
       await Promise.all(invitePromises);
       alert(`Invitations sent to ${friendsToSendInviteTo.length} friend(s)!`);
-      onClose(); // Close the modal on success
+      onClose();
     } catch (error) {
       console.error("Error sending invites:", error);
       alert("Failed to send invitations.");
     }
   };
 
+  const handleSendDirectInvite = async (e) => {
+    e.preventDefault();
+    const recipient = newInviteRecipient.trim();
+    if (emailCheckStatus !== "found") {
+      alert("Please enter a valid user email or ID.");
+      return;
+    }
+
+    let recipientDoc;
+    let recipientId;
+    try {
+      // Find the recipient, checking for email first, then UID
+      if (recipient.includes("@")) {
+        const q = query(
+          collection(db, "users"),
+          where("email", "==", recipient)
+        );
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+          alert("No user found with that email address.");
+          return;
+        }
+        recipientDoc = querySnapshot.docs[0];
+        recipientId = recipientDoc.id;
+      } else {
+        const userDoc = await getDoc(doc(db, "users", recipient));
+        if (!userDoc.exists()) {
+          alert("No user found with that ID.");
+          return;
+        }
+        recipientDoc = userDoc;
+        recipientId = userDoc.id;
+      }
+
+      const roomSnap = await getDoc(doc(db, "rooms", roomId));
+      const roomData = roomSnap.data();
+      const currentMembers = roomData.members || [];
+      const roomName = roomData.name || "the room";
+
+      if (currentMembers.includes(recipientId)) {
+        alert("This user is already a member of the room.");
+        setNewInviteRecipient("");
+        return;
+      }
+
+      await addDoc(collection(db, "room_invites"), {
+        senderId: user.uid,
+        receiverId: recipientId,
+        roomId: roomId,
+        roomName: roomName,
+        status: "pending",
+        createdAt: serverTimestamp(),
+      });
+
+      alert(
+        `Invitation sent to ${
+          recipientDoc.data().displayName || recipientDoc.data().email
+        }!`
+      );
+      setNewInviteRecipient("");
+      onClose();
+    } catch (error) {
+      console.error("Error sending direct invite:", error);
+      alert("Failed to send direct invitation.");
+    }
+  };
+
   if (!isOpen) return null;
+
+  const getStatusMessage = () => {
+    switch (emailCheckStatus) {
+      case "checking":
+        return (
+          <span className="email-status-checking">
+            <Spinner /> Checking...
+          </span>
+        );
+      case "found":
+        return <span className="email-status-found">User Found! ✅</span>;
+      case "not-found":
+        return (
+          <span className="email-status-not-found">User Not Found ❌</span>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="modal-overlay">
@@ -121,8 +250,27 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
           &times;
         </button>
         <h2>Invite Friends to Room</h2>
+        <form onSubmit={handleSendDirectInvite} className="direct-invite-form">
+          <label htmlFor="direct-invite-input">
+            Invite by Email
+          </label>
+          <div className="direct-invite-input-group">
+            <input
+              id="direct-invite-input"
+              type="text"
+              value={newInviteRecipient}
+              onChange={(e) => setNewInviteRecipient(e.target.value)}
+              placeholder="Enter email or user ID"
+            />
+            <button type="submit" className="send-btn primary-btn">
+              Send
+            </button>
+          </div>
+          <div className="email-check-status">{getStatusMessage()}</div>
+        </form>
+        {/* <hr className="invite-separator" /> */}
         <div className="invite-list-header">
-          <span>Select Friends</span>
+          <span>Select from Friends</span>
           <button onClick={handleSelectAll} className="select-all-btn">
             {selectedFriends.length === friendsList.length
               ? "Deselect All"
@@ -130,28 +278,27 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
           </button>
         </div>
         <ul className="friend-invite-list">
-    {friendsList.map((friend) => (
-        <li key={friend.id} className="invite-friend-item">
-            <div className="invite-friend-info">
+          {friendsList.map((friend) => (
+            <li key={friend.id} className="invite-friend-item">
+              <div className="invite-friend-info">
                 <img
-                    src={friend.photoURL || defaultPhoto}
-                    alt={friend.name}
-                    className="invite-friend-photo"
+                  src={friend.photoURL || defaultPhoto}
+                  alt={friend.name}
+                  className="invite-friend-photo"
                 />
                 <span>{friend.name}</span>
-            </div>
-            {/* The input element is a direct child of the flex container */}
-            <div>
-              <input
-                type="checkbox"
-                checked={selectedFriends.includes(friend.id)}
-                onChange={() => handleSelectFriend(friend.id)}
-                className="invite-checkbox"
-            />
-            </div>
-        </li>
-    ))}
-</ul>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  checked={selectedFriends.includes(friend.id)}
+                  onChange={() => handleSelectFriend(friend.id)}
+                  className="invite-checkbox"
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
         <button
           onClick={handleSendInvites}
           className="invite-send-btn primary-btn"
