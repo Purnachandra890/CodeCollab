@@ -141,12 +141,14 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
                 <span>{friend.name}</span>
             </div>
             {/* The input element is a direct child of the flex container */}
-            <input
+            <div>
+              <input
                 type="checkbox"
                 checked={selectedFriends.includes(friend.id)}
                 onChange={() => handleSelectFriend(friend.id)}
                 className="invite-checkbox"
             />
+            </div>
         </li>
     ))}
 </ul>
