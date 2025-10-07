@@ -24,6 +24,21 @@ import FriendsTab from "./FriendsTab";
 import InviteFriendsModal from "./InviteFriendsModal"; // <-- Import the modal component
 
 // --- Icon Components ---
+const YouTubeIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill="#FF0000"
+      d="M23.5 6.2s-.2-1.6-.9-2.3c-.8-.9-1.7-.9-2.1-1C16.8 2.5 12 2.5 12 2.5h-.1s-4.8 0-8.5.4c-.5.1-1.3.1-2.1 1C.7 4.6.5 6.2.5 6.2S0 8.1 0 10v4c0 1.9.5 3.8.5 3.8s.2 1.6.9 2.3c.8.9 1.8.9 2.3 1 1.7.2 7.3.4 8.3.4 0 0 4.8 0 8.5-.4.5-.1 1.3-.1 2.1-1 .7-.7.9-2.3.9-2.3s.5-1.9.5-3.8v-4c0-1.9-.5-3.8-.5-3.8z"
+    />
+    <path fill="#fff" d="M9.75 15.02V8.98L15.5 12l-5.75 3.02z" />
+  </svg>
+);
+
 const EditIcon = () => (
   <svg
     width="16"
@@ -81,12 +96,15 @@ const InviteIcon = () => (
 // --- Add/Edit Problem Modal ---
 const ProblemModal = ({ isOpen, onClose, onSave, problem }) => {
   const [link, setLink] = useState("");
+  const [youtubeLink, setYoutubeLink] = useState("");
 
   useEffect(() => {
     if (problem) {
       setLink(problem.link || "");
+      setYoutubeLink(problem.youtubeLink || "");
     } else {
       setLink("");
+      setYoutubeLink("");
     }
   }, [problem, isOpen]);
 
@@ -94,7 +112,7 @@ const ProblemModal = ({ isOpen, onClose, onSave, problem }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ link }); // pass only link; title will be derived
+    onSave({ link, youtubeLink }); // Now passing both links
   };
 
   return (
@@ -114,6 +132,18 @@ const ProblemModal = ({ isOpen, onClose, onSave, problem }) => {
               value={link}
               onChange={(e) => setLink(e.target.value)}
               required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="youtubeLink">
+              YouTube Solution Link (Optional)
+            </label>
+            <input
+              id="youtubeLink"
+              type="url"
+              placeholder="https://www.youtube.com/watch?v=..."
+              value={youtubeLink}
+              onChange={(e) => setYoutubeLink(e.target.value)}
             />
           </div>
           <button type="submit" className="modal-submit-btn">
@@ -137,7 +167,7 @@ const RoomPage = () => {
   const [editingProblem, setEditingProblem] = useState(null);
   const [friends, setFriends] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
-  const [pendingRequestCount, setPendingRequestCount] = useState(0); 
+  const [pendingRequestCount, setPendingRequestCount] = useState(0);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false); // <-- Already here
   const navigate = useNavigate();
   const defaultPhoto =
@@ -205,13 +235,13 @@ const RoomPage = () => {
 
     // Listener for Incoming Friend Requests (for the badge)
     const qIncomingRequests = query(
-        collection(db, "friend_requests"),
-        where("receiverId", "==", user.uid),
-        where("status", "==", "pending")
+      collection(db, "friend_requests"),
+      where("receiverId", "==", user.uid),
+      where("status", "==", "pending")
     );
 
     const unsubIncomingRequests = onSnapshot(qIncomingRequests, (snapshot) => {
-        setPendingRequestCount(snapshot.size);
+      setPendingRequestCount(snapshot.size);
     });
 
     return () => {
@@ -221,10 +251,10 @@ const RoomPage = () => {
     };
   }, [user]);
 
-  const handleSaveProblem = async ({ link }) => {
+  const handleSaveProblem = async ({ link, youtubeLink }) => {
     try {
       const normalized = normalizeLink(link);
-      const slug = extractTitleFromLink(normalized); 
+      const slug = extractTitleFromLink(normalized);
 
       if (!slug) {
         alert("Invalid LeetCode problem link. Please check and try again.");
@@ -232,9 +262,10 @@ const RoomPage = () => {
       }
 
       const problemToSave = {
-        title: slug, 
-        titleSlug: slug, 
+        title: slug,
+        titleSlug: slug,
         link: normalized,
+        youtubeLink: youtubeLink || null, // Add the new field
       };
 
       if (editingProblem) {
@@ -303,6 +334,7 @@ const RoomPage = () => {
                 <thead>
                   <tr>
                     <th>Problem Title</th>
+                    <th>Link</th>
                     <th>Added By</th>
                     <th>Actions</th>
                   </tr>
@@ -318,6 +350,19 @@ const RoomPage = () => {
                         >
                           {p.title}
                         </a>
+                      </td>
+                      <td>
+                        {p.youtubeLink && (
+                          <a
+                            href={p.youtubeLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Watch Solution on YouTube"
+                            className="youtube-link-icon" // Use a class for styling
+                          >
+                            <YouTubeIcon />
+                          </a>
+                        )}
                       </td>
                       <td>{p.addedBy}</td>
                       <td className="actions-cell">
