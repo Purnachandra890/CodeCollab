@@ -8,6 +8,7 @@ import {
   getDocs,
   query,
   updateDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import { useAuth } from "./AuthContext";
@@ -143,7 +144,7 @@ export default function LeaderBoard() {
           if (isSolvedInAPI && !alreadyMarked) {
             updates.push(
               updateDoc(doc(db, "rooms", roomId, "problems", p.id), {
-                [`completedBy.${user.uid}`]: true,
+                [`completedBy.${user.uid}`]: serverTimestamp(),
               })
             );
           }

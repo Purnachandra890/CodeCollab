@@ -276,7 +276,7 @@ const RoomPage = () => {
       } else {
         await addDoc(collection(db, "rooms", roomId, "problems"), {
           ...problemToSave,
-          addedBy: user.displayName,
+          addedBy: user.name,
           addedById: user.uid,
           createdAt: serverTimestamp(),
         });
