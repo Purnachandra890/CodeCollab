@@ -280,6 +280,7 @@ export default function LeaderBoard() {
             />
             <h3 className="podium-name">{player.username}</h3>
             <p className="podium-problems">{player.completed} Problems</p>
+            {/* <p>{formatDate(player.lastActivity)}</p> */}
           </div>
         ))}
       </section>

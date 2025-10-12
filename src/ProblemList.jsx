@@ -8,6 +8,8 @@ import {
   updateDoc,
   doc,
   getDoc,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import { useAuth } from "./AuthContext";
 import { useParams, Link } from "react-router-dom";
@@ -117,12 +119,14 @@ export default function ProblemList() {
       if (docSnap.exists()) setRoomName(docSnap.data().name || "");
     });
 
-    const unsub = onSnapshot(
+    const qProblems = query(
       collection(db, "rooms", roomId, "problems"),
-      (snapshot) => {
-        setProblems(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
-      }
+      orderBy("createdAt", "asc") // Add this orderBy clause
     );
+
+    const unsub = onSnapshot(qProblems, (snapshot) => {
+      setProblems(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
 
     return () => unsub();
   }, [roomId]);
@@ -203,7 +207,8 @@ export default function ProblemList() {
         if (isSolvedInAPI && !alreadyMarked) {
           updates.push(
             updateDoc(doc(db, "rooms", roomId, "problems", p.id), {
-              [`completedBy.${user.uid}`]: true,
+              // [`completedBy.${user.uid}`]: true,
+              [`completedBy.${user.uid}`]: serverTimestamp(),
             })
           );
         }
