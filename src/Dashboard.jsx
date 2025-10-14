@@ -11,6 +11,7 @@ import {
   query,
   where,
   getDocs,
+  orderBy,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
@@ -46,27 +47,50 @@ const Dashboard = () => {
     }
   }, [isMobile]);
 
-  useEffect(() => {
-    const fetchUserRooms = async () => {
-      if (!user) return;
-      try {
-        const q = query(
-          collection(db, "rooms"),
-          where("members", "array-contains", user.uid)
-        );
-        const querySnapshot = await getDocs(q);
-        const rooms = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
-        }));
-        setUserRooms(rooms);
-      } catch (error) {
-        console.error("Error fetching user rooms:", error);
-      }
-    };
-    fetchUserRooms();
-  }, [user]);
+  // useEffect(() => {
+  //   const fetchUserRooms = async () => {
+  //     if (!user) return;
+  //     try {
+  //       const q = query(
+  //         collection(db, "rooms"),
+  //         where("members", "array-contains", user.uid)
+  //       );
+  //       const querySnapshot = await getDocs(q);
+  //       const rooms = querySnapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //         createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
+  //       }));
+  //       setUserRooms(rooms);
+  //     } catch (error) {
+  //       console.error("Error fetching user rooms:", error);
+  //     }
+  //   };
+  //   fetchUserRooms();
+  // }, [user]);
+
+   useEffect(() => {
+  const fetchUserRooms = async () => {
+    if (!user) return;
+    try {
+      const q = query(
+        collection(db, "rooms"),
+        where("members", "array-contains", user.uid),
+        orderBy("createdAt", "desc") // Add this line to order by creation date descending
+      );
+      const querySnapshot = await getDocs(q);
+      const rooms = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
+      }));
+      setUserRooms(rooms);
+    } catch (error) {
+      console.error("Error fetching user rooms:", error);
+    }
+  };
+  fetchUserRooms();
+}, [user]);
 
   const handleLogout = async () => {
     try {
