@@ -23,7 +23,7 @@ export default function DashboardRoom() {
   const [leetcodeUsername, setLeetcodeUsername] = useState("");
 
   const shortUserId = user?.uid?.slice(0, 6); //  Shortened ID
- const userName = user.name;
+  const userName = user.name;
   // console.log(user);
 
   const defaultPhoto =

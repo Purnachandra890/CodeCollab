@@ -14,6 +14,8 @@ import {
 } from "firebase/firestore";
 import "./RoomPage.css";
 import "./InviteFriendsModal.css";
+import emailjs from "emailjs-com";
+import { useAuth } from "./AuthContext";
 
 // A simple loading spinner component
 const Spinner = () => (
@@ -243,6 +245,51 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
     }
   };
 
+  const handleSendInvitesEmail = (e) => {
+    e.preventDefault();
+
+    // const recipientEmails = [
+    //   "purnachandra.n17@gmail.com",
+    //   "npurnachandra9948265246@gmail.com",
+    // ];
+
+    const recipientEmails = selectedFriends
+      .map((friendId) => {
+        // Find the friend object in friendsList using the ID
+        const friend = friendsList.find((f) => f.id === friendId);
+        // Return the email if the friend is found, otherwise return null
+        return friend ? friend.email : null;
+      })
+      .filter((email) => email !== null);
+
+    if (recipientEmails.length === 0) {
+      alert("Please select friends with valid emails to send invites.");
+      return;
+    }
+
+    // console.log(recipientEmails);
+    emailjs
+      .send(
+        "service_ng8k2bc", // Your service ID
+        "template_bowryek", // Your template ID
+        {
+          to_name: "Group",
+          from_name: "CodeCollab Team",
+          message: "You’ve been invited to join the room CodeCollab123!",
+          to_email: recipientEmails.join(", "), // Join the array into a comma-separated string
+        },
+        "W66kHP4-mU-MLTK7X" // Your public key
+      )
+      .then((response) => {
+        console.log("✅ Email sent!", response.status, response.text);
+        alert("Invites sent successfully!");
+      })
+      .catch((err) => {
+        console.error("❌ Failed to send email:", err);
+      });
+  };
+  // console.log(user.uid);
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -251,9 +298,7 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
         </button>
         <h2>Invite Friends to Room</h2>
         <form onSubmit={handleSendDirectInvite} className="direct-invite-form">
-          <label htmlFor="direct-invite-input">
-            Invite by Email
-          </label>
+          <label htmlFor="direct-invite-input">Invite by Email</label>
           <div className="direct-invite-input-group">
             <input
               id="direct-invite-input"
@@ -305,6 +350,15 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
         >
           Send Invites ({selectedFriends.length})
         </button>
+        {/* Conditional rendering for the email invite button */}
+        {user?.uid === "8ZD0wcOL4FWXimv4LvMOMaqSXVA3" && (
+          <button
+            onClick={handleSendInvitesEmail}
+            className="invite-send-btn primary-btn"
+          >
+            Send Invites through Email({selectedFriends.length})
+          </button>
+        )}
       </div>
     </div>
   );
