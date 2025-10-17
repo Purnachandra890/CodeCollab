@@ -543,7 +543,7 @@ const RoomPage = () => {
           onClick={() => setActiveTab("Members")}
           className={`tab-btn ${activeTab === "Members" && "active"}`}
         >
-          Members
+          Members ({members.length})
         </button>
         <button
           onClick={() => setActiveTab("Requests")}
