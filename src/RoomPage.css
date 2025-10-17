@@ -21,6 +21,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow-x: hidden;
 }
 
 /* --- Room Header --- */
@@ -167,7 +168,9 @@
 .table-scroll-container {
   flex-grow: 1; /* Allows this container to grow and fill remaining space */
   overflow-y: auto; /* This is the key: makes the container vertically scrollable */
+  overflow-x: auto;
   min-height: 0; /* Prevents flexbox from overriding the height and causing overflow */
+  scrollbar-width: none;
 }
 .problems-table thead {
   position: sticky;
@@ -436,7 +439,7 @@
   }
 
   .room-tabs {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   /* 4. Ensure buttons and tabs are sized correctly */
@@ -508,4 +511,16 @@
   color: #555;       /* A slightly lighter color also makes it look more subtle */
   margin-top: 10px;   /* Adds a little space above the message */
   text-align: center; /* Optional: centers the text */
+}
+
+/* Hide scrollbar visually for room-tabs and room-header-actions */
+.room-tabs,
+.room-header-actions {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.room-tabs::-webkit-scrollbar,
+.room-header-actions::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
 }

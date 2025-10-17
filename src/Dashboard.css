@@ -514,10 +514,10 @@ body {
 
 /* 1. Mobile-only hamburger button (hidden on desktop) */
 .mobile-hamburger-btn {
-  display: none; /* Hidden by default */
+  display: none; 
   position: fixed;
-  top: 35px;
-  left: 15px;
+  top: 0.8rem;
+  left: 1rem;
   z-index: 1001; /* Above everything */
   background: white;
   color: #111827;
