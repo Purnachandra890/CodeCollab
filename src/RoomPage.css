@@ -25,6 +25,8 @@
 
 /* --- Room Header --- */
 .room-header {
+  /* border: 2px solid red; */
+  margin-top: -20px;
   flex-shrink: 0;
 }
 .room-header h1 {
@@ -75,7 +77,7 @@
 /* --- Tabs --- */
 .room-tabs {
   display: flex;
-  margin-top: 32px;
+  margin-top: 15px;
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
 }
@@ -114,7 +116,7 @@
 .tab-content {
   display: flex;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: 12px;
   flex-grow: 1;
   overflow-y: auto;
   min-height: 0;
@@ -500,4 +502,10 @@
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
+}
+.message{
+  font-size: 0.8rem;  /* This makes it 80% of the default font size */
+  color: #555;       /* A slightly lighter color also makes it look more subtle */
+  margin-top: 10px;   /* Adds a little space above the message */
+  text-align: center; /* Optional: centers the text */
 }

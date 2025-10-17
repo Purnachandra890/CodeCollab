@@ -386,6 +386,9 @@ const RoomPage = () => {
                 </tbody>
               </table>
             </div>
+            <div className="message">
+              <p>Help your peers learn! If you find a great YouTube explanation for a problem, please use the Edit icon to add the link.</p>
+            </div>
           </div>
         );
       case "Leaderboard":
