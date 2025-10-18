@@ -260,9 +260,13 @@
   }
 
   .welcome-message {
-    padding-left: 0; /* Remove desktop padding */
+    padding-left: 0; 
   }
 
+ .main-header .welcome-message h2,
+  .main-header .welcome-message p {
+    margin-left: 0; 
+  }
   .user-profile {
     margin: 0; /* Remove the top margin that pushed it down */
   }
