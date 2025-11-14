@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { auth, db } from "./firebase";
+import { auth, db } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../../AuthContext";
 import "./Dashboard.css";
 import {
   collection,
@@ -249,7 +249,7 @@ Thank you.
               <p>Enter a name for your new room to get started.</p>
               <input
                 type="text"
-                placeholder="e.g., Q4 Marketing Sync"
+                placeholder="e.g., Linked List"
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 required

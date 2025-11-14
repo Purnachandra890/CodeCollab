@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { collection, query, where, getDocs, updateDoc, doc, arrayUnion } from "firebase/firestore";
-import { db, auth } from "./firebase"; // Make sure auth is exported from your firebase config
+import { db, auth } from "../../firebase"; // Make sure auth is exported from your firebase config
 import "./JoinRoom.css"; // Import the new CSS file
 
 // --- Icon Components ---

@@ -1,7 +1,7 @@
 // ChatMessage.jsx - Replace the entire file with this
 
 import React, { useEffect, useState, useRef } from "react";
-import { db } from "./firebase";
+import { db } from "../../firebase";
 import {
   collection,
   onSnapshot,
@@ -12,7 +12,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../../AuthContext";
 import { useParams, Link } from "react-router-dom";
 import "./ChatMessage.css";
 

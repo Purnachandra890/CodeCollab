@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { auth, db } from "./firebase"; // 🧠 Make sure both are exported from firebase.js
+import { auth, db } from "../../firebase"; // 🧠 Make sure both are exported from firebase.js
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import "./Login.css";

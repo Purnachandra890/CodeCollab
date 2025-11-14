@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db } from "./firebase";
+import { db } from "../../../firebase";
 import {
   collection,
   doc,
@@ -11,7 +11,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { useParams } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../../../AuthContext";
 import axios from "axios";
 import "./LeaderBoard.css";
 

@@ -1,7 +1,7 @@
 // ProblemList.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { db } from "./firebase";
+import { db } from "../../firebase";
 import {
   collection,
   onSnapshot,
@@ -11,7 +11,7 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../../AuthContext";
 import { useParams, Link } from "react-router-dom";
 import "./ProblemList.css";
 

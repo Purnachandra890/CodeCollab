@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "./AuthContext";
-import { db } from "./firebase";
+import { useAuth } from "../../AuthContext";
+import { db } from "../../firebase";
 import {
   collection,
   doc,
@@ -18,10 +18,10 @@ import {
   where,
 } from "firebase/firestore";
 import "./RoomPage.css";
-import Leaderboard from "./LeaderBoard";
-import RequestsTab from "./RequestsTab";
-import FriendsTab from "./FriendsTab";
-import InviteFriendsModal from "./InviteFriendsModal"; // <-- Import the modal component
+import Leaderboard from "./LeaderBoard/LeaderBoard";
+import RequestsTab from "./RequestsTab/RequestsTab";
+import FriendsTab from "./FriendsTab/FriendsTab";
+import InviteFriendsModal from "./InviteFriendsModal/InviteFriendsModal"; // <-- Import the modal component
 
 // --- Icon Components ---
 const YouTubeIcon = () => (

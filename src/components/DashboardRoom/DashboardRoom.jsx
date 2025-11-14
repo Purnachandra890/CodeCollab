@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { auth, db } from "./firebase";
+import { auth, db } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../../AuthContext";
 import "./DashboardRoom.css";
 import {
   collection,
@@ -13,7 +13,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import RoomInvitesCard from "./RoomInvitesCard";
+import RoomInvitesCard from "./components/RoomInvitesCard";
 
 export default function DashboardRoom() {
   const { user } = useAuth(); //  Get current user

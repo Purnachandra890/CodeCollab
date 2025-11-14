@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot, setDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { auth, db } from "../../firebase";
 import "./EditProfile.css"; // Import the new CSS file
 
 export default function EditProfile() {

@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./Login";
-import Dashboard from "./Dashboard";
-import ProtectedRoute from "./ProtectedRoute";
-import JoinRoomByInvite from "./JoinRoomByInvite";
-import RoomPage from "./RoomPage";
-import ProblemList from "./ProblemList";
-import LeaderBoard from "./LeaderBoard";
-import ChatMessage from "./ChatMessage";
-import DashboardRoom from "./DashboardRoom";
+// login page
+import LoginPage from "./pages/Login/Login";
+// Dadshboard
+import Dashboard from "./pages/Dashboard/Dashboard";
+// ProtectedRoute
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+// JoinRoomByInvite
+import JoinRoomByInvite from "./pages/JoinRoomByInvite/JoinRoomByInvite";
+// RoomPage
+import RoomPage from "./components/RoomPage/RoomPage";
+// ProblemList
+import ProblemList from "./pages/ProblemList/ProblemList";
+// LeaderBoard
+import LeaderBoard from "./components/RoomPage/LeaderBoard/LeaderBoard";
+// ChatMessage
+import ChatMessage from "./pages/ChatMessage/ChatMessage";
+import DashboardRoom from "./components/DashboardRoom/DashboardRoom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
-import EditProfile from "./EditProfile";
+// EditProfile
+import EditProfile from "./pages/EditProfile/EditProfile";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

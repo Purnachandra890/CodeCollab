@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { db } from "./firebase";
+import { db } from "../../../firebase";
 import {
   doc,
   getDoc,
@@ -12,10 +12,10 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
-import "./RoomPage.css";
+import "../RoomPage.css";
 import "./InviteFriendsModal.css";
 import emailjs from "emailjs-com";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../../../AuthContext";
 
 // A simple loading spinner component
 const Spinner = () => (
