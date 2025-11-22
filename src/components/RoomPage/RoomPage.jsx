@@ -168,6 +168,8 @@ const RoomPage = () => {
   const [friends, setFriends] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
   const [pendingRequestCount, setPendingRequestCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false); // <-- Already here
   const navigate = useNavigate();
   const defaultPhoto =
@@ -250,6 +252,23 @@ const RoomPage = () => {
       unsubIncomingRequests();
     };
   }, [user]);
+
+  useEffect(() => {
+    if (!roomId || !user?.uid) return;
+
+    const roomRef = doc(db, "rooms", roomId);
+
+    const unsub = onSnapshot(roomRef, (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        const unreadCounts = data.unreadCounts || {};
+
+        setUnreadCount(unreadCounts[user.uid] || 0);
+      }
+    });
+
+    return () => unsub();
+  }, [roomId, user]);
 
   const handleSaveProblem = async ({ link, youtubeLink }) => {
     try {
@@ -387,7 +406,10 @@ const RoomPage = () => {
               </table>
             </div>
             <div className="message">
-              <p>Help your peers learn! If you find a great YouTube explanation for a problem, please use the Edit icon to add the link.</p>
+              <p>
+                Help your peers learn! If you find a great YouTube explanation
+                for a problem, please use the Edit icon to add the link.
+              </p>
             </div>
           </div>
         );
@@ -516,11 +538,15 @@ const RoomPage = () => {
             <ListIcon /> My Personal List
           </button>
           <button
-            className="primary-btn"
+            className="primary-btn chat-btn-with-badge"
             onClick={() => navigate(`/room/${roomId}/chatMessages`)}
           >
             <ChatIcon /> Open Room Chat
+            {unreadCount > 0 && (
+              <span className="chat-badge">{unreadCount}</span>
+            )}
           </button>
+
           <button
             className="secondary-btn"
             onClick={() => setIsInviteModalOpen(true)}

@@ -524,3 +524,19 @@
 .room-header-actions::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
+
+
+.chat-btn-with-badge {
+  position: relative;
+}
+
+.chat-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 3px 7px;
+  border-radius: 50%;
+}
