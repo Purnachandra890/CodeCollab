@@ -45,7 +45,7 @@ body {
   padding: 24px 12px;
   display: flex;
   flex-direction: column; /* This is already here, which is correct */
-  height: 100vh;         /* <-- ADD THIS CRUCIAL LINE */
+  height: 100vh; /* <-- ADD THIS CRUCIAL LINE */
   transition: width 0.3s ease-in-out;
   flex-shrink: 0;
   position: relative;
@@ -64,6 +64,7 @@ body {
   width: 10px; /* keeps hamburger visible */
   align-items: center;
 }
+
 .sidebar.closed .hamburger-btn {
   color: black;
   background-color: white;
@@ -71,6 +72,7 @@ body {
   margin-left: 0%;
   position: relative;
   z-index: 11;
+  margin-left: -5px;
 }
 
 /* Sidebar header */
@@ -95,12 +97,31 @@ body {
   font-size: 1.5rem;
   cursor: pointer;
 }
-
 .sidebar-header {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 32px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .sidebar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .sidebar-header h1 {
+    position: static;
+    margin: 0;
+  }
+
+  /* Keep logo at left */
+  .sidebar-header svg {
+    position: absolute;
+    left: 15px;
+  }
 }
 
 .sidebar-header h1 {
@@ -165,9 +186,9 @@ body {
 .sidebar-footer {
   display: flex;
   flex-direction: column;
-  gap: 16px; 
+  gap: 16px;
   margin-top: auto;
-  padding-top: 16px; 
+  padding-top: 16px;
 }
 .sidebar-footer .sidebar-btn {
   width: 100%;
@@ -183,9 +204,9 @@ body {
 .sidebar-footer .logout-btn:hover {
   background-color: #4b5563;
 }
-.modal-actions{
+.modal-actions {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
 }
 /* --- Main Content Styles --- */
 /* Find this rule and REMOVE the flex-grow line */
@@ -514,7 +535,7 @@ body {
 
 /* 1. Mobile-only hamburger button (hidden on desktop) */
 .mobile-hamburger-btn {
-  display: none; 
+  display: none;
   position: fixed;
   top: 0.8rem;
   left: 1rem;
@@ -529,7 +550,6 @@ body {
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   /* border: 2px solid red; */
-
 }
 
 /* 2. Overlay for dimming the background on mobile */
@@ -576,7 +596,6 @@ body {
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
     overflow-y: auto;
-    
   }
 
   /* Slide the sidebar into view when open */
@@ -592,22 +611,6 @@ body {
   }
 
   /* --- TITLE CENTERING --- */
-  .sidebar-header {
-    /* Create a positioning context for the title */
-    position: relative;
-  }
-
-  .sidebar-header h1 {
-    /* Position the title absolutely within the header */
-    position: absolute;
-    left: 50%;
-
-    /* This transform trick ensures it's perfectly centered */
-    transform: translateX(-50%);
-
-    /* Remove any default margins that might affect positioning */
-    margin: 0;
-  }
 }
 /* --- Custom Scrollbar Styles for the Sidebar --- */
 
@@ -630,7 +633,7 @@ body {
 /* The draggable scrolling handle */
 .your-rooms-section::-webkit-scrollbar-thumb {
   background-color: #4b5563; /* A muted gray that matches your footer buttons */
-  border-radius: 10px;       /* Makes the scrollbar thumb rounded */
+  border-radius: 10px; /* Makes the scrollbar thumb rounded */
   border: 2px solid #1f2937; /* Creates a padding effect */
 }
 
@@ -638,3 +641,45 @@ body {
 .your-rooms-section::-webkit-scrollbar-thumb:hover {
   background-color: #6b7280; /* A slightly lighter gray for interactivity */
 }
+
+/* Desktop only invite badge */
+
+.dashboard-title-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dashboard-invite-badge {
+  position: absolute;
+  top: -6px;
+  right: -35px;
+
+  background-color: #e50914;
+  color: white;
+
+  font-size: 8px;
+  font-weight: bold;
+  padding: 0.5px 6px;
+
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure badge NEVER appears on mobile */
+/* Mobile version of the same badge (text, smaller) */
+@media (max-width: 768px) {
+
+  .dashboard-invite-badge {
+    display: inline-flex;
+
+    top: -6px;
+    right: -36px;   /* you can adjust this */
+    
+    font-size: 9px;
+    padding: 2px 6px;
+
+    border-radius: 10px;
+  }
+}
+
+

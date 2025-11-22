@@ -474,6 +474,12 @@
     grid-template-columns: 1fr;
   }
 }
+@media (max-width: 768px) {
+  .room-header-actions {
+    overflow: visible !important;   /* VERY IMPORTANT */
+  }
+}
+
 
 /* --- Members Tab Styles --- */
 .add-friend-btn {
@@ -529,14 +535,27 @@
 .chat-btn-with-badge {
   position: relative;
 }
-
 .chat-badge {
   position: absolute;
-  top: -6px;
-  right: -8px;
+  top: -4px;
+  right: -4px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0;
+
   background: red;
   color: white;
-  font-size: 12px;
-  padding: 3px 7px;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   border-radius: 50%;
+  border: 2px solid white; /* creates clean outline */
+
+  z-index: 10;
 }

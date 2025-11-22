@@ -14,6 +14,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
+import { onSnapshot } from "firebase/firestore";
 
 // Icon components for better readability
 const LogoIcon = () => (
@@ -35,6 +36,7 @@ const Dashboard = () => {
   const [roomName, setRoomName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [hasNewInvites, setHasNewInvites] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const isMobile = window.innerWidth <= 768;
@@ -69,28 +71,44 @@ const Dashboard = () => {
   //   fetchUserRooms();
   // }, [user]);
 
-   useEffect(() => {
-  const fetchUserRooms = async () => {
-    if (!user) return;
-    try {
-      const q = query(
-        collection(db, "rooms"),
-        where("members", "array-contains", user.uid),
-        orderBy("createdAt", "desc") // Add this line to order by creation date descending
-      );
-      const querySnapshot = await getDocs(q);
-      const rooms = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
-      }));
-      setUserRooms(rooms);
-    } catch (error) {
-      console.error("Error fetching user rooms:", error);
-    }
-  };
-  fetchUserRooms();
-}, [user]);
+  useEffect(() => {
+    const fetchUserRooms = async () => {
+      if (!user) return;
+      try {
+        const q = query(
+          collection(db, "rooms"),
+          where("members", "array-contains", user.uid),
+          orderBy("createdAt", "desc") // Add this line to order by creation date descending
+        );
+        const querySnapshot = await getDocs(q);
+        const rooms = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
+        }));
+        setUserRooms(rooms);
+      } catch (error) {
+        console.error("Error fetching user rooms:", error);
+      }
+    };
+    fetchUserRooms();
+  }, [user]);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    const q = query(
+      collection(db, "room_invites"),
+      where("receiverId", "==", user.uid),
+      where("status", "==", "pending")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setHasNewInvites(snapshot.size > 0);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -180,10 +198,18 @@ Thank you.
         <div className="sidebar-header">
           <LogoIcon />
           {isSidebarOpen && (
-            <h1 onClick={() => handleNavigate("/dashboard/rooms")}>
-              Dashboard
-            </h1>
+            <div className="dashboard-title-container">
+              <h1 onClick={() => handleNavigate("/dashboard/rooms")}>
+                Dashboard
+              </h1>
+
+              {hasNewInvites && (
+                <span className="dashboard-invite-badge">Invites</span>
+              )}
+
+            </div>
           )}
+
           <button className="hamburger-btn" onClick={toggleSidebar}>
             ☰
           </button>
