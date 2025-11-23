@@ -415,14 +415,14 @@ const RoomPage = () => {
 
                       <td className="actions-cell">
                         <button
-                          className="action-icon-btn"
+                          className="action-icon-btn edit"
                           title="Edit"
                           onClick={() => openModal(p)}
                         >
                           <EditIcon />
                         </button>
                         <button
-                          className="action-icon-btn"
+                          className="action-icon-btn delete"
                           title="Delete"
                           onClick={() => handleDeleteProblem(p.id)}
                         >

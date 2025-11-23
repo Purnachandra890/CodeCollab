@@ -211,7 +211,7 @@
   display: flex;
   /* margin-left: 2.5rem; */
   justify-content: start;
-  align-items: center;    /* Centers vertically */
+  align-items: center; /* Centers vertically */
   /* border: 2px solid red; */
 }
 .actions-cell {
@@ -231,6 +231,22 @@
 .action-icon-btn:hover {
   color: var(--primary-blue);
   background-color: #eef2ff;
+}
+.edit {
+  color: #3b82f6; /* Blue icon */
+  background-color: #eff6ff;
+}
+.edit:hover {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+.delete {
+  color: #ef4444; /* Red icon */
+  background-color: #fef2f2;
+}
+.delete:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
 }
 
 /* --- Members Tab --- */
@@ -476,10 +492,9 @@
 }
 @media (max-width: 768px) {
   .room-header-actions {
-    overflow: visible !important;   /* VERY IMPORTANT */
+    overflow: visible !important; /* VERY IMPORTANT */
   }
 }
-
 
 /* --- Members Tab Styles --- */
 .add-friend-btn {
@@ -512,10 +527,10 @@
   font-size: 0.75rem;
   font-weight: 600;
 }
-.message{
-  font-size: 0.8rem;  /* This makes it 80% of the default font size */
-  color: #555;       /* A slightly lighter color also makes it look more subtle */
-  margin-top: 10px;   /* Adds a little space above the message */
+.message {
+  font-size: 0.8rem; /* This makes it 80% of the default font size */
+  color: #555; /* A slightly lighter color also makes it look more subtle */
+  margin-top: 10px; /* Adds a little space above the message */
   text-align: center; /* Optional: centers the text */
 }
 
@@ -530,7 +545,6 @@
 .room-header-actions::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
-
 
 .chat-btn-with-badge {
   position: relative;
@@ -560,13 +574,12 @@
   z-index: 10;
 }
 
-
 .leetcode-cell {
   text-align: center;
 }
 
 .leetcode-logo {
-  width: 27px;        /* adjust size */
+  width: 27px; /* adjust size */
   height: 27px;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -576,7 +589,7 @@
   transform: scale(1.1);
 }
 .youtube-logo {
-  width: 21px;     /* change size here */
+  width: 21px; /* change size here */
   height: 21px;
   cursor: pointer;
   transition: transform 0.2s ease;
