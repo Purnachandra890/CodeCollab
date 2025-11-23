@@ -97,7 +97,7 @@ const InviteIcon = () => (
 );
 
 // --- Add/Edit Problem Modal ---
-const ProblemModal = ({ isOpen, onClose, onSave, problem }) => {
+const ProblemModal = ({ isOpen, onClose, onSave, problem, isSaving }) => {
   const [link, setLink] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
 
@@ -149,8 +149,12 @@ const ProblemModal = ({ isOpen, onClose, onSave, problem }) => {
               onChange={(e) => setYoutubeLink(e.target.value)}
             />
           </div>
-          <button type="submit" className="modal-submit-btn">
-            {problem ? "Save Changes" : "Add Problem"}
+          <button
+            type="submit"
+            className="modal-submit-btn"
+            disabled={isSaving}
+          >
+            {isSaving ? "Adding..." : problem ? "Save Changes" : "Add Problem"}
           </button>
         </form>
       </div>
@@ -172,7 +176,7 @@ const RoomPage = () => {
   const [sentRequests, setSentRequests] = useState([]);
   const [pendingRequestCount, setPendingRequestCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
-
+  const [isSaving, setIsSaving] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false); // <-- Already here
   const navigate = useNavigate();
   const defaultPhoto =
@@ -275,6 +279,7 @@ const RoomPage = () => {
 
   const handleSaveProblem = async ({ link, youtubeLink }) => {
     try {
+      setIsSaving(true);
       const normalized = normalizeLink(link);
       const slug = extractTitleFromLink(normalized);
 
@@ -306,6 +311,8 @@ const RoomPage = () => {
       closeModal();
     } catch (error) {
       console.error("Error saving problem:", error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -548,6 +555,7 @@ const RoomPage = () => {
         onClose={closeModal}
         onSave={handleSaveProblem}
         problem={editingProblem}
+        isSaving={isSaving}
       />
       {/* NEW: Render the InviteFriendsModal */}
       <InviteFriendsModal
