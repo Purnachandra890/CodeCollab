@@ -585,3 +585,12 @@
 .youtube-logo:hover {
   transform: scale(1.1);
 }
+.youtube-cell {
+  text-align: center;
+}
+
+.no-video {
+  font-size: 18px;
+  color: #999;
+  font-weight: bold;
+}

@@ -392,8 +392,8 @@ const RoomPage = () => {
                       </td>
 
                       {/* YouTube Column */}
-                      <td>
-                        {p.youtubeLink && (
+                      <td className="youtube-cell">
+                        {p.youtubeLink ? (
                           <a
                             href={p.youtubeLink}
                             target="_blank"
@@ -406,6 +406,8 @@ const RoomPage = () => {
                               className="youtube-logo"
                             />
                           </a>
+                        ) : (
+                          <span className="no-video">{"--"}</span>
                         )}
                       </td>
 
