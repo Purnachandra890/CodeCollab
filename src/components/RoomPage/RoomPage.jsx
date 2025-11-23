@@ -4,6 +4,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import { db } from "../../firebase";
+import leetcodeLogo from "../../assets/leetcode.png"; // adjust path if needed
+import youtubeLogo from "../../assets/youtube.png"; // adjust path if needed
+
 import {
   collection,
   doc,
@@ -353,6 +356,7 @@ const RoomPage = () => {
                 <thead>
                   <tr>
                     <th>Problem Title</th>
+                    <th>LeetCode</th>
                     <th>Link</th>
                     <th>Added By</th>
                     <th>Actions</th>
@@ -370,6 +374,24 @@ const RoomPage = () => {
                           {p.title}
                         </a>
                       </td>
+
+                      {/* NEW: LeetCode Logo Column */}
+                      <td className="leetcode-cell">
+                        <a
+                          href={p.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={leetcodeLogo}
+                            alt="LeetCode"
+                            className="leetcode-logo"
+                            title="Solve problems on LeetCode"
+                          />
+                        </a>
+                      </td>
+
+                      {/* YouTube Column */}
                       <td>
                         {p.youtubeLink && (
                           <a
@@ -377,13 +399,18 @@ const RoomPage = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             title="Watch Solution on YouTube"
-                            className="youtube-link-icon" // Use a class for styling
                           >
-                            <YouTubeIcon />
+                            <img
+                              src={youtubeLogo}
+                              alt="YouTube"
+                              className="youtube-logo"
+                            />
                           </a>
                         )}
                       </td>
+
                       <td>{p.addedBy}</td>
+
                       <td className="actions-cell">
                         <button
                           className="action-icon-btn"

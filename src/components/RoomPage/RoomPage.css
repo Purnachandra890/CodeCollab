@@ -559,3 +559,29 @@
 
   z-index: 10;
 }
+
+
+.leetcode-cell {
+  text-align: center;
+}
+
+.leetcode-logo {
+  width: 27px;        /* adjust size */
+  height: 27px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.leetcode-logo:hover {
+  transform: scale(1.1);
+}
+.youtube-logo {
+  width: 21px;     /* change size here */
+  height: 21px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.youtube-logo:hover {
+  transform: scale(1.1);
+}
