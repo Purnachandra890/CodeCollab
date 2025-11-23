@@ -1,8 +1,18 @@
+html, body {
+  overflow-x: hidden;
+}
+
+#root, .dashboard, .main-content {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+
 /* General Main Content Styles */
 .main-content {
   /* border: 2px solid green; */
   padding: 2rem;
-  width: 100vw-20;
+   width: 100% !important;
   height: calc(
     100vh - 125px
   ); /*"Full window height" − "Header height" = Remaining area for content.*/
@@ -100,15 +110,20 @@
 
 /* Rooms Grid */
 .rooms-grid {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
-  flex-wrap: wrap; /* allows wrapping on smaller screens */
+  padding: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
 }
+
 
 /* Room Card Styles */
 .room-card {
+  width: 100%; /* ✅ Same width for all cards */
+  height: 220px; /* ✅ Same height for all cards */
+  max-width: 350px;
   background-color: #ffffff;
   border-radius: 12px;
   padding: 1.5rem;
@@ -130,6 +145,10 @@
 .card-header h3 {
   margin: 0;
   font-size: 1.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* ✅ Adds ... */
+  max-width: 200px;
 }
 
 .card-header p {
@@ -232,7 +251,7 @@
 
 .dashboard {
   margin-left: 10px;
-  width: 100vw-20;
+  width: 100% !important;
   /* border: 2px solid green; */
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -260,12 +279,12 @@
   }
 
   .welcome-message {
-    padding-left: 0; 
+    padding-left: 0;
   }
 
- .main-header .welcome-message h2,
+  .main-header .welcome-message h2,
   .main-header .welcome-message p {
-    margin-left: 0; 
+    margin-left: 0;
   }
   .user-profile {
     margin: 0; /* Remove the top margin that pushed it down */

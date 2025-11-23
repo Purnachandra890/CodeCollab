@@ -14,6 +14,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import RoomInvitesCard from "./components/RoomInvitesCard";
+import { orderBy } from "firebase/firestore";
 
 export default function DashboardRoom() {
   const { user } = useAuth(); //  Get current user
@@ -68,13 +69,14 @@ export default function DashboardRoom() {
         }
         const q = query(
           collection(db, "rooms"),
-          where("members", "array-contains", user.uid)
+          where("members", "array-contains", user.uid),
+          orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(q);
         const rooms = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
+          createdAt: doc.data().createdAt?.toDate().toLocaleDateString("en-GB"),
         }));
         setUserRooms(rooms);
         //  Delay hiding the loading message for 0.5s
