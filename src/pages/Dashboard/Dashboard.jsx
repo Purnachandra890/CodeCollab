@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { onSnapshot } from "firebase/firestore";
+import { useLocation } from "react-router-dom";
 
 // Icon components for better readability
 const LogoIcon = () => (
@@ -44,33 +45,15 @@ const Dashboard = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  const location = useLocation();
+  // Extract roomId from URL like: /dashboard/room/abc123
+  const currentRoomId = location.pathname.split("/dashboard/room/")[1];
+
   useEffect(() => {
     if (isMobile) {
       setIsSidebarOpen(false);
     }
   }, [isMobile]);
-
-  // useEffect(() => {
-  //   const fetchUserRooms = async () => {
-  //     if (!user) return;
-  //     try {
-  //       const q = query(
-  //         collection(db, "rooms"),
-  //         where("members", "array-contains", user.uid)
-  //       );
-  //       const querySnapshot = await getDocs(q);
-  //       const rooms = querySnapshot.docs.map((doc) => ({
-  //         id: doc.id,
-  //         ...doc.data(),
-  //         createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
-  //       }));
-  //       setUserRooms(rooms);
-  //     } catch (error) {
-  //       console.error("Error fetching user rooms:", error);
-  //     }
-  //   };
-  //   fetchUserRooms();
-  // }, [user]);
 
   useEffect(() => {
     const fetchUserRooms = async () => {
@@ -148,7 +131,7 @@ const Dashboard = () => {
         createdAt: new Date().toLocaleDateString(),
       };
       // setUserRooms((prev) => [...prev, newRoom]);
-      setUserRooms((prev) => [newRoom,...prev]);
+      setUserRooms((prev) => [newRoom, ...prev]);
       setRoomName("");
       setIsModalOpen(false);
     } catch (error) {
@@ -238,6 +221,7 @@ Thank you.
                   <li
                     key={room.id}
                     onClick={() => handleNavigate(`/dashboard/room/${room.id}`)}
+                    className={room.id === currentRoomId ? "active-room" : ""}
                   >
                     {room.name}
                   </li>

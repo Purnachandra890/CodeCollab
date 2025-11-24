@@ -170,6 +170,10 @@ body {
 }
 
 .room-list li {
+  white-space: nowrap;        /* ✅ Prevent text from going to new line */
+  overflow: hidden;           /* ✅ Hide overflow text */
+  text-overflow: ellipsis;    /* ✅ Show ... */
+  max-width: 100%;            /* ✅ Important for ellipsis */
   padding: 10px;
   border-radius: 6px;
   cursor: pointer;
@@ -683,3 +687,9 @@ body {
 }
 
 
+
+.room-list li.active-room {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-left: 3px solid #3b82f6;
+  font-weight: 600;
+}
