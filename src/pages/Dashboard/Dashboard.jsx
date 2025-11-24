@@ -37,6 +37,7 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [hasNewInvites, setHasNewInvites] = useState(false);
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const isMobile = window.innerWidth <= 768;
@@ -125,8 +126,13 @@ const Dashboard = () => {
       alert("Please enter a room name.");
       return;
     }
-    const inviteCode = uuidv4().slice(0, 8);
+
+    // Stop if already creating
+    if (isCreatingRoom) return;
+
     try {
+      setIsCreatingRoom(true);
+      const inviteCode = uuidv4().slice(0, 8);
       const docRef = await addDoc(collection(db, "rooms"), {
         name: roomName,
         adminId: user.uid,
@@ -141,12 +147,15 @@ const Dashboard = () => {
         adminId: user.uid,
         createdAt: new Date().toLocaleDateString(),
       };
-      setUserRooms((prev) => [...prev, newRoom]);
+      // setUserRooms((prev) => [...prev, newRoom]);
+      setUserRooms((prev) => [newRoom,...prev]);
       setRoomName("");
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error creating room:", error);
       alert("Failed to create room.");
+    } finally {
+      setIsCreatingRoom(false);
     }
   };
 
@@ -206,7 +215,6 @@ Thank you.
               {hasNewInvites && (
                 <span className="dashboard-invite-badge">Invites</span>
               )}
-
             </div>
           )}
 
@@ -279,9 +287,14 @@ Thank you.
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 required
+                disabled={isCreatingRoom}
               />
-              <button type="submit" className="modal-submit-btn">
-                Create Room
+              <button
+                type="submit"
+                className="modal-submit-btn"
+                disabled={isCreatingRoom}
+              >
+                {isCreatingRoom ? "Creating..." : "Create Room"}
               </button>
             </form>
           </div>
