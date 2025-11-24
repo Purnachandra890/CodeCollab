@@ -34,6 +34,33 @@ export const useRoomProblems = (roomId, user) => {
     }
   };
 
+  // ✅ YouTube validation (optional field)
+  const isValidYoutubeLink = (url) => {
+    if (!url || url.trim() === "") return true; // ✅ allow empty
+
+    try {
+      const parsed = new URL(url);
+
+      const validDomains = ["youtube.com", "www.youtube.com", "youtu.be"];
+
+      if (!validDomains.includes(parsed.hostname)) {
+        return false;
+      }
+
+      if (parsed.hostname.includes("youtube.com")) {
+        return parsed.searchParams.has("v");
+      }
+
+      if (parsed.hostname === "youtu.be") {
+        return parsed.pathname.length > 1;
+      }
+
+      return false;
+    } catch (err) {
+      return false;
+    }
+  };
+
   const saveProblem = async (problem, editingProblem) => {
     try {
       setIsSaving(true);
@@ -46,11 +73,17 @@ export const useRoomProblems = (roomId, user) => {
         return;
       }
 
+      // ✅ Correct validation usage
+      if (!isValidYoutubeLink(problem.youtubeLink)) {
+        alert("Please enter a valid YouTube video link.");
+        return;
+      }
+
       const problemToSave = {
         title: slug,
         titleSlug: slug,
         link: normalized,
-        youtubeLink: problem.youtubeLink || null,
+        youtubeLink: problem.youtubeLink?.trim() || null,
       };
 
       if (editingProblem) {
@@ -66,6 +99,7 @@ export const useRoomProblems = (roomId, user) => {
           createdAt: serverTimestamp(),
         });
       }
+
     } catch (err) {
       console.error(err);
     } finally {
