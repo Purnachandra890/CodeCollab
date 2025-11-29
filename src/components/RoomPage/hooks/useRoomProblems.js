@@ -61,12 +61,26 @@ export const useRoomProblems = (roomId, user) => {
     }
   };
 
+  async function fetchDifficultyFromAPI(slug) {
+    try {
+      const url = `https://leetcode-api-xesz.onrender.com/select?titleSlug=${slug}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data?.difficulty || "Unknown";
+    } catch (error) {
+      console.log("Fetch failed:", error);
+      return "Unknown";
+    }
+  }
+
   const saveProblem = async (problem, editingProblem) => {
     try {
       setIsSaving(true);
 
       const normalized = normalizeLink(problem.link);
       const slug = extractTitleFromLink(normalized);
+
+      const difficulty = await fetchDifficultyFromAPI(slug);
 
       if (!slug) {
         alert("Invalid LeetCode link");
@@ -84,6 +98,7 @@ export const useRoomProblems = (roomId, user) => {
         titleSlug: slug,
         link: normalized,
         youtubeLink: problem.youtubeLink?.trim() || null,
+        difficulty: difficulty,
       };
 
       if (editingProblem) {
@@ -99,7 +114,6 @@ export const useRoomProblems = (roomId, user) => {
           createdAt: serverTimestamp(),
         });
       }
-
     } catch (err) {
       console.error(err);
     } finally {

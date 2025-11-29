@@ -38,15 +38,32 @@ const TrashIcon = () => (
   </svg>
 );
 
-/**
- * ProblemsTab
- * props:
- *  - problems: array of problem objects
- *  - onAddProblem: () => void        (opens modal in "add" mode)
- *  - onEditProblem: (problem) => void
- *  - onDeleteProblem: (problemId) => void
- */
-const ProblemsTab = ({ problems, onAddProblem, onEditProblem, onDeleteProblem }) => {
+function getDifficultyColor(difficulty) {
+  switch (difficulty) {
+    case "Easy":
+      return "#22c55e";
+    case "Medium":
+      return "#eab308";
+    case "Hard":
+      return "#ef4444";
+    default:
+      return "#6b7280";
+  }
+}
+
+function getDifficultyClass(level) {
+  if (level === "Easy") return "difficulty-easy";
+  if (level === "Medium") return "difficulty-medium";
+  if (level === "Hard") return "difficulty-hard";
+  return "";
+}
+
+const ProblemsTab = ({
+  problems,
+  onAddProblem,
+  onEditProblem,
+  onDeleteProblem,
+}) => {
   return (
     <div className="problems-container card">
       <div className="problems-header">
@@ -61,6 +78,7 @@ const ProblemsTab = ({ problems, onAddProblem, onEditProblem, onDeleteProblem })
           <thead>
             <tr>
               <th>Problem Title</th>
+              <th>Difficulty</th>
               <th>LeetCode</th>
               <th>Link</th>
               <th>Added By</th>
@@ -75,6 +93,16 @@ const ProblemsTab = ({ problems, onAddProblem, onEditProblem, onDeleteProblem })
                   <a href={p.link} target="_blank" rel="noopener noreferrer">
                     {p.title}
                   </a>
+                </td>
+
+                <td className="px-6 py-4">
+                  <span
+                    className={`difficulty-badge ${getDifficultyClass(
+                      p.difficulty
+                    )}`}
+                  >
+                    {p.difficulty}
+                  </span>
                 </td>
 
                 {/* LeetCode Logo column */}
@@ -138,8 +166,8 @@ const ProblemsTab = ({ problems, onAddProblem, onEditProblem, onDeleteProblem })
       {/* Bottom helper message */}
       <div className="message">
         <p>
-          Help your peers learn! If you find a great YouTube explanation
-          for a problem, please use the Edit icon to add the link.
+          Help your peers learn! If you find a great YouTube explanation for a
+          problem, please use the Edit icon to add the link.
         </p>
       </div>
     </div>
