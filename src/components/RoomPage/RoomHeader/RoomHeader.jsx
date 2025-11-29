@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../AuthContext";
 
 /* Icons moved here */
 const ListIcon = () => (
@@ -20,18 +21,21 @@ const InviteIcon = () => (
   </svg>
 );
 
-const RoomHeader = ({
-  room,
-  roomId,
-  unreadCount,
-  setIsInviteModalOpen
-}) => {
+const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <header className="room-header">
-      <h1>{room.name}</h1>
-      <p className="room-description">{room.description}</p>
+      <div className="name-profile">
+        <h1>{room.name}</h1>
+        <img
+          src={user?.photoURL || defaultPhoto}
+          alt="User"
+          onError={(e) => (e.target.src = defaultPhoto)}
+          className="logo"
+        />
+      </div>
 
       <div className="room-header-actions">
         <button
@@ -46,9 +50,7 @@ const RoomHeader = ({
           onClick={() => navigate(`/room/${roomId}/chatMessages`)}
         >
           <ChatIcon /> Open Room Chat
-          {unreadCount > 0 && (
-            <span className="chat-badge">{unreadCount}</span>
-          )}
+          {unreadCount > 0 && <span className="chat-badge">{unreadCount}</span>}
         </button>
 
         <button
