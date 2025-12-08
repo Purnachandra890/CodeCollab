@@ -487,10 +487,7 @@
   .problems-table td {
     padding: 12px;
   }
-  .problems-table th:nth-child(2),
-  .problems-table td:nth-child(2) {
-    display: none;
-  }
+  
 
   /* 6. Fix for the tab-content overflow */
   .tab-content {
@@ -650,4 +647,96 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+  /* Hide ADDED BY column completely */
+  .problems-table th:nth-child(5),
+  .problems-table td:nth-child(5) {
+    display: none !important;
+  }
+  .problems-table th:nth-child(3),
+  .problems-table td:nth-child(3) {
+    display: none !important;
+  }
+  .problems-table th:nth-child(6),
+  .problems-table td:nth-child(6) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Force table to behave properly on smaller screens */
+  .problems-table {
+    table-layout: fixed;   /* Prevent columns from stretching unevenly */
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* Adjust column widths so table fits in mobile without shift */
+  .problems-table td:first-child,
+  .problems-table th:first-child {
+    width: 55%;   /* Title column takes main space */
+  }
+
+  .problems-table td:nth-child(2),
+  .problems-table th:nth-child(2) {
+    width: 30%;   /* Difficulty column */
+    text-align: center;
+  }
+
+  .problems-table td:nth-child(3),
+  .problems-table th:nth-child(3) {
+    width: 10%;   /* YouTube link column */
+    text-align: center;
+  }
+}
+@media (max-width: 768px) {
+
+  /* Convert header top row into a 3-column grid */
+  .name-profile {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* left | center | right */
+    align-items: center;
+    width: 100%;
+  }
+
+  /* Center the title in the middle column */
+  .name-profile h1 {
+    grid-column: 2;  /* center column */
+    text-align: center;
+    margin: 0 auto;
+    font-size: 1.4rem;
+    white-space: nowrap;
+  }
+
+  /* Keep profile image on the far right */
+  .name-profile .logo {
+    grid-column: 3;
+    justify-self: end;
+  }
+  .room-header {
+    margin-top: 0rem !important;   /* Add space from top */
+    /* padding-top: 10px;             Extra spacing for breathing room */
+  }
+}
+@media (max-width: 768px) {
+
+  /* Fix header overflow & auto horizontal scroll */
+  .room-header-actions {
+    display: flex;       
+    justify-content: center;   /* <-- Center buttons nicely */
+    gap: 10px;                 /* Spacing between buttons */
+    width: 100%;
+    padding: 10px 0;
+    
+  }
+
+  /* Buttons automatically shrink on mobile */
+  .room-header-actions .primary-btn,
+  .room-header-actions .secondary-btn {
+    flex: 1 1 calc(50% - 20px);  /* 2 buttons per row automatically */
+    min-width: 130px;           /* Prevent super tiny buttons */
+    text-align: center;
+    white-space: nowrap;
+  }
 }

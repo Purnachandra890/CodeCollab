@@ -49,7 +49,7 @@ const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
           className="primary-btn chat-btn-with-badge"
           onClick={() => navigate(`/room/${roomId}/chatMessages`)}
         >
-          <ChatIcon /> Open Room Chat
+          <ChatIcon />Room Chat
           {unreadCount > 0 && <span className="chat-badge">{unreadCount}</span>}
         </button>
 
