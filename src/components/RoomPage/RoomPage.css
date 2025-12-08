@@ -645,3 +645,9 @@
   background-color: #fee2e2; /* red-100 */
   color: #991b1b; /* red-800 */
 }
+.problems-table td:first-child {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

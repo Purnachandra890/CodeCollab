@@ -111,9 +111,9 @@ export default function LeaderBoard() {
           `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`,
           `https://leetcode-api-xesz.onrender.com/${leetcodeUsername}/acSubmission`,
         ];
-        
+
         const res = await fetchWithFailover(endpoints);
-        
+
         const submissions = Array.isArray(res.data?.submission)
           ? res.data.submission
           : [];
@@ -154,7 +154,10 @@ export default function LeaderBoard() {
           await Promise.all(updates);
         }
       } catch (err) {
-        console.error("Error syncing LeetCode submissions from all servers:", err);
+        console.error(
+          "Error syncing LeetCode submissions from all servers:",
+          err
+        );
       }
     };
 
@@ -189,21 +192,19 @@ export default function LeaderBoard() {
           problemsSnap.docs.forEach((problemDoc) => {
             const problem = problemDoc.data();
             if (!problem.completedBy) return;
-            Object.entries(problem.completedBy).forEach(
-              ([uid, timestamp]) => {
-                if (!userStats[uid]) return;
-                userStats[uid].completed += 1;
-                const activityDate = timestamp?.toDate
-                  ? timestamp.toDate()
-                  : null;
-                if (
-                  !userStats[uid].lastActivity ||
-                  activityDate > userStats[uid].lastActivity
-                ) {
-                  userStats[uid].lastActivity = activityDate;
-                }
+            Object.entries(problem.completedBy).forEach(([uid, timestamp]) => {
+              if (!userStats[uid]) return;
+              userStats[uid].completed += 1;
+              const activityDate = timestamp?.toDate
+                ? timestamp.toDate()
+                : null;
+              if (
+                !userStats[uid].lastActivity ||
+                activityDate > userStats[uid].lastActivity
+              ) {
+                userStats[uid].lastActivity = activityDate;
               }
-            );
+            });
           });
 
           const finalData = await Promise.all(
@@ -241,17 +242,73 @@ export default function LeaderBoard() {
     return () => unsubscribeRoom();
   }, [roomId]);
 
+  // const formatDate = (date) => {
+  //   if (!date) return "No Activity";
+  //   console.log(new Intl.DateTimeFormat("en-US", {
+  //     year: "numeric",
+  //     month: "numeric",
+  //     day: "numeric",
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     second: "numeric",
+  //     hour12: true,
+  //   }).format(date));
+  //   return new Intl.DateTimeFormat("en-US", {
+  //     year: "numeric",
+  //     month: "numeric",
+  //     day: "numeric",
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     second: "numeric",
+  //     hour12: true,
+  //   }).format(date);
+  // };
+
+  // const formatDate = (date) => {
+  //   console.log("Raw LastActivity:", date);
+  //   if (!date) return "No Activity";
+
+  //   console.log(
+  //     new Intl.DateTimeFormat("en-GB", {
+  //       year: "numeric",
+  //       month: "2-digit",
+  //       day: "2-digit",
+  //       hour: "numeric",
+  //       minute: "numeric",
+  //       second: "numeric",
+  //       hour12: true,
+  //     }).format(date)
+  //   );
+  //   return new Intl.DateTimeFormat("en-GB", {
+  //     year: "numeric",
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     second: "numeric",
+  //     hour12: true,
+  //   }).format(date);
+  // };
+
   const formatDate = (date) => {
     if (!date) return "No Activity";
-    return new Intl.DateTimeFormat("en-US", {
+
+    const options = {
+      day: "2-digit",
+      month: "short",
       year: "numeric",
-      month: "numeric",
-      day: "numeric",
       hour: "numeric",
       minute: "numeric",
-      second: "numeric",
       hour12: true,
-    }).format(date);
+    };
+
+    // Create formatted parts
+    const formatted = new Intl.DateTimeFormat("en-GB", options).format(date);
+
+    // formatted 👉 "17 Oct 2025, 7:16 pm"
+    // We convert "," into " · " and uppercase PM/AM
+
+    return formatted.replace(",", " · ").toUpperCase();
   };
 
   const topThree = leaderboard.slice(0, 3);
