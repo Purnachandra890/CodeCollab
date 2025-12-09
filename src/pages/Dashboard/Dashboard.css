@@ -613,7 +613,9 @@ body {
     width: 260px !important;
     transform: translateX(-100%);
   }
-
+  .mobile-hamburger-btn {
+    top: 1.8rem;
+  }
   /* --- TITLE CENTERING --- */
 }
 /* --- Custom Scrollbar Styles for the Sidebar --- */
