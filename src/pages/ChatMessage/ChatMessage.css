@@ -1,4 +1,17 @@
 /* ChatMessage.css */
+:root {
+  /* For Chrome & iOS notch safe areas */
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
+
+body, html {
+  padding-top: env(safe-area-inset-top);
+  margin: 0;
+  height: 100%;
+}
+
+
 
 .chat-container {
   display: flex;
@@ -7,16 +20,26 @@
   background-color: white;
   animation: fadeIn 0.3s ease-in-out;
 }
+.chat-header {
+  z-index: 999; /* keep above messages */
+}
+
 
 /* --- Chat Header (Fixed Top) --- */
 .chat-header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: white;
+
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px 24px;
+
+  padding: calc(16px + var(--safe-top)) 24px 16px 24px;
   border-bottom: 1px solid var(--border-color);
-  flex-shrink: 0;
 }
+
 .back-to-room-link-chat {
   display: flex;
   align-items: center;
