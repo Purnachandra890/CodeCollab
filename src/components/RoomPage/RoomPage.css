@@ -739,4 +739,17 @@
     text-align: center;
     white-space: nowrap;
   }
+  .name-profile {
+    flex-direction: column; /* stack name + profile vertically */
+    align-items: center; /* center both */
+    gap: 10px;
+    margin-top: 10px; /* gives spacing from top */
+  }
+
+  .name-profile h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    white-space: normal; /* allow wrapping */
+    word-break: break-word; /* break long titles */
+  }
 }
