@@ -77,6 +77,7 @@ const ProblemsTab = ({
         <table className="problems-table">
           <thead>
             <tr>
+              <th>S.No</th>
               <th>Problem Title</th>
               <th>Difficulty</th>
               <th>LeetCode</th>
@@ -86,8 +87,9 @@ const ProblemsTab = ({
             </tr>
           </thead>
           <tbody>
-            {problems.map((p) => (
+            {problems.map((p,index) => (
               <tr key={p.id}>
+                <td>{index+1}</td>
                 {/* Title column (click opens problem link) */}
                 <td>
                   <a href={p.link} target="_blank" rel="noopener noreferrer">

@@ -487,7 +487,6 @@
   .problems-table td {
     padding: 12px;
   }
-  
 
   /* 6. Fix for the tab-content overflow */
   .tab-content {
@@ -649,49 +648,63 @@
   text-overflow: ellipsis;
 }
 @media (max-width: 768px) {
-  /* Hide ADDED BY column completely */
-  .problems-table th:nth-child(5),
-  .problems-table td:nth-child(5) {
+
+  /* Hide S.No column */
+  .problems-table th:nth-child(1),
+  .problems-table td:nth-child(1) {
     display: none !important;
   }
-  .problems-table th:nth-child(3),
-  .problems-table td:nth-child(3) {
+
+  /* Hide LeetCode column */
+  .problems-table th:nth-child(4),
+  .problems-table td:nth-child(4) {
     display: none !important;
   }
+
+  /* Hide Added By column */
   .problems-table th:nth-child(6),
   .problems-table td:nth-child(6) {
     display: none !important;
   }
+
+  /* Hide Actions column */
+  .problems-table th:nth-child(7),
+  .problems-table td:nth-child(7) {
+    display: none !important;
+  }
 }
 
+
 @media (max-width: 768px) {
-  /* Force table to behave properly on smaller screens */
+
+  /* Fix mobile column widths AFTER hiding S.No, LC, AddedBy, Actions */
   .problems-table {
-    table-layout: fixed;   /* Prevent columns from stretching unevenly */
+    table-layout: fixed;
     width: 100%;
-    border-collapse: collapse;
   }
 
-  /* Adjust column widths so table fits in mobile without shift */
-  .problems-table td:first-child,
-  .problems-table th:first-child {
-    width: 55%;   /* Title column takes main space */
+  /* Title column (now 2nd column) */
+  .problems-table th:nth-child(2),
+  .problems-table td:nth-child(2) {
+    width: 65%; 
   }
 
-  .problems-table td:nth-child(2),
-  .problems-table th:nth-child(2) {
-    width: 30%;   /* Difficulty column */
+  /* Difficulty (now 3rd visible column) */
+  .problems-table th:nth-child(3),
+  .problems-table td:nth-child(3) {
+    width: 25%;
     text-align: center;
   }
 
-  .problems-table td:nth-child(3),
-  .problems-table th:nth-child(3) {
-    width: 10%;   /* YouTube link column */
+  /* YouTube column */
+  .problems-table th:nth-child(4),
+  .problems-table td:nth-child(4) {
+    width: 10%;
     text-align: center;
   }
 }
-@media (max-width: 768px) {
 
+@media (max-width: 768px) {
   /* Convert header top row into a 3-column grid */
   .name-profile {
     display: grid;
@@ -702,7 +715,7 @@
 
   /* Center the title in the middle column */
   .name-profile h1 {
-    grid-column: 2;  /* center column */
+    grid-column: 2; /* center column */
     text-align: center;
     margin: 0 auto;
     font-size: 1.4rem;
@@ -715,27 +728,25 @@
     justify-self: end;
   }
   .room-header {
-    margin-top: 0rem !important;   /* Add space from top */
+    margin-top: 0rem !important; /* Add space from top */
     /* padding-top: 10px;             Extra spacing for breathing room */
   }
 }
 @media (max-width: 768px) {
-
   /* Fix header overflow & auto horizontal scroll */
   .room-header-actions {
-    display: flex;       
-    justify-content: center;   /* <-- Center buttons nicely */
-    gap: 10px;                 /* Spacing between buttons */
+    display: flex;
+    justify-content: center; /* <-- Center buttons nicely */
+    gap: 10px; /* Spacing between buttons */
     width: 100%;
-    padding: 10px 0;
-    
+    padding: 9px 0;
   }
 
   /* Buttons automatically shrink on mobile */
   .room-header-actions .primary-btn,
   .room-header-actions .secondary-btn {
-    flex: 1 1 calc(50% - 20px);  /* 2 buttons per row automatically */
-    min-width: 130px;           /* Prevent super tiny buttons */
+    flex: 1 1 calc(50% - 20px); /* 2 buttons per row automatically */
+    min-width: 130px; /* Prevent super tiny buttons */
     text-align: center;
     white-space: nowrap;
   }
