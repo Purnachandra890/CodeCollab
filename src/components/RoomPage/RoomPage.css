@@ -704,63 +704,27 @@
   }
 }
 
-@media (max-width: 768px) {
-  /* Convert header top row into a 3-column grid */
-  .name-profile {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr; /* left | center | right */
-    align-items: center;
-    width: 100%;
-  }
-
-  /* Center the title in the middle column */
-  .name-profile h1 {
-    grid-column: 2; /* center column */
-    text-align: center;
-    margin: 0 auto;
-    font-size: 1.4rem;
-    white-space: nowrap;
-  }
-
-  /* Keep profile image on the far right */
-  .name-profile .logo {
-    grid-column: 3;
-    justify-self: end;
-  }
-  .room-header {
-    margin-top: 0rem !important; /* Add space from top */
-    /* padding-top: 10px;             Extra spacing for breathing room */
-  }
+.name-profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
+
+.right-side-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 @media (max-width: 768px) {
-  /* Fix header overflow & auto horizontal scroll */
-  .room-header-actions {
-    display: flex;
-    justify-content: center; /* <-- Center buttons nicely */
-    gap: 10px; /* Spacing between buttons */
-    width: 100%;
-    padding: 9px 0;
-  }
-
-  /* Buttons automatically shrink on mobile */
-  .room-header-actions .primary-btn,
-  .room-header-actions .secondary-btn {
-    flex: 1 1 calc(50% - 20px); /* 2 buttons per row automatically */
-    min-width: 130px; /* Prevent super tiny buttons */
-    text-align: center;
-    white-space: nowrap;
-  }
   .name-profile {
-    flex-direction: column; /* stack name + profile vertically */
-    align-items: center; /* center both */
+    flex-direction: column;
     gap: 10px;
-    margin-top: 10px; /* gives spacing from top */
   }
 
-  .name-profile h1 {
-    text-align: center;
-    font-size: 1.4rem;
-    white-space: normal; /* allow wrapping */
-    word-break: break-word; /* break long titles */
+  .right-side-group {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }

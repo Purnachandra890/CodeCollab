@@ -4,22 +4,31 @@ import { useAuth } from "../../../AuthContext";
 
 /* Icons moved here */
 const ListIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"></path>
+  <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M4 10.5c-.83 0-1.5.67-1.5 1.5S3.17 13.5 4 13.5 5.5 12.83 5.5 12 4.83 10.5 4 10.5zm0-6C3.17 4.5 2.5 5.17 2.5 6S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.67-1.5 1.5S3.17 19.5 4 19.5 5.5 18.83 5.5 18 4.83 16.5 4 16.5zM8 6h12v2H8V6zm0 6h12v2H8v-2zm0 6h12v2H8v-2z"/>
   </svg>
 );
 
+
 const ChatIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M20 2H4C2.9 2 2 2.9 2 4V18L6 14H20C21.1 14 22 13.1 22 12V4C22 2.9 21.1 2 20 2Z" />
+  <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
   </svg>
 );
 
 const InviteIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M16 11h-3V8h-2v3H8v2h3v3h2v-3h3v-2zM21 17h-2v2h-2v-2h-2v-2h2v-2h2v2h2v2zM12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+  <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 
+             5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 
+             2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 
+             8s1.34 3 3 3zm8 2c-1.33 0-4 .67-4 
+             2v2h8v-2c0-1.33-2.67-2-4-2zm-8 
+             0c-1.33 0-4 .67-4 
+             2v2h8v-2c0-1.33-2.67-2-4-2z"/>
   </svg>
 );
+
+
 
 const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
   const navigate = useNavigate();
@@ -28,37 +37,41 @@ const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
   return (
     <header className="room-header">
       <div className="name-profile">
-        <h1>{room.name}</h1>
-        <img
-          src={user?.photoURL || defaultPhoto}
-          alt="User"
-          onError={(e) => (e.target.src = defaultPhoto)}
-          className="logo"
-        />
-      </div>
+        <h1 className="room-title">{room.name}</h1>
 
-      <div className="room-header-actions">
-        <button
-          className="secondary-btn"
-          onClick={() => navigate(`/room/${roomId}/problems`)}
-        >
-          <ListIcon /> My Personal List
-        </button>
+        <div className="right-side-group">
+          <button
+            className="secondary-btn"
+            onClick={() => navigate(`/room/${roomId}/problems`)}
+          >
+            <ListIcon /> My Problems
+          </button>
 
-        <button
-          className="primary-btn chat-btn-with-badge"
-          onClick={() => navigate(`/room/${roomId}/chatMessages`)}
-        >
-          <ChatIcon />Room Chat
-          {unreadCount > 0 && <span className="chat-badge">{unreadCount}</span>}
-        </button>
+          <button
+            className="primary-btn chat-btn-with-badge"
+            onClick={() => navigate(`/room/${roomId}/chatMessages`)}
+          >
+            <ChatIcon />
+            Chat
+            {unreadCount > 0 && (
+              <span className="chat-badge">{unreadCount}</span>
+            )}
+          </button>
 
-        <button
-          className="secondary-btn"
-          onClick={() => setIsInviteModalOpen(true)}
-        >
-          <InviteIcon /> Invite Friends
-        </button>
+          <button
+            className="secondary-btn"
+            onClick={() => setIsInviteModalOpen(true)}
+          >
+            <InviteIcon /> Invite
+          </button>
+
+          <img
+            src={user?.photoURL || defaultPhoto}
+            alt="User"
+            className="logo"
+            onError={(e) => (e.target.src = defaultPhoto)}
+          />
+        </div>
       </div>
     </header>
   );
