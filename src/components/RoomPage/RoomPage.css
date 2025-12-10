@@ -31,7 +31,6 @@
   flex-shrink: 0;
 }
 .name-profile {
-  /* border: 2px solid green; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -449,13 +448,6 @@
     height: auto;
   }
 
-  /* 2. Center the room name */
-  .room-header h1 {
-    text-align: center;
-    font-size: 1.5rem;
-    margin-top: 1rem; /* Add some space from the top */
-  }
-
   /* 3. Make buttons and tabs horizontally scrollable */
   .room-header-actions,
   .room-tabs {
@@ -648,7 +640,6 @@
   text-overflow: ellipsis;
 }
 @media (max-width: 768px) {
-
   /* Hide S.No column */
   .problems-table th:nth-child(1),
   .problems-table td:nth-child(1) {
@@ -674,9 +665,7 @@
   }
 }
 
-
 @media (max-width: 768px) {
-
   /* Fix mobile column widths AFTER hiding S.No, LC, AddedBy, Actions */
   .problems-table {
     table-layout: fixed;
@@ -686,7 +675,7 @@
   /* Title column (now 2nd column) */
   .problems-table th:nth-child(2),
   .problems-table td:nth-child(2) {
-    width: 65%; 
+    width: 65%;
   }
 
   /* Difficulty (now 3rd visible column) */
@@ -716,15 +705,43 @@
   align-items: center;
   gap: 12px;
 }
-
 @media (max-width: 768px) {
+  .room-header {
+    margin-top: 0.2rem;
+  }
+  /* Hide profile image */
+  .name-profile .logo {
+    display: none !important;
+  }
+
+  /* Make title take full width and appear ABOVE the buttons */
   .name-profile {
-    flex-direction: column;
+    flex-direction: column !important;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Center the title */
+  .name-profile h1 {
+    width: 100%;
+    text-align: center;
+    font-size: 1.4rem;
+    margin: 0;
+    margin-bottom: 8px; /* space between title and buttons */
+  }
+
+  /* Place buttons BELOW the title as a new line */
+  .room-header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
     gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 0; /* remove extra spacing */
   }
 
   .right-side-group {
-    flex-wrap: wrap;
-    justify-content: center;
+    /* border: 2px solid green; */
+    margin-top: 1rem;
   }
 }
