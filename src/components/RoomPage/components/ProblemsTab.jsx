@@ -1,5 +1,5 @@
 // src/components/RoomPage/components/ProblemsTab.jsx
-import React from "react";
+import React, { useState } from "react";
 import leetcodeLogo from "../../../assets/leetcode.png";
 import youtubeLogo from "../../../assets/youtube.png";
 
@@ -64,6 +64,7 @@ const ProblemsTab = ({
   onEditProblem,
   onDeleteProblem,
 }) => {
+  const [hoveredId, setHoveredId] = useState(null);
   return (
     <div className="problems-container card">
       <div className="problems-header">
@@ -87,14 +88,39 @@ const ProblemsTab = ({
             </tr>
           </thead>
           <tbody>
-            {problems.map((p,index) => (
+            {problems.map((p, index) => (
               <tr key={p.id}>
-                <td>{index+1}</td>
+                <td>{index + 1}</td>
                 {/* Title column (click opens problem link) */}
-                <td>
-                  <a href={p.link} target="_blank" rel="noopener noreferrer">
-                    {p.title}
-                  </a>
+                <td style={{ position: "relative" }}>
+                  <div
+                    className="problem-hover-wrapper"
+                    onMouseEnter={() => setHoveredId(p.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                  >
+                    <a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="problem-title"
+                    >
+                      {p.title}
+                    </a>
+
+                    {hoveredId === p.id && p.problemStatement && (
+                      <div
+                        className="problem-tooltip-fixed"
+                        onMouseEnter={() => setHoveredId(p.id)}
+                        onMouseLeave={() => setHoveredId(null)}
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: p.problemStatement,
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </td>
 
                 <td className="px-6 py-4">

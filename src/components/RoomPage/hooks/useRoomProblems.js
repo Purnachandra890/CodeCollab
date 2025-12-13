@@ -66,10 +66,16 @@ export const useRoomProblems = (roomId, user) => {
       const url = `https://leetcode-api-xesz.onrender.com/select?titleSlug=${slug}`;
       const res = await fetch(url);
       const data = await res.json();
-      return data?.difficulty || "Unknown";
+      return {
+        difficulty: data?.difficulty || "Unknown",
+        statement: data?.question || "", // ✅ problem statement
+      };
     } catch (error) {
       console.log("Fetch failed:", error);
-      return "Unknown";
+      return {
+        difficulty: "Unknown",
+        statement: "",
+      };
     }
   }
 
@@ -80,7 +86,7 @@ export const useRoomProblems = (roomId, user) => {
       const normalized = normalizeLink(problem.link);
       const slug = extractTitleFromLink(normalized);
 
-      const difficulty = await fetchDifficultyFromAPI(slug);
+      const {difficulty, statement} = await fetchDifficultyFromAPI(slug);
 
       if (!slug) {
         alert("Invalid LeetCode link");
@@ -99,6 +105,7 @@ export const useRoomProblems = (roomId, user) => {
         link: normalized,
         youtubeLink: problem.youtubeLink?.trim() || null,
         difficulty: difficulty,
+        problemStatement: statement,
       };
 
       if (editingProblem) {
