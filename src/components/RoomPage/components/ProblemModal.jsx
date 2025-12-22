@@ -5,23 +5,26 @@ import React, { useState, useEffect } from "react";
 const ProblemModal = ({ isOpen, onClose, onSave, problem, isSaving }) => {
   const [link, setLink] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
+  const [difficulty, setDifficulty] = useState("Easy");
 
   // When opening the modal, pre-fill fields if editing
   useEffect(() => {
     if (problem) {
       setLink(problem.link || "");
       setYoutubeLink(problem.youtubeLink || "");
+      setDifficulty(problem.difficulty || "Easy");
     } else {
       setLink("");
       setYoutubeLink("");
+      setDifficulty("Easy");
     }
   }, [problem, isOpen]);
 
   if (!isOpen) return null;
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    await onSave({ link, youtubeLink });
+    await onSave({ link, youtubeLink, difficulty });
     onClose();
   };
 
@@ -45,6 +48,19 @@ const ProblemModal = ({ isOpen, onClose, onSave, problem, isSaving }) => {
               onChange={(e) => setLink(e.target.value)}
               required
             />
+          </div>
+          <div className="form-group">
+            <label htmlFor="difficulty">Difficulty (Optional For Leetcode)</label>
+            <select
+              id="difficulty"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+            >
+              {/* <option value="" disabled>Select difficulty</option> */}
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
           </div>
 
           <div className="form-group">

@@ -10,10 +10,13 @@ import {
   getDoc,
   query,
   orderBy,
+  serverTimestamp,
 } from "firebase/firestore";
 import { useAuth } from "../../AuthContext";
 import { useParams, Link } from "react-router-dom";
 import "./ProblemList.css";
+import GfgInfoBox from './components/GfgInfoBox'
+
 
 // ----- Icons -----
 const BackArrowIcon = () => (
@@ -111,6 +114,42 @@ export default function ProblemList() {
   const [solvedSlugs, setSolvedSlugs] = useState([]);
   const [leetcodeUsername, setLeetcodeUsername] = useState(null);
 
+  const [gfgUsername, setGfgUsername] = useState(null);
+  const [gfgSolvedSlugs, setGfgSolvedSlugs] = useState([]);
+  const [loadingGfg, setLoadingGfg] = useState(false);
+
+  const [canRefreshGfg, setCanRefreshGfg] = useState(false);
+  const [nextRefreshIn, setNextRefreshIn] = useState(null);
+
+  const gfgSolvedSet = React.useMemo(
+    () => new Set(gfgSolvedSlugs),
+    [gfgSolvedSlugs]
+  );
+
+  const CACHE_DURATION = 30 * 60 * 1000; // 1 hour 30 minutes
+  // checkGfgCacheStatus
+  const checkGfgCacheStatus = (cache) => {
+    if (!cache?.lastFetchedAt) {
+      setCanRefreshGfg(true);
+      setNextRefreshIn(null);
+      return;
+    }
+
+    const lastFetched = cache.lastFetchedAt.toMillis();
+    const now = Date.now();
+    const diff = now - lastFetched;
+
+    if (diff >= CACHE_DURATION) {
+      // Cache expired
+      setCanRefreshGfg(true);
+      setNextRefreshIn(null);
+    } else {
+      // Cache still valid
+      setCanRefreshGfg(false);
+      setNextRefreshIn(CACHE_DURATION - diff);
+    }
+  };
+
   // Load room name + problems
   useEffect(() => {
     if (!roomId) return;
@@ -143,6 +182,21 @@ export default function ProblemList() {
     load();
   }, [user?.uid]);
 
+  // Load GFG username once from users/{uid}
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    const load = async () => {
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists()) {
+        setGfgUsername(snap.data().gfgUsername || null);
+      } else {
+        setGfgUsername(null);
+      }
+    };
+    load();
+  }, [user?.uid]);
+
   // Fetch solved slugs when username is available (WITH FAILOVER)
   useEffect(() => {
     if (!leetcodeUsername) return;
@@ -170,9 +224,9 @@ export default function ProblemList() {
           `https://leetcode-api-xesz.onrender.com/${leetcodeUsername}/acSubmission`,
           `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`,
         ];
-        
+
         const res = await fetchWithFailover(endpoints);
-        
+
         const arr = Array.isArray(res.data?.submission)
           ? res.data.submission
           : [];
@@ -226,6 +280,23 @@ export default function ProblemList() {
     doSync();
   }, [problems, solvedSlugs, roomId, user]);
 
+  useEffect(() => {
+    if (!nextRefreshIn) return;
+
+    const interval = setInterval(() => {
+      setNextRefreshIn((prev) => {
+        if (prev <= 1000) {
+          setCanRefreshGfg(true);
+          clearInterval(interval);
+          return null;
+        }
+        return prev - 1000;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [nextRefreshIn]);
+
   // UI status
   const completedCount = problems.filter((p) => {
     const slug = getProblemSlug(p);
@@ -236,14 +307,144 @@ export default function ProblemList() {
   const progressPercentage =
     totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
+  const fetchGfgSolved = async (force = false) => {
+    if (!gfgUsername || !user?.uid) return;
+
+    // 🔒 HARD LOCK (MOST IMPORTANT)
+    if (loadingGfg) {
+      console.log("Blocked duplicate click");
+      return;
+    }
+
+    try {
+      setLoadingGfg(true);
+
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      const cache = snap.data()?.gfgCache;
+
+      //  Use cache if allowed
+      if (!force && cache?.slugs && cache?.lastFetchedAt) {
+        const lastFetched = cache.lastFetchedAt.toMillis();
+        const now = Date.now();
+
+        if (now - lastFetched < CACHE_DURATION) {
+          setGfgSolvedSlugs(cache.slugs);
+          return;
+        }
+      }
+
+      // 🚀 API call
+      // console.log("api calling...");
+      const res = await axios.post(
+        "https://gfg-api-55gh.onrender.com/api/gfg/solved",
+        {
+          handle: gfgUsername,
+          year: "",
+          month: "",
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      if (res.data?.success) {
+        setGfgSolvedSlugs(res.data.slugs || []);
+
+        // ✅ Save cache
+        await updateDoc(userRef, {
+          gfgCache: {
+            slugs: res.data.slugs || [],
+            lastFetchedAt: serverTimestamp(),
+          },
+        });
+
+        // 🔁 Update UI timer immediately
+        checkGfgCacheStatus({
+          lastFetchedAt: { toMillis: () => Date.now() },
+        });
+      }
+    } catch (e) {
+      if (e.response?.status === 429) {
+        const msg =
+          e.response.data?.error ||
+          "Too many requests. Please try again later.";
+
+        alert(msg);
+
+        // Lock refresh button temporarily
+        setCanRefreshGfg(false);
+        setNextRefreshIn(30 * 1000); // 15 minutes
+      } else {
+        console.error("❌ GFG fetch failed", e);
+      }
+    } finally {
+      setLoadingGfg(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!gfgUsername || !user?.uid) return;
+
+    const checkAndFetch = async () => {
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      const cache = snap.data()?.gfgCache;
+
+      if (cache?.slugs) {
+        // ✅ ONLY USE CACHE
+        setGfgSolvedSlugs(cache.slugs || []);
+        checkGfgCacheStatus(cache);
+        console.log(" Using cached GFG data");
+      } else {
+        setCanRefreshGfg(true);
+      }
+    };
+
+    checkAndFetch();
+  }, [gfgUsername, user?.uid]);
+
+  const formatTime = (ms) => {
+    const totalSeconds = Math.ceil(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   return (
     <div className="personal-list-container">
       <header className="personal-list-header">
         <Link to={`/dashboard/room/${roomId}`} className="back-to-room-link">
           <BackArrowIcon /> Back to {roomName}
         </Link>
-        <h1>My Personal Problem List</h1>
+        <GfgInfoBox />
+        <div className="gfg">
+          <h1>My Personal Problem List</h1>
+          <div className="gfg-refresh-bar">
+            <button
+              className={`refresh-btn ${!canRefreshGfg ? "disabled" : ""}`}
+              disabled={!canRefreshGfg || loadingGfg}
+              onClick={() => fetchGfgSolved(true)}
+            >
+              {loadingGfg ? "Refreshing…" : "Refresh GFG Data"}
+            </button>
+
+            {!canRefreshGfg && nextRefreshIn && (
+              <div className="refresh-timer">
+                Available in {formatTime(nextRefreshIn)}
+              </div>
+            )}
+          </div>
+        </div>
       </header>
+
+      {!gfgUsername && (
+        <div className="notification-message">
+          <p>
+            Please enter your GeeksforGeeks username to enable GFG
+            auto-detection.
+          </p>
+        </div>
+      )}
 
       <div className="progress-card card">
         <div className="progress-header">
@@ -263,15 +464,21 @@ export default function ProblemList() {
       <div className="problem-list-items">
         {problems.map((problem) => {
           const slug = getProblemSlug(problem);
-          const isCompleted =
-            problem?.completedBy?.[user?.uid] ||
-            (slug && solvedSlugs.includes(slug));
+
+          // 1️⃣ User-confirmed completion (source of truth)
+          const isCompleted = !!problem?.completedBy?.[user?.uid];
+
+          // 2️⃣ LeetCode auto-detection (trusted)
+          const solvedByLeetCode = slug && solvedSlugs.includes(slug);
+
+          // 3️⃣ GFG detection (NOT trusted, needs confirmation)
+          const detectedInGfg = slug && gfgSolvedSet.has(slug);
 
           return (
             <div
               key={problem.id}
               className={`problem-item-card card ${
-                isCompleted ? "completed" : "todo"
+                isCompleted || solvedByLeetCode ? "completed" : "todo"
               }`}
             >
               <div className="problem-item-info">
@@ -285,11 +492,29 @@ export default function ProblemList() {
                   View Problem <RightArrowIcon />
                 </a>
               </div>
+
               <div className="problem-item-action">
-                {isCompleted ? (
+                {isCompleted || solvedByLeetCode ? (
                   <span className="completed-label">
                     <CheckIcon /> Completed
                   </span>
+                ) : detectedInGfg ? (
+                  <div style={{ textAlign: "right" }}>
+                    <button
+                      className="confirm-btn"
+                      onClick={async () => {
+                        await updateDoc(
+                          doc(db, "rooms", roomId, "problems", problem.id),
+                          {
+                            [`completedBy.${user.uid}`]: true,
+                          }
+                        );
+                      }}
+                    >
+                      Confirm Completion
+                    </button>
+                    <div className="detected-text">Detected from GFG</div>
+                  </div>
                 ) : (
                   <span className="todo-label">To Do</span>
                 )}

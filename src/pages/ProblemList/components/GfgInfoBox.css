@@ -1,0 +1,80 @@
+/* ===== GFG Info Box ===== */
+.gfg-fixed-box {
+  position: fixed;
+  right: 2.5rem;
+  top: 4rem;
+  width: 260px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/* Header */
+.gfg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #166534;
+}
+
+/* Arrow */
+.gfg-arrow {
+  transition: transform 0.25s ease;
+  font-size: 14px;
+}
+
+.gfg-arrow.open {
+  transform: rotate(90deg);
+}
+
+/* Content */
+.gfg-content {
+  padding: 0 14px 14px;
+  font-size: 0.85rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* ========================= */
+/* ===== RESPONSIVE ======== */
+/* ========================= */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .gfg-fixed-box {
+    right: 1.5rem;
+    width: 230px;
+  }
+}
+
+/* Mobile screens */
+@media (max-width: 768px) {
+  .gfg-fixed-box {
+    position: static;        /* 🔑 stop fixed */
+    width: 100%;
+    margin: 12px 0;
+    box-shadow: none;
+    border-radius: 10px;
+  }
+}
+/* Tip box inside GFG info */
+.gfg-tip-box {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-left: 4px solid #22c55e; /* green */
+  background: #ecfdf5; /* light green */
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: #065f46;
+}
+
+.gfg-tip-box p {
+  margin: 4px 0 0;
+  line-height: 1.4;
+}

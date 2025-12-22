@@ -6,6 +6,7 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
+  getDocs,
   serverTimestamp,
 } from "firebase/firestore";
 
@@ -79,32 +80,101 @@ export const useRoomProblems = (roomId, user) => {
     }
   }
 
+  // const saveProblem = async (problem, editingProblem) => {
+  //   try {
+  //     setIsSaving(true);
+
+  //     const normalized = normalizeLink(problem.link);
+  //     const slug = extractTitleFromLink(normalized);
+
+  //     const {difficulty, statement} = await fetchDifficultyFromAPI(slug);
+
+  //     if (!slug) {
+  //       alert("Invalid LeetCode link");
+  //       return;
+  //     }
+
+  //     // ✅ Correct validation usage
+  //     if (!isValidYoutubeLink(problem.youtubeLink)) {
+  //       alert("Please enter a valid YouTube video link.");
+  //       return;
+  //     }
+
+  //     const problemToSave = {
+  //       title: slug,
+  //       titleSlug: slug,
+  //       link: normalized,
+  //       youtubeLink: problem.youtubeLink?.trim() || null,
+  //       difficulty: difficulty,
+  //       problemStatement: statement,
+  //     };
+
+  //     if (editingProblem) {
+  //       await updateDoc(
+  //         doc(db, "rooms", roomId, "problems", editingProblem.id),
+  //         problemToSave
+  //       );
+  //     } else {
+  //       await addDoc(collection(db, "rooms", roomId, "problems"), {
+  //         ...problemToSave,
+  //         addedBy: user.name,
+  //         addedById: user.uid,
+  //         createdAt: serverTimestamp(),
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
+  const detectPlatform = (link) => {
+    if (!link) return "unknown";
+
+    const lower = link.toLowerCase();
+
+    if (lower.includes("leetcode.com")) return "leetcode";
+    if (lower.includes("geeksforgeeks.org")) return "gfg";
+
+    return "unknown";
+  };
+
   const saveProblem = async (problem, editingProblem) => {
     try {
       setIsSaving(true);
 
       const normalized = normalizeLink(problem.link);
+      const platform = detectPlatform(normalized);
       const slug = extractTitleFromLink(normalized);
 
-      const {difficulty, statement} = await fetchDifficultyFromAPI(slug);
-
       if (!slug) {
-        alert("Invalid LeetCode link");
+        alert("Invalid problem link");
         return;
       }
 
-      // ✅ Correct validation usage
+      // ✅ YouTube validation
       if (!isValidYoutubeLink(problem.youtubeLink)) {
         alert("Please enter a valid YouTube video link.");
         return;
+      }
+
+      let difficulty = problem.difficulty || "Unknown";
+      let statement = "";
+
+      // ✅ Fetch ONLY for LeetCode
+      if (platform === "leetcode") {
+        const res = await fetchDifficultyFromAPI(slug);
+        difficulty = res.difficulty;
+        statement = res.statement;
       }
 
       const problemToSave = {
         title: slug,
         titleSlug: slug,
         link: normalized,
+        platform, // ✅ STORE PLATFORM HERE
         youtubeLink: problem.youtubeLink?.trim() || null,
-        difficulty: difficulty,
+        difficulty,
         problemStatement: statement,
       };
 

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import leetcodeLogo from "../../../assets/leetcode.png";
 import youtubeLogo from "../../../assets/youtube.png";
+import gfgLogo from "../../../assets/gfg.png";
 
 // Icons used in the Actions column
 const EditIcon = () => (
@@ -81,7 +82,7 @@ const ProblemsTab = ({
               <th>S.No</th>
               <th>Problem Title</th>
               <th>Difficulty</th>
-              <th>LeetCode</th>
+              <th>Platform</th>
               <th>Link</th>
               <th>Added By</th>
               <th>Actions</th>
@@ -134,13 +135,18 @@ const ProblemsTab = ({
                 </td>
 
                 {/* LeetCode Logo column */}
+                {/* Platform Logo column */}
                 <td className="leetcode-cell">
                   <a href={p.link} target="_blank" rel="noopener noreferrer">
                     <img
-                      src={leetcodeLogo}
-                      alt="LeetCode"
+                      src={p.platform === "gfg" ? gfgLogo : leetcodeLogo}
+                      alt={p.platform === "gfg" ? "GeeksforGeeks" : "LeetCode"}
                       className="leetcode-logo"
-                      title="Solve problem on LeetCode"
+                      title={
+                        p.platform === "gfg"
+                          ? "Solve problem on GeeksforGeeks"
+                          : "Solve problem on LeetCode"
+                      }
                     />
                   </a>
                 </td>

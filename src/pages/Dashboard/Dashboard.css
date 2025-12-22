@@ -170,10 +170,10 @@ body {
 }
 
 .room-list li {
-  white-space: nowrap;        /* ✅ Prevent text from going to new line */
-  overflow: hidden;           /* ✅ Hide overflow text */
-  text-overflow: ellipsis;    /* ✅ Show ... */
-  max-width: 100%;            /* ✅ Important for ellipsis */
+  white-space: nowrap; /* ✅ Prevent text from going to new line */
+  overflow: hidden; /* ✅ Hide overflow text */
+  text-overflow: ellipsis; /* ✅ Show ... */
+  max-width: 100%; /* ✅ Important for ellipsis */
   padding: 10px;
   border-radius: 6px;
   cursor: pointer;
@@ -674,21 +674,18 @@ body {
 /* Ensure badge NEVER appears on mobile */
 /* Mobile version of the same badge (text, smaller) */
 @media (max-width: 768px) {
-
   .dashboard-invite-badge {
     display: inline-flex;
 
     top: -6px;
-    right: -36px;   /* you can adjust this */
-    
+    right: -36px; /* you can adjust this */
+
     font-size: 9px;
     padding: 2px 6px;
 
     border-radius: 10px;
   }
 }
-
-
 
 .room-list li.active-room {
   background-color: rgba(255, 255, 255, 0.12);
@@ -697,7 +694,23 @@ body {
 }
 @media (max-width: 768px) {
   .mobile-hamburger-btn {
-    top: 1rem !important;   /* Move UP */
+    top: 1rem !important; /* Move UP */
     left: 1rem !important;
   }
+}
+.edit-profile-btn {
+  position: relative;
+}
+
+.profile-warning-badge {
+  background-color: #ef4444; /* red */
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 7px;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

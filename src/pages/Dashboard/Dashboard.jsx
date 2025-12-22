@@ -12,10 +12,15 @@ import {
   where,
   getDocs,
   orderBy,
+  doc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { onSnapshot } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
+
+import ReportBugButton from "./components/ReportBugButton";
+import EditProfileButton from "./components/EditProfileButton";
+import LogoutButton from "./components/LogoutButton";
 
 // Icon components for better readability
 const LogoIcon = () => (
@@ -45,9 +50,31 @@ const Dashboard = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  const [leetcodeUsername, setLeetcodeUsername] = useState(null); //for storing leetcode username
+  const [gfgUsername, setGfgUsername] = useState(""); //for storing gfg username
+
   const location = useLocation();
   // Extract roomId from URL like: /dashboard/room/abc123
   const currentRoomId = location.pathname.split("/dashboard/room/")[1];
+
+  const isLeetcodeMissing = !leetcodeUsername || leetcodeUsername.trim() === "";
+  const isGfgMissing = !gfgUsername || gfgUsername.trim() === "";
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    const unsub = onSnapshot(doc(db, "users", user.uid), (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        setLeetcodeUsername(data.leetcodeUsername || "");
+        setGfgUsername(data.gfgUsername || "");
+      } else {
+        setLeetcodeUsername("");
+        setGfgUsername("");
+      }
+    });
+
+    return () => unsub();
+  }, [user?.uid]);
 
   useEffect(() => {
     if (isMobile) {
@@ -230,21 +257,12 @@ Thank you.
             </nav>
 
             <div className="sidebar-footer">
-              <button className="sidebar-btn" onClick={handleReportBug}>
-                Report Bug
-              </button>
-              <button
-                className="sidebar-btn"
-                onClick={() => navigate("/editProfile")}
-              >
-                Edit Profile
-              </button>
-              <button
-                className="sidebar-btn"
-                onClick={() => setIsLogoutModalOpen(true)}
-              >
-                Logout
-              </button>
+               <EditProfileButton
+                isLeetcodeMissing={isLeetcodeMissing}
+                isGfgMissing={isGfgMissing}
+              />
+              <ReportBugButton />
+              {/* <LogoutButton onClick={() => setIsLogoutModalOpen(true)} /> */}
             </div>
           </>
         )}
