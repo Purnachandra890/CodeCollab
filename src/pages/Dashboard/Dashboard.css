@@ -567,10 +567,10 @@ body {
   z-index: 999; /* Below sidebar, above content */
   animation: fadeIn 0.3s ease;
 }
-
+/* 
 .mobile-sidebar-is-open .mobile-hamburger-btn {
   display: none;
-}
+} */
 
 /* --- MOBILE OVERRIDES (for screens 768px or less) --- */
 @media (max-width: 768px) {
@@ -713,4 +713,10 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+/* Hide hamburger ONLY on mobile when sidebar is open */
+@media (max-width: 768px) {
+  .mobile-sidebar-is-open .mobile-hamburger-btn {
+    display: none;
+  }
 }

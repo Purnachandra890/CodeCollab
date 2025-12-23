@@ -18,22 +18,11 @@ import { v4 as uuidv4 } from "uuid";
 import { onSnapshot } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
 
-import ReportBugButton from "./components/ReportBugButton";
-import EditProfileButton from "./components/EditProfileButton";
-import LogoutButton from "./components/LogoutButton";
+import Sidebar from "./components/Sidebar/Sidebar";
+import MobileHeader from "./components/Sidebar/SidebarHeaders/MobileHeader";
+import CreateRoomModal from "./components/Sidebar/CreateRoomModal/CreateRoomModal";
 
 // Icon components for better readability
-const LogoIcon = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z" />
-  </svg>
-);
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -46,7 +35,7 @@ const Dashboard = () => {
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
-  const isMobile = window.innerWidth <= 768;
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -59,6 +48,16 @@ const Dashboard = () => {
 
   const isLeetcodeMissing = !leetcodeUsername || leetcodeUsername.trim() === "";
   const isGfgMissing = !gfgUsername || gfgUsername.trim() === "";
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     if (!user?.uid) return;
 
@@ -169,31 +168,17 @@ const Dashboard = () => {
     }
   };
 
-  const handleReportBug = () => {
-    const recipientEmail = "purnachandra.n17@gmail.com";
-    const subject = "Bug Report: Code Collab Application";
-    const body = `
-Hello Support Team,
-I'd like to report a bug.
-
-- **Description of Bug:**
-[Please describe the issue here]
-
-- **Steps to Reproduce:**
-1.
-2.
-3.
-
-Thank you.
-    `;
-    const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body.trim())}`;
-    window.location.href = mailtoLink;
-  };
-
   const handleNavigate = (path) => {
     navigate(path);
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  };
+
+  const openCreateRoomModal = () => {
+    setIsModalOpen(true);
+
+    // Optional UX improvement
     if (isMobile) {
       setIsSidebarOpen(false);
     }
@@ -205,130 +190,34 @@ Thank you.
         isMobile && isSidebarOpen ? "mobile-sidebar-is-open" : ""
       }`}
     >
-      <button className="mobile-hamburger-btn" onClick={toggleSidebar}>
-        ☰
-      </button>
+      <MobileHeader
+        isMobile={isMobile}
+        isSidebarOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+      />
 
-      {isMobile && isSidebarOpen && (
-        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
-      )}
-
-      <aside className={`sidebar ${isSidebarOpen ? "open" : "closed"}`}>
-        <div className="sidebar-header">
-          <LogoIcon />
-          {isSidebarOpen && (
-            <div className="dashboard-title-container">
-              <h1 onClick={() => handleNavigate("/dashboard/rooms")}>
-                Dashboard
-              </h1>
-
-              {hasNewInvites && (
-                <span className="dashboard-invite-badge">Invites</span>
-              )}
-            </div>
-          )}
-
-          <button className="hamburger-btn" onClick={toggleSidebar}>
-            ☰
-          </button>
-        </div>
-
-        {isSidebarOpen && (
-          <>
-            <button
-              className="create-room-btn"
-              onClick={() => setIsModalOpen(true)}
-            >
-              + Create New Room
-            </button>
-            <nav className="your-rooms-section">
-              <h2>YOUR ROOMS</h2>
-              <ul className="room-list">
-                {userRooms.map((room) => (
-                  <li
-                    key={room.id}
-                    onClick={() => handleNavigate(`/dashboard/room/${room.id}`)}
-                    className={room.id === currentRoomId ? "active-room" : ""}
-                  >
-                    {room.name}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <div className="sidebar-footer">
-               <EditProfileButton
-                isLeetcodeMissing={isLeetcodeMissing}
-                isGfgMissing={isGfgMissing}
-              />
-              <ReportBugButton />
-              {/* <LogoutButton onClick={() => setIsLogoutModalOpen(true)} /> */}
-            </div>
-          </>
-        )}
-      </aside>
+      <Sidebar
+        isSidebarOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+        userRooms={userRooms}
+        currentRoomId={currentRoomId}
+        handleNavigate={handleNavigate}
+        hasNewInvites={hasNewInvites}
+        isLeetcodeMissing={isLeetcodeMissing}
+        isGfgMissing={isGfgMissing}
+        onCreateRoom={openCreateRoomModal}
+      />
 
       <Outlet />
 
-      {/* --- MODAL FOR CREATING ROOMS --- */}
-      {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button
-              className="modal-close-btn"
-              onClick={() => setIsModalOpen(false)}
-            >
-              &times;
-            </button>
-            <h2>Create a New Room</h2>
-            <form onSubmit={handleCreateRoom}>
-              <p>Enter a name for your new room to get started.</p>
-              <input
-                type="text"
-                placeholder="e.g., Linked List"
-                value={roomName}
-                onChange={(e) => setRoomName(e.target.value)}
-                required
-                disabled={isCreatingRoom}
-              />
-              <button
-                type="submit"
-                className="modal-submit-btn"
-                disabled={isCreatingRoom}
-              >
-                {isCreatingRoom ? "Creating..." : "Create Room"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* --- NEW: LOGOUT CONFIRMATION MODAL --- */}
-      {isLogoutModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content logout-modal">
-            <button
-              className="modal-close-btn"
-              onClick={() => setIsLogoutModalOpen(false)}
-            >
-              &times;
-            </button>
-            <h2>Confirm Logout</h2>
-            <p>Are you sure you want to logout</p>
-            <div className="modal-actions">
-              <button className="primary-btn" onClick={handleLogout}>
-                Yes, Log Out
-              </button>
-              <button
-                className="secondary-btn"
-                onClick={() => setIsLogoutModalOpen(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CreateRoomModal
+        isOpen={isModalOpen}
+        roomName={roomName}
+        setRoomName={setRoomName}
+        isCreatingRoom={isCreatingRoom}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCreateRoom}
+      />
     </div>
   );
 };
