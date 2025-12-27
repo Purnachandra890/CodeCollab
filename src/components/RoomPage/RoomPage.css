@@ -170,6 +170,55 @@
   padding: 16px 24px;
   border-bottom: 1px solid var(--border-color);
 }
+.toggle-addprobtm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+.preview-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #374151;
+}
+/* Hide preview toggle on mobile screens */
+@media (max-width: 768px) {
+  .preview-toggle {
+    display: none;
+  }
+}
+
+.toggle-switch {
+  width: 42px;
+  height: 22px;
+  background-color: #d1d5db;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-switch.on {
+  background-color: #22c55e;
+}
+
+.toggle-knob {
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-switch.on .toggle-knob {
+  transform: translateX(20px);
+}
+
 .problems-header h3 {
   margin: 0;
   font-size: 1.125rem;
@@ -778,11 +827,7 @@
 
   overflow-y: auto;
 
-  background: linear-gradient(
-    180deg,
-    #0f172a 0%,
-    #020617 100%
-  );
+  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
 
   color: #e5e7eb;
   padding: 18px;
@@ -791,8 +836,7 @@
   border: 1px solid rgba(148, 163, 184, 0.08);
 
   z-index: 9999;
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.55),
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   animation: tooltipFadeIn 0.18s ease-out;
@@ -855,7 +899,7 @@
 /* Profile Dropdown */
 /* ============================= */
 .profile-avatar {
-  cursor: pointer;   /* 👈 correct cursor */
+  cursor: pointer; /* 👈 correct cursor */
 }
 
 .profile-wrapper {

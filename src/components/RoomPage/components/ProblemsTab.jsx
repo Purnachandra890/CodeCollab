@@ -66,13 +66,38 @@ const ProblemsTab = ({
   onDeleteProblem,
 }) => {
   const [hoveredId, setHoveredId] = useState(null);
+  const [showPreview, setShowPreview] = useState(() => {
+    const saved = localStorage.getItem("showProblemPreview");
+    return saved === "true"; // default false
+  });
+
+  const handleTogglePreview = () => {
+    setShowPreview((prev) => {
+      localStorage.setItem("showProblemPreview", !prev);
+      return !prev;
+    });
+  };
+
   return (
     <div className="problems-container card">
       <div className="problems-header">
         <h3>Problems in this Room</h3>
-        <button className="primary-btn" onClick={onAddProblem}>
-          + Add Problem
-        </button>
+        <div className="toggle-addprobtm">
+          <div className="preview-toggle">
+            <span className="toggle-label-text">Show problem preview</span>
+
+            <div
+              className={`toggle-switch ${showPreview ? "on" : ""}`}
+              onClick={handleTogglePreview}
+            >
+              <div className="toggle-knob" />
+            </div>
+          </div>
+
+          <button className="primary-btn" onClick={onAddProblem}>
+            + Add Problem
+          </button>
+        </div>
       </div>
 
       <div className="table-scroll-container">
@@ -108,19 +133,21 @@ const ProblemsTab = ({
                       {p.title}
                     </a>
 
-                    {hoveredId === p.id && p.problemStatement && (
-                      <div
-                        className="problem-tooltip-fixed"
-                        onMouseEnter={() => setHoveredId(p.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                      >
+                    {showPreview &&
+                      hoveredId === p.id &&
+                      p.problemStatement && (
                         <div
-                          dangerouslySetInnerHTML={{
-                            __html: p.problemStatement,
-                          }}
-                        />
-                      </div>
-                    )}
+                          className="problem-tooltip-fixed"
+                          onMouseEnter={() => setHoveredId(p.id)}
+                          onMouseLeave={() => setHoveredId(null)}
+                        >
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: p.problemStatement,
+                            }}
+                          />
+                        </div>
+                      )}
                   </div>
                 </td>
 
