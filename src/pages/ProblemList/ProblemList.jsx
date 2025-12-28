@@ -126,7 +126,7 @@ export default function ProblemList() {
     [gfgSolvedSlugs]
   );
 
-  const CACHE_DURATION = 30 * 60 * 1000; // 1 hour 30 minutes
+  const CACHE_DURATION = 30  * 1000; // 1 hour 30 minutes
   // checkGfgCacheStatus
   const checkGfgCacheStatus = (cache) => {
     if (!cache?.lastFetchedAt) {
@@ -372,7 +372,7 @@ export default function ProblemList() {
 
         // Lock refresh button temporarily
         setCanRefreshGfg(false);
-        setNextRefreshIn(30 * 1000); // 15 minutes
+        setNextRefreshIn(CACHE_DURATION); 
       } else {
         console.error("❌ GFG fetch failed", e);
       }
