@@ -126,7 +126,7 @@ export default function ProblemList() {
     [gfgSolvedSlugs]
   );
 
-  const CACHE_DURATION = 30  * 1000; // 1 hour 30 minutes
+  const CACHE_DURATION = 30 * 60 * 1000; // 1 hour 30 minutes
   // checkGfgCacheStatus
   const checkGfgCacheStatus = (cache) => {
     if (!cache?.lastFetchedAt) {
