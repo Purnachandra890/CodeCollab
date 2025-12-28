@@ -337,7 +337,7 @@ export default function ProblemList() {
       // 🚀 API call
       // console.log("api calling...");
       const res = await axios.post(
-        "https://gfg-api-c5m8.onrender.com/api/gfg/solved",
+        `${import.meta.env.VITE_GFG_API_URL}/api/gfg/solved`,
         {
           handle: gfgUsername,
           year: "",
