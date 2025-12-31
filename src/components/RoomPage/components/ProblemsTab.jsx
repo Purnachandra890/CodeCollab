@@ -84,7 +84,9 @@ const ProblemsTab = ({
         <h3>Problems in this Room</h3>
         <div className="toggle-addprobtm">
           <div className="preview-toggle">
-            <span className="toggle-label-text">Show problem preview</span>
+            <span className="toggle-label-text">
+              Hover on title to view problem statement (leetcode)
+            </span>
 
             <div
               className={`toggle-switch ${showPreview ? "on" : ""}`}
