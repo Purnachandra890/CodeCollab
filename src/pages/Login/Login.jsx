@@ -32,8 +32,15 @@ function Login() {
         });
       }
 
-      // ✅ Redirect to dashboard
-      navigate("/dashboard");
+      // ✅ Redirect back to intended page (invite link or dashboard)
+      const redirectPath =
+        sessionStorage.getItem("redirectAfterLogin") || "/dashboard/rooms";
+
+      sessionStorage.removeItem("redirectAfterLogin");
+
+      navigate(redirectPath, { replace: true });
+
+      // navigate("/dashboard");
     } catch (error) {
       console.error("Login failed", error);
     }
@@ -136,7 +143,7 @@ function Login() {
           </p>
         </div>
 
-        <button className="google-login-button" onClick={handleGoogleLogin} >
+        <button className="google-login-button" onClick={handleGoogleLogin}>
           <svg className="google-icon" viewBox="0 0 48 48">
             <path
               fill="#FFC107"
