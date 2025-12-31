@@ -41,8 +41,10 @@ const RoomPage = () => {
   const unreadCount = useUnreadMessages(roomId, user?.uid);
 
   /* 🔹 Logic Hooks */
-  const { saveProblem, deleteProblem, isSaving } =
-    useRoomProblems(roomId, user);
+  const { saveProblem, deleteProblem, isSaving } = useRoomProblems(
+    roomId,
+    user
+  );
 
   const { sendFriendRequest } = useRoomActions(user);
 
@@ -65,6 +67,8 @@ const RoomPage = () => {
             onAddProblem={() => openProblemModal()}
             onEditProblem={(problem) => openProblemModal(problem)}
             onDeleteProblem={deleteProblem}
+            currentUserId={user?.uid}
+            roomAdminId={room.adminId}
           />
         );
 
@@ -152,9 +156,7 @@ const RoomPage = () => {
       />
 
       {/* ✅ Tab Content */}
-      <div className="tab-content">
-        {renderContent()}
-      </div>
+      <div className="tab-content">{renderContent()}</div>
     </div>
   );
 };

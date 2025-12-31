@@ -64,12 +64,16 @@ const ProblemsTab = ({
   onAddProblem,
   onEditProblem,
   onDeleteProblem,
+  currentUserId,
+  roomAdminId,
 }) => {
   const [hoveredId, setHoveredId] = useState(null);
   const [showPreview, setShowPreview] = useState(() => {
     const saved = localStorage.getItem("showProblemPreview");
     return saved === "true"; // default false
   });
+
+  const isAdmin = currentUserId === roomAdminId;
 
   const handleTogglePreview = () => {
     setShowPreview((prev) => {
@@ -212,13 +216,15 @@ const ProblemsTab = ({
                   >
                     <EditIcon />
                   </button>
-                  <button
-                    className="action-icon-btn delete"
-                    title="Delete"
-                    onClick={() => onDeleteProblem(p.id)}
-                  >
-                    <TrashIcon />
-                  </button>
+                  {isAdmin && (
+                    <button
+                      className="action-icon-btn delete"
+                      title="Delete"
+                      onClick={() => onDeleteProblem(p.id)}
+                    >
+                      <TrashIcon />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -227,12 +233,14 @@ const ProblemsTab = ({
       </div>
 
       {/* Bottom helper message */}
-      <div className="message">
-        <p>
-          Help your peers learn! If you find a great YouTube explanation for a
-          problem, please use the Edit icon to add the link.
-        </p>
-      </div>
+      {problems.length>0 && (
+        <div className="message">
+          <p>
+            Help your peers learn! If you find a great YouTube explanation for a
+            problem, please use the Edit icon to add the link.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
