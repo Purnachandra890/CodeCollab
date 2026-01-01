@@ -1,0 +1,168 @@
+/* src/components/RoomPage/components/ProblemModal.css */
+
+/* --- 1. Overlay (Glass Backdrop) --- */
+.pm-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Dark Dim */
+  backdrop-filter: blur(8px); /* Blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: pmFadeIn 0.2s ease-out;
+}
+
+/* --- 2. Modal Content (Dark Card) --- */
+.pm-content {
+  background-color: #1e293b; /* Slate 800 */
+  color: #f1f5f9;
+  width: 95%;
+  max-width: 480px;
+  border-radius: 16px;
+  border: 1px solid #334155; /* Subtle Border */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  padding: 32px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: pmSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Close Button */
+.pm-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pm-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #f1f5f9;
+}
+
+.pm-close-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Header */
+.pm-header {
+  margin-bottom: 24px;
+}
+
+.pm-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.02em;
+}
+
+.pm-header p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+/* --- 3. Form Styling --- */
+.pm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pm-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pm-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-left: 2px;
+}
+
+/* Inputs & Selects */
+.pm-input,
+.pm-select {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #0f172a; /* Deep Navy Input */
+  border: 1px solid #334155;
+  border-radius: 10px;
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  outline: none;
+  transition: all 0.2s;
+}
+
+/* Link inputs look better with monospace font */
+.pm-input[type="url"] {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+
+.pm-input:focus,
+.pm-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background-color: #0b1120;
+}
+
+.pm-input::placeholder {
+  color: #475569;
+}
+
+/* --- 4. Submit Button --- */
+.pm-submit-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.pm-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 15px -3px rgba(59, 130, 246, 0.3);
+}
+
+.pm-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #475569;
+}
+
+/* --- Animations --- */
+@keyframes pmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pmSlideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* --- Mobile --- */
+@media (max-width: 640px) {
+  .pm-content {
+    padding: 24px;
+    width: 90%;
+  }
+}

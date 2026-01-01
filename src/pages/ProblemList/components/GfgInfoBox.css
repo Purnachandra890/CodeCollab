@@ -1,44 +1,138 @@
-/* ===== GFG Info Box ===== */
+/* src/components/ProblemList/components/GfgInfoBox.css */
+
+/* --- 💎 Glass Container --- */
 .gfg-fixed-box {
   position: fixed;
   right: 2.5rem;
-  top: 4rem;
-  width: 260px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  top: 5rem; /* Adjusted slightly to sit below headers */
+  width: 280px;
+  
+  /* Glass Background */
+  background: rgba(15, 23, 42, 0.85); /* Dark Navy with transparency */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* Border & Shadow */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Deep shadow for floating effect */
+  
   z-index: 1000;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #f1f5f9;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
-/* Header */
+/* Hover Effect on the Container */
+.gfg-fixed-box:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* --- Header --- */
 .gfg-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 14px;
+  padding: 14px 16px;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  color: #166534;
+  
+  /* Remove gradient from here so hover doesn't break it */
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.2s;
 }
 
-/* Arrow */
+/* ✅ FIX: Apply gradient ONLY to the text span */
+.gfg-header > span:first-child {
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ✅ FIX: Hover now changes background-color safely */
+.gfg-header:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* When open, add a separator line */
+.gfg-fixed-box.is-open .gfg-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gfg-header:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* When open, add a separator line */
+.gfg-fixed-box.is-open .gfg-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- Arrow --- */
 .gfg-arrow {
-  transition: transform 0.25s ease;
-  font-size: 14px;
+  transition: transform 0.3s ease;
+  font-size: 12px;
+  color: #94a3b8; /* Muted Slate */
+  -webkit-text-fill-color: #94a3b8; /* Override gradient */
 }
 
 .gfg-arrow.open {
-  transform: rotate(90deg);
+  transform: rotate(180deg); /* Flip up/down standard chevron behavior */
+  color: #4ade80; /* Turn green when open */
 }
 
-/* Content */
+/* --- Content Area --- */
 .gfg-content {
-  padding: 0 14px 14px;
+  padding: 16px;
   font-size: 0.85rem;
-  color: #374151;
-  line-height: 1.5;
+  color: #cbd5e1; /* Light Slate text */
+  line-height: 1.6;
+  animation: slideDown 0.3s ease-out;
+}
+
+.gfg-content p {
+  margin-bottom: 12px;
+}
+
+.gfg-content strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* --- 💡 The Tip Box (Dark Mode) --- */
+.gfg-tip-box {
+  margin-top: 16px;
+  padding: 12px;
+  
+  /* Dark Green Glass Background */
+  background: rgba(16, 185, 129, 0.1); 
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-left: 3px solid #10b981; /* Neon Green Stripe */
+  
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #d1fae5; /* Very light green text */
+}
+
+.gfg-tip-box strong {
+  color: #34d399; /* Bright Green Title */
+  display: block;
+  margin-bottom: 4px;
+}
+
+.gfg-tip-box p {
+  margin: 4px 0 0;
+  opacity: 0.9;
+}
+
+/* --- Animation --- */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ========================= */
@@ -49,32 +143,25 @@
 @media (max-width: 1024px) {
   .gfg-fixed-box {
     right: 1.5rem;
-    width: 230px;
+    width: 250px;
   }
 }
 
 /* Mobile screens */
 @media (max-width: 768px) {
   .gfg-fixed-box {
-    position: static;        /* 🔑 stop fixed */
+    position: static;        /* Stop fixed */
     width: 100%;
-    margin: 12px 0;
+    margin: 0 0 24px 0;      /* Margin bottom to separate from list */
+    
+    /* Simplified look for inline mobile */
+    background: rgba(255, 255, 255, 0.03); 
     box-shadow: none;
-    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
-}
-/* Tip box inside GFG info */
-.gfg-tip-box {
-  margin-top: 12px;
-  padding: 10px 12px;
-  border-left: 4px solid #22c55e; /* green */
-  background: #ecfdf5; /* light green */
-  border-radius: 6px;
-  font-size: 0.82rem;
-  color: #065f46;
-}
-
-.gfg-tip-box p {
-  margin: 4px 0 0;
-  line-height: 1.4;
+  
+  .gfg-header {
+    background: none;
+    -webkit-text-fill-color: #4ade80; /* Solid green text on mobile */
+  }
 }

@@ -1,0 +1,85 @@
+/* src/components/RoomTabs/RoomTabs.css */
+
+.room-tabs {
+  display: flex;
+  gap: 32px;
+  /* CHANGED: Darker border to match the theme */
+  border-bottom: 1px solid #334155; 
+  margin-top: 0;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+/* Hide scrollbars */
+.room-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 12px 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  /* CHANGED: Lighter Grey for visibility on dark background */
+  color: #94a3b8; 
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+/* Hover State */
+.tab-btn:hover {
+  /* CHANGED: Pure white on hover */
+  color: #f8fafc; 
+}
+
+/* Active State */
+.tab-btn.active {
+  /* CHANGED: Bright Blue (Blue-500) pops well on dark */
+  color: #3b82f6; 
+  font-weight: 600;
+}
+
+/* Animated Underline */
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3b82f6;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+  transform-origin: center;
+}
+
+.tab-btn.active::after {
+  transform: scaleX(1);
+}
+
+/* Badge Styling */
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: -12px;
+  background-color: #ef4444; /* Red stays the same */
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 99px;
+  min-width: 14px;
+  text-align: center;
+  /* CHANGED: Ring matches the DARK page background, not white */
+  box-shadow: 0 0 0 2px #0f172a; 
+}
+
+@media (max-width: 768px) {
+  .room-tabs {
+    gap: 24px;
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+}

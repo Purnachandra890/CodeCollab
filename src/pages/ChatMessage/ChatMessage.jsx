@@ -1,4 +1,4 @@
-// ChatMessage.jsx
+// src/ChatMessage.jsx
 
 import React, { useEffect, useState, useRef } from "react";
 import { db } from "../../firebase";
@@ -40,7 +40,6 @@ const ChatMessage = () => {
   const [roomName, setRoomName] = useState("");
 
   const messagesEndRef = useRef(null);
-
   const defaultPhoto = "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
   const scrollToBottom = () => {
@@ -49,40 +48,29 @@ const ChatMessage = () => {
 
   useEffect(scrollToBottom, [messages]);
 
-  // ✅ Reset unread when user opens chat
+  // Reset unread counts
   useEffect(() => {
     if (!roomId || !user) return;
-
     const resetUnread = async () => {
       const roomRef = doc(db, "rooms", roomId);
       const snap = await getDoc(roomRef);
-
       if (snap.exists()) {
         const data = snap.data();
         const unreadCounts = data.unreadCounts || {};
-
         unreadCounts[user.uid] = 0;
-
         await updateDoc(roomRef, { unreadCounts });
       }
     };
-
     resetUnread();
   }, [roomId, user]);
 
-  // ✅ Load Room Name and Messages
+  // Load Messages
   useEffect(() => {
     if (!roomId) return;
-
     getDoc(doc(db, "rooms", roomId)).then((snap) => {
       if (snap.exists()) setRoomName(snap.data().name);
     });
-
-    const q = query(
-      collection(db, "rooms", roomId, "messages"),
-      orderBy("timestamp")
-    );
-
+    const q = query(collection(db, "rooms", roomId, "messages"), orderBy("timestamp"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const msgs = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -91,24 +79,21 @@ const ChatMessage = () => {
       }));
       setMessages(msgs);
     });
-
     return () => unsubscribe();
   }, [roomId]);
 
-  // ✅ Send message & update unread
+  // Send Message
   const handleSend = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !user) return;
 
     const roomRef = doc(db, "rooms", roomId);
     const snap = await getDoc(roomRef);
-
     if (!snap.exists()) return;
 
     const data = snap.data();
     const members = data.members || [];
     const unreadCounts = data.unreadCounts || {};
-
     const updatedUnread = { ...unreadCounts };
 
     members.forEach(uid => {
@@ -125,10 +110,7 @@ const ChatMessage = () => {
       timestamp: serverTimestamp(),
     });
 
-    await updateDoc(roomRef, {
-      unreadCounts: updatedUnread
-    });
-
+    await updateDoc(roomRef, { unreadCounts: updatedUnread });
     setNewMessage("");
   };
 
@@ -148,8 +130,11 @@ const ChatMessage = () => {
         {messages.map((msg) => {
           const isMine = msg.senderId === user?.uid;
 
+          // ✅ UPDATED: Added Date and Month logic
           const time = msg.timestamp
             ? new Intl.DateTimeFormat("en-US", {
+                month: "short", // e.g., "Jan"
+                day: "numeric", // e.g., "1"
                 hour: "numeric",
                 minute: "numeric",
                 hour12: true,
@@ -158,24 +143,22 @@ const ChatMessage = () => {
 
           return (
             <div key={msg.id} className={`message-wrapper ${isMine ? "sent" : "received"}`}>
-              {!isMine && (
-                <img
-                  src={msg.senderPhotoURL || defaultPhoto}
-                  alt="user"
-                  className="message-avatar"
-                  onError={(e) => e.target.src = defaultPhoto}
-                />
-              )}
+              {/* Show avatar for received messages */}
+              <img
+                src={msg.senderPhotoURL || defaultPhoto}
+                alt="user"
+                className="message-avatar"
+                onError={(e) => e.target.src = defaultPhoto}
+              />
 
               <div className="message-content">
                 {!isMine && <span className="message-sender-name">{msg.senderName}</span>}
-                <p className="message-bubble">{msg.text}</p>
+                <div className="message-bubble">{msg.text}</div>
                 <span className="message-timestamp">{time}</span>
               </div>
             </div>
           );
         })}
-
         <div ref={messagesEndRef} />
       </div>
 

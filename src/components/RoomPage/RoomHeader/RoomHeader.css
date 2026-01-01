@@ -1,0 +1,233 @@
+/* src/components/RoomHeader/RoomHeader.css */
+
+.room-header {
+  flex-shrink: 0;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  /* Ensure this sits well on the dark page background */
+}
+
+.name-profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.room-title {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 800; /* Extra bold */
+  color: #f8fafc; /* CHANGED: Pure White for visibility */
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Adds depth on dark bg */
+}
+
+.right-side-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Button Base */
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 40px;
+}
+
+/* Secondary Button (My Problems, Invite) - DARK MODE FIX */
+.secondary-btn {
+  background-color: #1e293b; /* CHANGED: Dark Slate Surface */
+  color: #e2e8f0; /* CHANGED: Light Grey Text */
+  border: 1px solid #334155; /* CHANGED: Subtle border */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.secondary-btn:hover {
+  background-color: #334155; /* Lighter on hover */
+  border-color: #475569;
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+/* Primary (Blue) Button - DARK MODE FIX */
+.primary-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Darker shadow */
+}
+
+.primary-btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Icons */
+.btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Chat Badge */
+.chat-btn-wrapper {
+  position: relative;
+}
+
+.chat-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 2px solid #1e293b; /* CHANGED: Border matches dark button bg */
+}
+
+/* Profile Avatar */
+.profile-wrapper {
+  position: relative;
+  margin-left: 8px;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #0f172a; /* CHANGED: Matches main page background */
+  box-shadow: 0 0 0 2px #334155; /* CHANGED: Dark grey ring */
+  transition: all 0.2s;
+}
+
+.profile-avatar:hover {
+  box-shadow: 0 0 0 2px #3b82f6; /* Blue ring on hover */
+}
+
+/* Dropdown - DARK MODE FIX */
+.profile-dropdown {
+  position: absolute;
+  top: 54px;
+  right: 0;
+  background: #1e293b; /* CHANGED: Dark Slate */
+  border: 1px solid #334155; /* CHANGED: Dark Border */
+  border-radius: 12px;
+  padding: 8px;
+  min-width: 180px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  z-index: 50;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.profile-dropdown-item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #e2e8f0; /* CHANGED: Light Text */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.2s;
+}
+
+.profile-dropdown-item:hover {
+  background-color: #334155; /* CHANGED: Darker hover state */
+}
+
+.profile-dropdown-item.logout {
+  color: #f87171; /* CHANGED: Softer Red for dark mode */
+}
+
+.profile-dropdown-item.logout:hover {
+  background-color: rgba(248, 113, 113, 0.1); /* Subtle Red tint */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .room-header {
+    position: relative;
+    /* Remove top padding/margin to pull the header area to the screen top */
+    padding-top: 0;
+    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Remove any border used for testing */
+    border: none;
+  }
+
+  .room-title {
+    /* 1. Position at the absolute top middle */
+    position: absolute;
+    top: 10px; /* Adjust this value to move title higher or lower */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* 2. Full width with horizontal safety padding for hamburger icon */
+    width: 100%;
+    text-align: center;
+    padding: 0 60px; 
+    
+    /* 3. Modern Typography */
+    font-size: 1.25rem !important;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    color: #f8fafc;
+    z-index: 10;
+  }
+
+  /* 4. Action Buttons Group */
+  .right-side-group {
+    /* Increased margin-top creates the gap between the title and buttons */
+    margin-top: 5rem; 
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    
+    /* Allow horizontal scroll for buttons if screen is very narrow */
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none; /* Hide scrollbar for cleaner look */
+  }
+
+  /* Hide scrollbar for Chrome/Safari */
+  .right-side-group::-webkit-scrollbar {
+    display: none;
+  }
+  .profile-avatar{
+    display: none;
+  }
+  .name-profile{
+    gap:1rem;
+  }
+}

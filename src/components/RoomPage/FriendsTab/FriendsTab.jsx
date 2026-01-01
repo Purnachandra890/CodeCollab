@@ -1,35 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../../../firebase";
 import { doc, onSnapshot, getDoc } from "firebase/firestore";
-import "../RoomPage.css";
 import "./FriendsTab.css";
 
 const FriendsTab = ({ user }) => {
   const [friendsList, setFriendsList] = useState([]);
 
-  // Define the default photo URL here
   const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
   useEffect(() => {
     if (!user?.uid) return;
 
-    // Listen to the user's document to get real-time updates to their friends list
     const unsub = onSnapshot(doc(db, "users", user.uid), async (userSnap) => {
       if (userSnap.exists()) {
         const userData = userSnap.data();
         const friendUIDs = userData.friends || [];
 
-        // Fetch details for each friend UID
         const friendsDetails = await Promise.all(
           friendUIDs.map(async (friendId) => {
             const friendDoc = await getDoc(doc(db, "users", friendId));
             return friendDoc.exists()
               ? { id: friendId, ...friendDoc.data() }
-              : null; // Handle case where friend document might not exist
+              : null;
           })
         );
-        // Filter out any null values and update state
         setFriendsList(friendsDetails.filter(Boolean));
       }
     });
@@ -38,31 +33,39 @@ const FriendsTab = ({ user }) => {
   }, [user]);
 
   return (
+    // ✅ FIX: Added "card" class here to fix the layout/width issue
     <div className="friends-container card">
-      {/* Fixed Header */}
-      <h3>Your Friends</h3>
+      
+      <h3>Your Friends <span style={{ opacity: 0.5, fontSize: '0.8em' }}>({friendsList.length})</span></h3>
 
-      {/* Scrollable Content */}
-      {friendsList.length > 0 ? (
-        <div className="friend-grid-scroll-container">
+      <div className="friend-grid-scroll-container">
+        {friendsList.length > 0 ? (
           <div className="friend-grid">
             {friendsList.map((friend) => (
               <div key={friend.id} className="friend-card">
                 <img
-                  src={friend.photoURL || defaultPhoto} // Use the default photo if photoURL is not available
+                  src={friend.photoURL || defaultPhoto}
                   alt={friend.name}
                   className="friend-photo"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultPhoto;
+                  }}
                 />
                 <div className="friend-info">
                   <span className="friend-name">{friend.name}</span>
+                  {/* Optional status text to balance the card */}
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      ) : (
-        <p>You don't have any friends yet. Add some from the Members tab!</p>
-      )}
+        ) : (
+          <div className="empty-friends-message">
+            <p>No friends found.</p>
+            <small>Add people from the Members tab to see them here.</small>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,13 +1,21 @@
 // src/components/RoomPage/components/ProblemModal.jsx
 
 import React, { useState, useEffect } from "react";
+import "./ProblemModal.css"; // Import the separate CSS
+
+// Icons
+const CloseIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
 
 const ProblemModal = ({ isOpen, onClose, onSave, problem, isSaving }) => {
   const [link, setLink] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
 
-  // When opening the modal, pre-fill fields if editing
   useEffect(() => {
     if (problem) {
       setLink(problem.link || "");
@@ -29,48 +37,53 @@ const ProblemModal = ({ isOpen, onClose, onSave, problem, isSaving }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="modal-close-btn" onClick={onClose}>
-          &times;
+    <div className="pm-overlay">
+      <div className="pm-content">
+        <button className="pm-close-btn" onClick={onClose}>
+          <CloseIcon />
         </button>
 
-        <h2>{problem ? "Edit Problem" : "Add New Problem"}</h2>
+        <div className="pm-header">
+          <h2>{problem ? "Edit Problem" : "Add Problem"}</h2>
+          <p>Paste the link to a LeetCode or GFG problem.</p>
+        </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="link">Problem Link</label>
+        <form onSubmit={handleSubmit} className="pm-form">
+          <div className="pm-group">
+            <label htmlFor="link">Problem URL</label>
             <input
               id="link"
+              className="pm-input"
               type="url"
-              placeholder="https://leetcode.com/problems/palindrome-number/"
+              placeholder="https://leetcode.com/problems/..."
               value={link}
               onChange={(e) => setLink(e.target.value)}
               required
+              autoFocus
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="difficulty">Difficulty (Optional For Leetcode)</label>
+
+          <div className="pm-group">
+            <label htmlFor="difficulty">Difficulty</label>
             <select
               id="difficulty"
+              className="pm-select"
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value)}
             >
-              {/* <option value="" disabled>Select difficulty</option> */}
               <option value="Easy">Easy</option>
               <option value="Medium">Medium</option>
               <option value="Hard">Hard</option>
             </select>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="youtubeLink">
-              YouTube Solution Link (Optional)
-            </label>
+          <div className="pm-group">
+            <label htmlFor="youtubeLink">YouTube Solution (Optional)</label>
             <input
               id="youtubeLink"
+              className="pm-input"
               type="url"
-              placeholder="https://www.youtube.com/watch?v=..."
+              placeholder="https://youtu.be/..."
               value={youtubeLink}
               onChange={(e) => setYoutubeLink(e.target.value)}
             />
@@ -78,10 +91,10 @@ const ProblemModal = ({ isOpen, onClose, onSave, problem, isSaving }) => {
 
           <button
             type="submit"
-            className="modal-submit-btn"
+            className="pm-submit-btn"
             disabled={isSaving}
           >
-            {isSaving ? "Adding..." : problem ? "Save Changes" : "Add Problem"}
+            {isSaving ? "Saving..." : problem ? "Save Changes" : "Add Problem"}
           </button>
         </form>
       </div>

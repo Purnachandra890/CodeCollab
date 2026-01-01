@@ -1,0 +1,154 @@
+/* src/components/DashboardRoomsGrid.css */
+
+/* --- Wrapper for the Grid Component --- */
+.dashboard-rooms-content {
+  padding: 0 24px 40px 24px;
+}
+
+/* --- Rooms Grid Layout --- */
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+  padding-top: 10px;
+}
+
+/* --- Dark Room Card Design --- */
+.room-card {
+  background-color: #1e293b; /* Dark Slate Card */
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.room-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #3b82f6; /* Blue accent strip on left */
+  opacity: 0.7;
+}
+
+.room-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  border-color: #3b82f6;
+}
+
+/* --- Card Header --- */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 12px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #f8fafc;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.card-header p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* --- Invite Link Box --- */
+.invite-link-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #0f172a; /* Darker than card */
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
+}
+
+.invite-link-container span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Card Footer & Buttons --- */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.delete-btn {
+  background: transparent;
+  color: #ef4444; /* Red */
+  border: 1px solid transparent;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.copy-link-btn {
+  background: #3b82f6; /* Brand Blue */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.copy-link-btn:hover {
+  background: #2563eb;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+/* --- Notification --- */
+.notification-message {
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid #eab308;
+  color: #fef08a;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+/* --- Mobile Responsive (Grid Specific) --- */
+@media (max-width: 768px) {
+  .rooms-grid {
+    grid-template-columns: 1fr;
+  }
+}

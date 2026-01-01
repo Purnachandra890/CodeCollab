@@ -1,0 +1,128 @@
+/* src/components/Sidebar/CreateRoomModal/CreateRoomModal.css */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Slightly darker dim for focus */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Ensure it sits above sidebar */
+  backdrop-filter: blur(2px); /* subtle blur effect */
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: #ffffff;
+  width: 90%;
+  max-width: 480px;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: modalScaleUp 0.2s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827; /* Dark text */
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close-btn:hover {
+  color: #4b5563;
+}
+
+.modal-description {
+  color: #6b7280; /* Gray muted text */
+  font-size: 0.95rem;
+  margin-top: 0;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  color: #1f2937;
+  border: 1px solid #d1d5db; /* Subtle border */
+  border-radius: 8px;
+  margin-bottom: 24px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-input::placeholder {
+  color: #9ca3af;
+}
+
+.modal-submit-btn {
+  width: 100%;
+  background-color: #3b82f6; /* Primary Blue */
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modal-submit-btn:hover {
+  background-color: #2563eb;
+}
+
+.modal-submit-btn:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalScaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

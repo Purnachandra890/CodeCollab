@@ -1,15 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, onSnapshot, setDoc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
-import "./EditProfile.css"; // Import the new CSS file
+import "./EditProfile.css";
+
+// --- Icons ---
+const SaveIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+    <polyline points="7 3 7 8 15 8"></polyline>
+  </svg>
+);
+
+const InfoIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="16" x2="12" y2="12"></line>
+    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+  </svg>
+);
 
 export default function EditProfile() {
   const [uid, setUid] = useState(null);
-  const [username, setUsername] = useState(""); //leetcode username
+  const [username, setUsername] = useState(""); // LeetCode
+  const [gfgUsername, setGfgUsername] = useState(""); // GFG
   const [loading, setLoading] = useState(true);
-  const [saveStatus, setSaveStatus] = useState(""); // To show feedback to the user
-  const [gfgUsername, setGfgUsername] = useState(""); //gfg username
+  const [saveStatus, setSaveStatus] = useState("");
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUid(u ? u.uid : null));
@@ -42,23 +59,41 @@ export default function EditProfile() {
         },
         { merge: true }
       );
-      setSaveStatus("Username updated successfully!");
+      setSaveStatus("Profile updated successfully!");
     } catch (error) {
-      console.error("Error updating username:", error);
-      setSaveStatus("Failed to update username.");
+      console.error("Error updating profile:", error);
+      setSaveStatus("Failed to update profile.");
     }
 
-    // Hide the message after a few seconds
     setTimeout(() => setSaveStatus(""), 3000);
   };
 
   return (
     <div className="edit-profile-container">
+      
+      {/* 1. Notification Area (Floating above card) */}
+      <div className="notification-area">
+        {username === "" && !loading && (
+          <div className="notification-message">
+            <InfoIcon />
+            <span>Please set your <strong>LeetCode Username</strong> to enable leaderboard tracking.</span>
+          </div>
+        )}
+        {gfgUsername === "" && !loading && (
+          <div className="notification-message">
+            <InfoIcon />
+            <span>Please set your <strong>GeeksforGeeks Username</strong> to enable progress syncing.</span>
+          </div>
+        )}
+      </div>
+
+      {/* 2. Main Edit Card */}
       <div className="edit-profile-card">
         <div className="card-header">
           <h2>Edit Profile</h2>
-          <p>Set your usernames to track your progress.</p>
+          <p>Connect your coding platforms to track progress.</p>
         </div>
+
         <form onSubmit={handleSubmit} className="edit-profile-form">
           <div className="form-group">
             <label htmlFor="leetcode-username">LeetCode Username</label>
@@ -67,10 +102,11 @@ export default function EditProfile() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="e.g., coding_master"
+              placeholder="e.g. coding_master"
               disabled={!uid || loading}
             />
           </div>
+
           <div className="form-group">
             <label htmlFor="gfg-username">GeeksforGeeks Username</label>
             <input
@@ -78,45 +114,22 @@ export default function EditProfile() {
               type="text"
               value={gfgUsername}
               onChange={(e) => setGfgUsername(e.target.value)}
-              placeholder="e.g., coding_master"
+              placeholder="e.g. coding_master"
               disabled={!uid || loading}
             />
           </div>
 
           <div className="form-footer">
-            {saveStatus && <span className="save-status">{saveStatus}</span>}
+            <span className="save-status">{saveStatus}</span>
             <button
               type="submit"
               className="save-btn"
               disabled={loading || saveStatus === "Saving..."}
             >
-              {loading ? "Loading..." : "Save Changes"}
+              {loading ? "Loading..." : <><SaveIcon /> Save Changes</>}
             </button>
           </div>
         </form>
-      </div>
-      <div className="edit-profile-container">
-        {/* NEW: Conditional notification message */}
-        {username === "" && !loading && (
-          <div className="notification-message">
-            <p>
-              Please enter your LeetCode username to enable LeetCode-related
-              features and leaderboard tracking.
-            </p>
-          </div>
-        )}
-        {gfgUsername === "" && !loading && (
-          <div className="notification-message">
-            <p>
-              Please enter your GeeksforGeeks username to enable GFG-related
-              features and progress tracking.
-            </p>
-          </div>
-        )}
-
-        <div className="edit-profile-card">
-          {/* ... (existing card content) ... */}
-        </div>
       </div>
     </div>
   );

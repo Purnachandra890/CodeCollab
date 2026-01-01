@@ -1,28 +1,36 @@
-/* Dashboard.css */
+/* src/Dashboard.css */
+/* src/Dashboard.css */
 
-/* --- Custom Properties (Theme Variables) --- */
 :root {
-  --sidebar-bg: #111827;
-  --main-bg: white;
-  --card-bg: #ffffff;
+  /* 1. FORCE DARK BACKGROUNDS */
+  --sidebar-bg: #0b1121; /* Very dark navy */
+  --main-bg: #0f172a; /* ✅ FIXED: Deep Navy (was white) */
+  --content-bg: #111827; /* Dark content background */
+  --card-bg: #1e293b; /* ✅ FIXED: Slate 800 (was #ffffff) */
+
+  /* 2. FORCE DARK BORDERS (The "Line" fix) */
+  --border-color: #374151; /* ✅ FIXED: Dark Grey (was #e5e7eb) */
+
+  /* 3. TEXT COLORS */
+  --text-light: #f3f4f6;
+  --text-dark: #f3f4f6; /* Override dark text to be white */
+  --text-muted: #9ca3af;
+
+  /* KEEP EXISTING COLORS */
   --primary-blue: #3b82f6;
   --primary-blue-hover: #2563eb;
-  --text-light: #f9fafb;
-  --text-dark: #1f2937;
-  --text-muted: #6b7280;
-  --border-color: #e5e7eb;
   --danger-red: #ef4444;
   --danger-red-hover: #dc2626;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
 }
 
-/* --- Base & Body Styles --- */
+/* --- ADD THIS TO FORCE THE BODY DARK --- */
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: var(--main-bg);
-  color: var(--text-dark);
+  background-color: #0f172a !important; /* Force Dark Navy */
+  color: var(--text-light);
 }
 
 * {
@@ -32,691 +40,97 @@ body {
 /* --- Main Layout Container --- */
 .dashboard-container {
   display: grid;
-  grid-template-columns: auto 1fr; /* Sidebar takes its own width, content takes 1 fraction of the rest */
+  /* Default (Open): 260px sidebar, rest is content */
+  grid-template-columns: 260px 1fr;
   min-height: 100vh;
+  overflow: hidden;
+  /* Smoothly animate the grid column change */
+  transition: grid-template-columns 0.3s ease-in-out;
 }
-
-/* --- Sidebar Styles --- */
-/* Sidebar base */
-/* In Dashboard.css */
-.sidebar {
-  background-color: var(--sidebar-bg);
-  color: var(--text-light);
-  padding: 24px 12px;
+.dashboard-container.sidebar-closed {
+  /* Collapsed width: Matches your Sidebar.css collapsed width (approx 72px) */
+  grid-template-columns: 72px 1fr;
+}
+/* --- Main Content Area --- */
+.main-content {
+  padding: 0; /* CHANGED: Remove padding so children can fill the screen */
+  height: 100vh;
+  overflow: hidden;
+  min-width: 0;
   display: flex;
-  flex-direction: column; /* This is already here, which is correct */
-  height: 100vh; /* <-- ADD THIS CRUCIAL LINE */
-  transition: width 0.3s ease-in-out;
-  flex-shrink: 0;
-  position: relative;
-  overflow: visible;
-  z-index: 10;
+  flex-direction: column;
+  background-color: #0f172a; /* CHANGED: Match your dark theme background */
 }
 
-/* Expanded */
-.sidebar.open {
-  width: 260px;
-}
+/* --- Mobile Header / Hamburger --- */
+/* This button sits outside the sidebar on mobile */
+.mobile-hamburger-btn {
+  display: none; /* Hidden on Desktop */
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1001;
 
-/* Collapsed */
-.sidebar.closed {
-  background-color: white;
-  width: 10px; /* keeps hamburger visible */
+  /* DESIGN FIX: Dark Theme Styling */
+  background-color: #111827; /* Matches Sidebar */
+  color: #f9fafb; /* White Icon */
+  border: 1px solid #374151; /* Subtle Border */
+  border-radius: 8px; /* Rounded Square looks cleaner than circle */
+
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Darker shadow */
+
+  /* Flex centering */
   align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
 }
 
-.sidebar.closed .hamburger-btn {
-  color: black;
-  background-color: white;
-  /* border: 1px solid black; */
-  margin-left: 0%;
-  position: relative;
-  z-index: 11;
-  margin-left: -5px;
+.mobile-hamburger-btn:hover {
+  background-color: #1f2937; /* Slightly lighter on hover */
 }
 
-/* Sidebar header */
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 32px;
-}
-
-/* Adjust title so it disappears gracefully */
-.sidebar.closed .sidebar-header h1 {
+.mobile-sidebar-is-open .mobile-hamburger-btn {
   display: none;
 }
 
-/* Hamburger always visible */
-.hamburger-btn {
-  background: none;
-  border: none;
-  color: var(--text-light);
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 32px;
-  position: relative;
-}
-
-@media (max-width: 768px) {
-  .sidebar-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .sidebar-header h1 {
-    position: static;
-    margin: 0;
-  }
-
-  /* Keep logo at left */
-  .sidebar-header svg {
-    position: absolute;
-    left: 15px;
-  }
-}
-
-.sidebar-header h1 {
-  font-size: 1.25rem;
-  margin: 0;
-  cursor: pointer;
-}
-
-.create-room-btn {
-  /* background-color: var(--primary-blue); */
-  background-color: #007bff;
-  color: var(--text-light);
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 0.2s;
-  margin-bottom: 32px;
-}
-
-.create-room-btn:hover {
-  /* background-color: var(--primary-blue-hover); */
-  background-color: #0056b3;
-}
-
-/* In Dashboard.css */
-.your-rooms-section {
-  /* flex-grow: 1; */
-  overflow-y: auto; /* <--- ADD THIS LINE */
-}
-
-.your-rooms-section h2 {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
-}
-
-.room-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.room-list li {
-  white-space: nowrap; /* ✅ Prevent text from going to new line */
-  overflow: hidden; /* ✅ Hide overflow text */
-  text-overflow: ellipsis; /* ✅ Show ... */
-  max-width: 100%; /* ✅ Important for ellipsis */
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-weight: 500;
-  color: #d1d5db;
-}
-
-.room-list li:hover {
-  background-color: #374151;
-  color: var(--text-light);
-}
-/* In Dashboard.css */
-.sidebar-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: auto;
-  padding-top: 16px;
-}
-.sidebar-footer .sidebar-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: #374151;
-  color: var(--text-light);
-  border: 1px solid #4b5563;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.sidebar-footer .logout-btn:hover {
-  background-color: #4b5563;
-}
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-}
-/* --- Main Content Styles --- */
-/* Find this rule and REMOVE the flex-grow line */
-.main-content {
-  /* flex-grow: 1; */ /* <-- REMOVE THIS LINE */
-  padding: 32px;
-  overflow-y: auto;
-  position: relative;
-  z-index: 1;
-}
-
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-}
-
-.welcome-message h2 {
-  font-size: 1.875rem;
-  margin: 0 0 4px 0;
-}
-
-.welcome-message p {
-  color: var(--text-muted);
-  margin: 0;
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background-color: var(--card-bg);
-  padding: 8px 12px;
-  border-radius: 9999px;
-  border: 1px solid var(--border-color);
-}
-
-.user-profile img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.user-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.user-info span {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
-.user-info strong {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.dropdown-arrow {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid var(--text-muted);
-  cursor: pointer;
-}
-
-/* --- Rooms Grid & Cards --- */
-.rooms-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 24px;
-}
-
-.room-card {
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.card-header h3 {
-  font-size: 1.25rem;
-  margin: 0;
-}
-
-.card-header p {
-  color: var(--text-muted);
-  margin: 4px 0 0 0;
-  font-size: 0.875rem;
-}
-
-.invite-link-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #f3f4f6;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  word-break: break-all;
-}
-
-.invite-link-container svg {
-  flex-shrink: 0;
-  color: #9ca3af;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-  margin-top: auto; /* Pushes footer to the bottom */
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color);
-}
-
-.card-footer button {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.delete-btn {
-  background-color: transparent;
-  color: var(--danger-red);
-}
-
-.delete-btn:hover {
-  background-color: #fee2e2;
-}
-
-.copy-link-btn {
-  background-color: var(--primary-blue);
-  color: var(--text-light);
-}
-
-.copy-link-btn:hover {
-  background-color: var(--primary-blue-hover);
-}
-
-/* --- Modal Styles --- */
-.modal-overlay {
+/* Overlay for mobile when sidebar is open */
+.sidebar-overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: var(--card-bg);
-  padding: 32px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 450px;
-  position: relative;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
-}
-
-.modal-close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.modal-content h2 {
-  margin-top: 0;
-  margin-bottom: 8px;
-}
-
-.modal-content p {
-  color: var(--text-muted);
-  margin-bottom: 24px;
-}
-
-.modal-content input {
-  width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  margin-bottom: 16px;
-}
-
-.modal-submit-btn {
-  width: 100%;
-  background-color: var(--primary-blue);
-  color: var(--text-light);
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.modal-submit-btn:hover {
-  background-color: var(--primary-blue-hover);
-}
-
-/* --- Additions for Dashboard.css --- */
-
-/* Style for the active room in the sidebar */
-.room-list li.active {
-  background-color: var(--primary-blue);
-  color: var(--text-light);
-  font-weight: 600;
-}
-
-/* Make the room cards clickable */
-.room-card {
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.room-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
-}
-
-/* Styles for the new Room Detail View */
-.room-detail-view {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.back-button {
-  background: none;
-  border: none;
-  color: var(--primary-blue);
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: 24px;
-}
-
-.room-detail-header h1 {
-  font-size: 2.25rem;
-  margin: 0 0 8px 0;
-}
-
-.room-detail-header p {
-  color: var(--text-muted);
-  font-size: 1rem;
-}
-
-.room-detail-header code {
-  background-color: #e5e7eb;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: var(--text-dark);
-}
-
-.room-content-placeholder {
-  margin-top: 40px;
-  padding: 40px;
-  border: 2px dashed var(--border-color);
-  border-radius: 12px;
-  text-align: center;
-  color: var(--text-muted);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.room-list {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.modal-overlay {
-  animation: fadeIn 0.2s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Paste this at the very end of your existing Dashboard.css file */
-
-/* --- NEW STYLES FOR RESPONSIVE BEHAVIOR --- */
-
-/* 1. Mobile-only hamburger button (hidden on desktop) */
-.mobile-hamburger-btn {
-  display: none;
-  position: fixed;
-  top: 0.8rem;
-  left: 1rem;
-  z-index: 1001; /* Above everything */
-  background: white;
-  color: #111827;
-  border: 1px solid #e5e7eb;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.25rem;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  /* border: 2px solid red; */
-}
-
-/* 2. Overlay for dimming the background on mobile */
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999; /* Below sidebar, above content */
+  z-index: 999;
   animation: fadeIn 0.3s ease;
+  /* border: 1px solid rgb(38, 255, 0); */
 }
-/* 
-.mobile-sidebar-is-open .mobile-hamburger-btn {
-  display: none;
-} */
 
-/* --- MOBILE OVERRIDES (for screens 768px or less) --- */
+/* --- Animations --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Responsive Layout Adjustments --- */
 @media (max-width: 768px) {
-  /* --- LAYOUT FIX --- */
   .dashboard-container {
-    /* Switch from two columns to a single column for the main content */
-    grid-template-columns: 1fr;
+    display: block; /* Stack layout on mobile */
   }
 
-  /* --- SIDEBAR STYLES --- */
-  /* Show the mobile hamburger button */
   .mobile-hamburger-btn {
-    display: block;
+    display: flex; /* Show on Mobile */
   }
 
-  /* Hide the original hamburger button that's inside the sidebar */
-  .sidebar .hamburger-btn {
-    display: none;
-  }
-
-  /* In Dashboard.css, inside the @media block */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 1000;
-    transition: transform 0.3s ease-in-out;
-    overflow-y: auto;
-  }
-
-  /* Slide the sidebar into view when open */
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  /* Slide the sidebar out of view when closed */
-  .sidebar.closed {
-    /* Override desktop inline style */
-    width: 260px !important;
-    transform: translateX(-100%);
-  }
-  .mobile-hamburger-btn {
-    top: 1.8rem;
-  }
-  /* --- TITLE CENTERING --- */
-}
-/* --- Custom Scrollbar Styles for the Sidebar --- */
-
-/* Target the scrolling element for Firefox */
-.your-rooms-section {
-  scrollbar-width: thin;
-  scrollbar-color: #4b5563 #1f2937; /* thumb-color track-color */
-}
-
-/* Target the scrollbar for WebKit browsers (Chrome, Safari, Edge) */
-.your-rooms-section::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* The track (the background of the scrollbar) */
-.your-rooms-section::-webkit-scrollbar-track {
-  background: #1f2937; /* A very dark gray, slightly lighter than the sidebar */
-}
-
-/* The draggable scrolling handle */
-.your-rooms-section::-webkit-scrollbar-thumb {
-  background-color: #4b5563; /* A muted gray that matches your footer buttons */
-  border-radius: 10px; /* Makes the scrollbar thumb rounded */
-  border: 2px solid #1f2937; /* Creates a padding effect */
-}
-
-/* The handle on hover */
-.your-rooms-section::-webkit-scrollbar-thumb:hover {
-  background-color: #6b7280; /* A slightly lighter gray for interactivity */
-}
-
-/* Desktop only invite badge */
-
-.dashboard-title-container {
-  position: relative;
-  display: inline-block;
-}
-
-.dashboard-invite-badge {
-  position: absolute;
-  top: -6px;
-  right: -35px;
-
-  background-color: #e50914;
-  color: white;
-
-  font-size: 8px;
-  font-weight: bold;
-  padding: 0.5px 6px;
-
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* Ensure badge NEVER appears on mobile */
-/* Mobile version of the same badge (text, smaller) */
-@media (max-width: 768px) {
-  .dashboard-invite-badge {
-    display: inline-flex;
-
-    top: -6px;
-    right: -36px; /* you can adjust this */
-
-    font-size: 9px;
-    padding: 2px 6px;
-
-    border-radius: 10px;
-  }
-}
-
-.room-list li.active-room {
-  background-color: rgba(255, 255, 255, 0.12);
-  border-left: 3px solid #3b82f6;
-  font-weight: 600;
-}
-@media (max-width: 768px) {
-  .mobile-hamburger-btn {
-    top: 1rem !important; /* Move UP */
-    left: 1rem !important;
-  }
-}
-.edit-profile-btn {
-  position: relative;
-}
-
-.profile-warning-badge {
-  background-color: #ef4444; /* red */
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  border-radius: 50%;
-  padding: 2px 7px;
-  margin-left: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-/* Hide hamburger ONLY on mobile when sidebar is open */
-@media (max-width: 768px) {
-  .mobile-sidebar-is-open .mobile-hamburger-btn {
-    display: none;
+  .main-content {
+    /* Reduce this from 60px to 10px or 15px */
+    padding-top: 15px !important;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }

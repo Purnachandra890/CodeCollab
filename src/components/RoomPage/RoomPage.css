@@ -1,3 +1,5 @@
+/* src/Dashboard.css (or RoomPage.css) */
+
 /* --- Custom Properties (Theme Variables) --- */
 :root {
   --sidebar-bg: #111827;
@@ -12,948 +14,121 @@
   --border-color: #e5e7eb;
 }
 
-/* --- Main Room Detail View Layout --- */
+/* --- Main Layout --- */
 .room-detail-view {
-  padding: 32px 48px;
-  animation: fadeIn 0.3s ease-in-out;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 20px 24px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow-x: hidden;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* --- Room Header --- */
 .room-header {
-  /* border: 2px solid red; */
-  margin-top: -20px;
   flex-shrink: 0;
-}
-.name-profile {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.name-profile .logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.room-header h1 {
-  /* border: 2px solid blue; */
-  font-size: 2.25rem;
   margin: 0;
-  margin-bottom: 1rem;
-}
-.room-header .room-description {
-  font-size: 1rem;
-  color: var(--text-muted);
-  margin: 8px 0 24px 0;
-  max-width: 60ch;
-}
-.room-header-actions {
-  display: flex;
-  gap: 12px;
+  margin-bottom: 12px;
 }
 
-/* --- General Button Styles --- */
-.primary-btn,
-.secondary-btn {
-  border: none;
-  border-radius: 6px;
-  padding: 10px 16px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.primary-btn {
-  background-color: var(--primary-blue);
-  color: white;
-}
-.primary-btn:hover {
-  background-color: var(--primary-blue-hover);
-}
-.secondary-btn {
-  background-color: #ffffff;
-  color: var(--text-dark);
-  border: 1px solid var(--border-color);
-}
-.secondary-btn:hover {
-  background-color: var(--content-bg);
-}
-
-/* --- Tabs --- */
 .room-tabs {
-  display: flex;
-  margin-top: 15px;
-  border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
-}
-.tab-btn {
-  background: none;
-  border: none;
-  padding: 12px 16px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  color: var(--text-muted);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  position: relative;
-}
-.notification-badge {
-  position: absolute;
-  top: 5px;
-  right: -5px;
-  background-color: #ff4500;
-  color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 0.7em;
-  font-weight: bold;
-  line-height: 1;
-  min-width: 15px;
-  text-align: center;
-}
-.tab-btn.active {
-  color: var(--primary-blue);
-  border-bottom-color: var(--primary-blue);
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0;
 }
 
-/* --- Tab Content --- */
+/* --- Tab Content Area --- */
 .tab-content {
   display: flex;
-  justify-content: center;
-  margin-top: 12px;
+  align-items: stretch; 
+  justify-content: stretch;
   flex-grow: 1;
-  overflow-y: auto;
-  min-height: 0;
+  width: 100%;
+  overflow: hidden; /* Prevent double scrollbars */
+  padding-bottom: 20px; 
+  margin-top: 16px;
 }
 
+/* Ensure the card fills the tab-content area */
 .tab-content .card {
   background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
+  /* border: 1px solid var(--border-color); Kept border for general cards */
   border-radius: 12px;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: auto; /* Allow scrolling INSIDE the card by default */
 }
 
-/* --- FIX: Allow Leaderboard podium to overflow its card --- */
+/* --- Leaderboard Specific Overrides --- */
 .tab-content .card:has(.leaderboard-container) {
   overflow: visible;
-  padding-top: 2rem;
+  padding-top: 10rem;
+  border: none; /* Remove border for leaderboard if desired */
+  background-color: transparent; /* Or keep white depending on design */
 }
+
 .tab-content .card .leaderboard-container {
   padding: 0;
   background-color: transparent;
   min-height: auto;
 }
 
-/* --- Problems Tab --- */
-.problems-container {
-  display: flex; /* Make it a flex container */
-  flex-direction: column; /* Stack its children vertically */
-  height: 100%; /* Ensure it takes up all available vertical space */
-}
-.problems-header {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  border-bottom: 1px solid var(--border-color);
-}
-.toggle-addprobtm {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-.preview-toggle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.85rem;
-  color: #374151;
-}
-/* Hide preview toggle on mobile screens */
-@media (max-width: 768px) {
-  .preview-toggle {
-    display: none;
-  }
-}
 
-.toggle-switch {
-  width: 42px;
-  height: 22px;
-  background-color: #d1d5db;
-  border-radius: 999px;
-  cursor: pointer;
-  position: relative;
-  transition: background-color 0.3s ease;
-}
-
-.toggle-switch.on {
-  background-color: #22c55e;
-}
-
-.toggle-knob {
-  width: 18px;
-  height: 18px;
-  background-color: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.3s ease;
-}
-
-.toggle-switch.on .toggle-knob {
-  transform: translateX(20px);
-}
-
-.problems-header h3 {
-  margin: 0;
-  font-size: 1.125rem;
-}
-.problems-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.table-scroll-container {
-  flex-grow: 1; /* Allows this container to grow and fill remaining space */
-  overflow-y: auto; /* This is the key: makes the container vertically scrollable */
-  overflow-x: auto;
-  min-height: 0; /* Prevents flexbox from overriding the height and causing overflow */
-  scrollbar-width: none;
-}
-.problems-table thead {
-  position: sticky;
-  top: 0;
-  background-color: var(
-    --card-bg
-  ); /* Match the card background to avoid transparency issues */
-  z-index: 1; /* Ensure the header stays on top of the scrolling content */
-}
-.problems-table th,
-.problems-table td {
-  padding: 16px 24px;
-  text-align: left;
-  vertical-align: middle;
-}
-.problems-table th {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.problems-table th:last-child {
-  text-align: right;
-}
-.problems-table td {
-  border-top: 1px solid var(--border-color);
-}
-.problems-table a {
-  color: var(--text-dark);
-  text-decoration: none;
-  font-weight: 500;
-}
-.problems-table a:hover {
-  color: var(--primary-blue);
-  text-decoration: underline;
-}
-.problems-table .youtube-link-icon {
-  display: flex;
-  /* margin-left: 2.5rem; */
-  justify-content: start;
-  align-items: center; /* Centers vertically */
-  /* border: 2px solid red; */
-}
-.actions-cell {
-  text-align: right !important;
-  white-space: nowrap;
-}
-.action-icon-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted);
-  padding: 4px;
-  margin-left: 8px;
-  border-radius: 4px;
-  transition: color 0.2s, background-color 0.2s;
-}
-.action-icon-btn:hover {
-  color: var(--primary-blue);
-  background-color: #eef2ff;
-}
-.edit {
-  color: #3b82f6; /* Blue icon */
-  background-color: #eff6ff;
-}
-.edit:hover {
-  background-color: #dbeafe;
-  color: #1d4ed8;
-}
-.delete {
-  color: #ef4444; /* Red icon */
-  background-color: #fef2f2;
-}
-.delete:hover {
-  background-color: #fee2e2;
-  color: #b91c1c;
-}
-
-/* --- Members Tab --- */
-.members-container {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-.member-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  overflow-y: auto;
-  max-height: calc(100vh - 300px);
-}
-.member-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background-color: var(--content-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-}
-.member-card img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.member-info {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-.member-name {
-  font-weight: 600;
-  color: var(--text-dark);
-}
-.member-id {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-.owner-badge {
-  background-color: #fef3c7;
-  color: #92400e;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-/* --- Modal Styles --- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: white;
-  padding: 32px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-}
-.modal-close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-.modal-content h2 {
-  margin-top: 0;
-}
-.form-group {
-  margin-bottom: 16px;
-}
-.form-group label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 6px;
-}
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-}
-.modal-submit-btn {
-  width: 100%;
-  background-color: var(--primary-blue);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* --- Animation --- */
+/* --- Global Animation --- */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.card {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* --- Custom Scrollbar Styles --- */
-.tab-content::-webkit-scrollbar {
+.tab-content::-webkit-scrollbar,
+.tab-content .card::-webkit-scrollbar {
   width: 8px;
 }
-.tab-content::-webkit-scrollbar-track {
+
+.tab-content::-webkit-scrollbar-track,
+.tab-content .card::-webkit-scrollbar-track {
   background: transparent;
 }
-.tab-content::-webkit-scrollbar-thumb {
+
+.tab-content::-webkit-scrollbar-thumb,
+.tab-content .card::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 10px;
 }
-.tab-content::-webkit-scrollbar-thumb:hover {
+
+.tab-content::-webkit-scrollbar-thumb:hover,
+.tab-content .card::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+
 .welcome-placeholder {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.card {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.member-grid {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.problems-table {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 /* ========================================= */
 /* --- Room Page Mobile Styles --- */
 /* ========================================= */
 @media (max-width: 768px) {
-  /* 1. Adjust main view padding and ensure it's not overflowing */
   .room-detail-view {
-    padding: 1rem;
-    height: auto;
+    padding: 16px;
   }
 
-  /* 3. Make buttons and tabs horizontally scrollable */
-  .room-header-actions,
-  .room-tabs {
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-    gap: 8px;
-    padding-bottom: 10px;
-    margin-top: 1rem;
-    border-bottom: 1px solid var(--border-color);
+  .room-header {
+    margin-bottom: 16px;
   }
 
-  .room-tabs {
-    margin-top: 1rem;
-  }
-
-  /* 4. Ensure buttons and tabs are sized correctly */
-  .room-header-actions .primary-btn,
-  .room-header-actions .secondary-btn,
-  .tab-btn {
-    flex-shrink: 0;
-    width: auto;
-    font-size: 0.8rem;
-    padding: 8px 12px;
-  }
-
-  /* 5. Fix for the Problems table */
-  .problems-table th,
-  .problems-table td {
-    padding: 12px;
-  }
-
-  /* 6. Fix for the tab-content overflow */
   .tab-content {
-    /* REMOVE the negative margins that cause the shift */
     margin: 1rem 0 0 0;
     justify-content: flex-start;
-  }
-
-  /* 7. Force the member cards to stack in a single column */
-  .member-grid {
-    grid-template-columns: 1fr;
-  }
-}
-@media (max-width: 768px) {
-  .room-header-actions {
-    overflow: visible !important; /* VERY IMPORTANT */
-  }
-}
-
-/* --- Members Tab Styles --- */
-.add-friend-btn {
-  background-color: var(--primary-blue);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.add-friend-btn:hover {
-  background-color: var(--primary-blue-hover);
-  transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-.pending-badge {
-  background-color: var(--text-muted);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-.message {
-  font-size: 0.8rem; /* This makes it 80% of the default font size */
-  color: #555; /* A slightly lighter color also makes it look more subtle */
-  margin-top: 10px; /* Adds a little space above the message */
-  text-align: center; /* Optional: centers the text */
-}
-
-/* Hide scrollbar visually for room-tabs and room-header-actions */
-.room-tabs,
-.room-header-actions {
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
-}
-
-.room-tabs::-webkit-scrollbar,
-.room-header-actions::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
-}
-
-.chat-btn-with-badge {
-  position: relative;
-}
-.chat-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-
-  min-width: 18px;
-  height: 18px;
-  padding: 0;
-
-  background: red;
-  color: white;
-
-  font-size: 11px;
-  font-weight: bold;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 50%;
-  border: 2px solid white; /* creates clean outline */
-
-  z-index: 10;
-}
-
-.leetcode-cell {
-  text-align: center;
-}
-
-.leetcode-logo {
-  width: 27px; /* adjust size */
-  height: 27px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.leetcode-logo:hover {
-  transform: scale(1.1);
-}
-.youtube-logo {
-  width: 21px; /* change size here */
-  height: 21px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.youtube-logo:hover {
-  transform: scale(1.1);
-}
-.youtube-cell {
-  text-align: center;
-}
-
-.no-video {
-  font-size: 18px;
-  color: #999;
-  font-weight: bold;
-}
-.difficulty-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px; /* px-2.5 py-0.5 */
-  border-radius: 9999px; /* rounded-full */
-  font-size: 12px; /* text-xs */
-  font-weight: 600; /* font-medium */
-}
-
-/* COLORS */
-.difficulty-easy {
-  background-color: #dcfce7; /* green-100 */
-  color: #166534; /* green-800 */
-}
-
-.difficulty-medium {
-  background-color: #fef9c3; /* yellow-100 */
-  color: #854d0e; /* yellow-800 */
-}
-
-.difficulty-hard {
-  background-color: #fee2e2; /* red-100 */
-  color: #991b1b; /* red-800 */
-}
-.problems-table td:first-child {
-  max-width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-@media (max-width: 768px) {
-  /* Hide S.No column */
-  .problems-table th:nth-child(1),
-  .problems-table td:nth-child(1) {
-    display: none !important;
-  }
-
-  /* Hide LeetCode column */
-  .problems-table th:nth-child(4),
-  .problems-table td:nth-child(4) {
-    display: none !important;
-  }
-
-  /* Hide Added By column */
-  .problems-table th:nth-child(6),
-  .problems-table td:nth-child(6) {
-    display: none !important;
-  }
-
-  /* Hide Actions column */
-  .problems-table th:nth-child(7),
-  .problems-table td:nth-child(7) {
-    display: none !important;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Fix mobile column widths AFTER hiding S.No, LC, AddedBy, Actions */
-  .problems-table {
-    table-layout: fixed;
-    width: 100%;
-  }
-
-  /* Title column (now 2nd column) */
-  .problems-table th:nth-child(2),
-  .problems-table td:nth-child(2) {
-    width: 65%;
-  }
-
-  /* Difficulty (now 3rd visible column) */
-  .problems-table th:nth-child(3),
-  .problems-table td:nth-child(3) {
-    width: 25%;
-    text-align: center;
-  }
-
-  /* YouTube column */
-  .problems-table th:nth-child(4),
-  .problems-table td:nth-child(4) {
-    width: 10%;
-    text-align: center;
-  }
-}
-
-.name-profile {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.right-side-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-@media (max-width: 768px) {
-  .room-header {
-    margin-top: 0.2rem;
-  }
-  /* Hide profile image */
-  .name-profile .logo {
-    display: none !important;
-  }
-
-  /* Make title take full width and appear ABOVE the buttons */
-  .name-profile {
-    flex-direction: column !important;
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-
-  /* Center the title */
-  .name-profile h1 {
-    width: 100%;
-    text-align: center;
-    font-size: 1.4rem;
-    margin: 0;
-    margin-bottom: 8px; /* space between title and buttons */
-  }
-
-  /* Place buttons BELOW the title as a new line */
-  .room-header-actions {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 0; /* remove extra spacing */
-  }
-
-  .right-side-group {
-    /* border: 2px solid green; */
-    margin-top: 1rem;
-  }
-}
-/* ============================= */
-/* Problem Tooltip (Final) */
-/* ============================= */
-
-.problem-title {
-  cursor: pointer;
-}
-
-/* Smooth fade + lift animation */
-@keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-40%) translateY(8px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-40%) translateY(0) scale(1);
-  }
-}
-
-.problem-tooltip-fixed {
-  position: fixed;
-  top: 160px;
-
-  left: 50%;
-  transform: translateX(-40%);
-
-  width: 750px;
-  max-width: 90vw;
-  max-height: 60vh;
-
-  overflow-y: auto;
-
-  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
-
-  color: #e5e7eb;
-  padding: 18px;
-  border-radius: 12px;
-
-  border: 1px solid rgba(148, 163, 184, 0.08);
-
-  z-index: 9999;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-
-  animation: tooltipFadeIn 0.18s ease-out;
-}
-
-/* Text formatting */
-.problem-tooltip-fixed p {
-  margin-bottom: 10px;
-  line-height: 1.6;
-}
-
-/* Inline code */
-.problem-tooltip-fixed code {
-  background: rgba(2, 6, 23, 0.85);
-  padding: 2px 6px;
-  border-radius: 6px;
-  color: #38bdf8;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.9em;
-}
-
-/* Code blocks */
-.problem-tooltip-fixed pre {
-  background: rgba(2, 6, 23, 0.9);
-  padding: 12px;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 12px 0;
-}
-
-/* ============================= */
-/* Scrollbar Styling */
-/* ============================= */
-
-/* Chrome / Edge / Safari */
-.problem-tooltip-fixed::-webkit-scrollbar {
-  width: 8px;
-}
-
-.problem-tooltip-fixed::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.problem-tooltip-fixed::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
-  border-radius: 9999px;
-}
-
-.problem-tooltip-fixed::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.55);
-}
-
-/* Firefox */
-.problem-tooltip-fixed {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
-}
-
-/* ============================= */
-/* Profile Dropdown */
-/* ============================= */
-.profile-avatar {
-  cursor: pointer; /* 👈 correct cursor */
-}
-
-.profile-wrapper {
-  position: relative;
-}
-
-.profile-dropdown {
-  position: absolute;
-  top: 48px;
-  right: 0;
-
-  background: white;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-
-  min-width: 160px;
-  padding: 6px;
-
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-  z-index: 999;
-  animation: fadeIn 0.15s ease-in-out;
-}
-
-.profile-dropdown-item {
-  width: 100%;
-  background: transparent;
-  border: none;
-
-  padding: 10px 12px;
-  text-align: left;
-
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text-dark);
-
-  border-radius: 6px;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-}
-
-.profile-dropdown-item.logout {
-  color: #dc2626;
-}
-
-.profile-dropdown-item.logout:hover {
-  background-color: #fee2e2;
-}
-
-/* Mobile: click only (disable hover dependency) */
-@media (max-width: 768px) {
-  .profile-wrapper:hover .profile-dropdown {
-    display: none;
   }
 }

@@ -1,0 +1,140 @@
+/* src/components/RoomPage/components/MembersTab.css */
+
+.members-container {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 100%;
+  
+  /* ADD THESE LINES to remove the white background */
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* --- Developer Theme Card --- */
+/* --- Developer Theme Card --- */
+.member-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  
+  /* CHANGE THIS COLOR */
+  background-color: #0f172a; /* Deep Navy (Slate 900) */
+  
+  /* Subtle Dark Border */
+  border: 1px solid #1e293b; 
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+/* Hover Effect: Glow slightly */
+.member-card:hover {
+  transform: translateY(-2px);
+  border-color: #3b82f6; /* Blue glow on border */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 0 10px rgba(59, 130, 246, 0.1);
+  background-color: #1f2937; /* Slightly lighter on hover */
+}
+
+.member-card img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #374151; /* Dark border around avatar */
+}
+
+.member-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+/* --- Typography: Light Text for Dark Mode --- */
+.member-name {
+  font-weight: 600;
+  color: #f3f4f6; /* Off-white text */
+  font-family: 'Inter', system-ui, sans-serif; /* Clean font */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1rem;
+}
+
+/* --- Badges & Buttons --- */
+
+/* Owner Badge: "Terminal Warning" Style (Yellow/Amber) */
+.owner-badge {
+  background-color: rgba(251, 191, 36, 0.1); /* Transparent Amber */
+  color: #fbbf24; /* Bright Amber Text */
+  border: 1px solid rgba(251, 191, 36, 0.3); /* Subtle border */
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Pending Badge: Muted Gray */
+.pending-badge {
+  background-color: #374151;
+  color: #d1d5db;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #4b5563;
+}
+
+/* Add Button: Neon Blue */
+.add-friend-btn {
+  background-color: #2563eb; /* Strong Blue */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.25rem; /* Adjusted for better centering */
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.3); /* Blue Glow */
+}
+
+.add-friend-btn:hover {
+  background-color: #3b82f6; /* Lighter Blue */
+  transform: scale(1.1) rotate(90deg); /* Fun rotation effect */
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .members-container {
+    padding: 16px;
+  }
+  
+  .member-grid {
+    grid-template-columns: 1fr; /* Stack vertically on mobile */
+  }
+}

@@ -15,23 +15,31 @@ import { useAuth } from "../../../AuthContext";
 import axios from "axios";
 import "./LeaderBoard.css";
 
-// --- Icon Component ---
-const LogoIcon = () => (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    color="#4f46e5"
-  >
-    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"></path>
-  </svg>
-);
-
 const defaultPhoto =
   "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
-// ----- HELPER FUNCTIONS -----
+const CrownIcon = ({ color }) => (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="none">
+    <path
+      d="M2 20H22V22H2V20ZM12 4L15 11H21L17 14L19 21L12 17L5 21L7 14L3 11H9L12 4Z"
+      fill={color}
+    />
+  </svg>
+);
+const Spinner = () => (
+  <svg className="spinner" viewBox="0 0 50 50">
+    <circle
+      className="path"
+      cx="25"
+      cy="25"
+      r="20"
+      fill="none"
+      strokeWidth="5"
+    ></circle>
+  </svg>
+);
+
+// ... (Keep helper functions: slugFromLink, slugifyTitle, getProblemSlug) ...
 const slugFromLink = (link) => {
   if (!link || typeof link !== "string") return "";
   try {
@@ -69,38 +77,33 @@ const getProblemSlug = (problem) => {
   if (fromLink) return fromLink;
   const t = problem?.title || "";
   if (!t) return "";
-  const looksSlugAlready = t.includes("-") || t === t.toLowerCase();
-  return looksSlugAlready ? t.toLowerCase() : slugifyTitle(t);
+  return t.includes("-") || t === t.toLowerCase()
+    ? t.toLowerCase()
+    : slugifyTitle(t);
 };
 
 export default function LeaderBoard() {
   const { roomId } = useParams();
   const { user } = useAuth();
   const [leaderboard, setLeaderboard] = useState([]);
-  const [roomName, setRoomName] = useState("");
+  const [isLoading, setIsLoading] = useState(true); // ✅ 1. Add Loading State
 
-  // ----- useEffect to sync LeetCode submissions for the current user -----
+  // ----- useEffect 1: Sync (Unchanged) -----
   useEffect(() => {
-    // Helper function to handle API requests with failover
     const fetchWithFailover = async (endpoints) => {
       let lastError = null;
       for (const url of endpoints) {
         try {
-          const response = await axios.get(url);
-          // console.log(`Successfully fetched from ${url}`);
-          return response; // Success
+          return await axios.get(url);
         } catch (error) {
-          // console.warn(`Request to ${url} failed. Trying next server...`);
           lastError = error;
         }
       }
-      // If loop completes, all have failed
       throw new Error("All API servers are unavailable.", { cause: lastError });
     };
 
     const syncSubmissions = async () => {
       if (!user?.uid || !roomId) return;
-
       const userDocSnap = await getDoc(doc(db, "users", user.uid));
       if (!userDocSnap.exists()) return;
       const leetcodeUsername = userDocSnap.data().leetcodeUsername;
@@ -111,9 +114,7 @@ export default function LeaderBoard() {
           `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`,
           `https://leetcode-api-xesz.onrender.com/${leetcodeUsername}/acSubmission`,
         ];
-
         const res = await fetchWithFailover(endpoints);
-
         const submissions = Array.isArray(res.data?.submission)
           ? res.data.submission
           : [];
@@ -137,7 +138,6 @@ export default function LeaderBoard() {
         for (const p of problems) {
           const slug = getProblemSlug(p);
           if (!slug) continue;
-
           const isSolvedInAPI = solvedSlugs.has(slug);
           const alreadyMarked = !!p?.completedBy?.[user.uid];
 
@@ -149,166 +149,114 @@ export default function LeaderBoard() {
             );
           }
         }
-
-        if (updates.length > 0) {
-          await Promise.all(updates);
-        }
+        if (updates.length > 0) await Promise.all(updates);
       } catch (err) {
-        console.error(
-          "Error syncing LeetCode submissions from all servers:",
-          err
-        );
+        console.error("Error syncing LeetCode submissions:", err);
       }
     };
-
     syncSubmissions();
   }, [roomId, user?.uid]);
 
-  // ----- useEffect to fetch and display leaderboard data (NO CHANGES HERE) -----
+  // ----- useEffect 2: Fetch Data (Updated) -----
   useEffect(() => {
     if (!roomId) return;
-
-    getDoc(doc(db, "rooms", roomId)).then((docSnap) => {
-      if (docSnap.exists()) setRoomName(docSnap.data().name);
-    });
+    setIsLoading(true);
 
     const roomRef = doc(db, "rooms", roomId);
     const problemsRef = collection(db, "rooms", roomId, "problems");
 
+    let memberUIDs = [];
+
+    // 1️⃣ Listen to room members
     const unsubscribeRoom = onSnapshot(roomRef, (roomSnap) => {
-      if (!roomSnap.exists()) return;
-      const memberUIDs = roomSnap.data().members || [];
-
-      const unsubscribeProblems = onSnapshot(
-        query(problemsRef),
-        async (problemsSnap) => {
-          const totalProblems = problemsSnap.docs.length;
-          const userStats = {};
-
-          memberUIDs.forEach((uid) => {
-            userStats[uid] = { completed: 0, lastActivity: null };
-          });
-
-          problemsSnap.docs.forEach((problemDoc) => {
-            const problem = problemDoc.data();
-            if (!problem.completedBy) return;
-            Object.entries(problem.completedBy).forEach(([uid, timestamp]) => {
-              if (!userStats[uid]) return;
-              userStats[uid].completed += 1;
-              const activityDate = timestamp?.toDate
-                ? timestamp.toDate()
-                : null;
-              if (
-                !userStats[uid].lastActivity ||
-                activityDate > userStats[uid].lastActivity
-              ) {
-                userStats[uid].lastActivity = activityDate;
-              }
-            });
-          });
-
-          const finalData = await Promise.all(
-            Object.entries(userStats).map(async ([uid, stats]) => {
-              const userSnap = await getDoc(doc(db, "users", uid));
-              const userData = userSnap.exists() ? userSnap.data() : {};
-              return {
-                uid,
-                username: userData.name || "Unknown",
-                photoURL: userData.photoURL || defaultPhoto,
-                completed: stats.completed,
-                lastActivity: stats.lastActivity,
-                completionPercentage:
-                  totalProblems > 0
-                    ? (stats.completed / totalProblems) * 100
-                    : 0,
-              };
-            })
-          );
-
-          finalData.sort((a, b) => {
-            if (b.completed !== a.completed) return b.completed - a.completed;
-            return a.lastActivity - b.lastActivity;
-          });
-
-          const rankedData = finalData.map((user, index) => ({
-            ...user,
-            rank: index + 1,
-          }));
-          setLeaderboard(rankedData);
-        }
-      );
-      return () => unsubscribeProblems();
+      if (!roomSnap.exists()) {
+        setLeaderboard([]);
+        setIsLoading(false);
+        return;
+      }
+      memberUIDs = roomSnap.data().members || [];
     });
-    return () => unsubscribeRoom();
+
+    // 2️⃣ Listen to problems independently
+    const unsubscribeProblems = onSnapshot(
+      problemsRef,
+      async (problemsSnap) => {
+        if (memberUIDs.length === 0) {
+          setLeaderboard([]);
+          setIsLoading(false);
+          return;
+        }
+
+        const totalProblems = problemsSnap.docs.length;
+        const userStats = {};
+
+        memberUIDs.forEach((uid) => {
+          userStats[uid] = { completed: 0, lastActivity: null };
+        });
+
+        problemsSnap.docs.forEach((docSnap) => {
+          const problem = docSnap.data();
+          if (!problem.completedBy) return;
+
+          Object.entries(problem.completedBy).forEach(([uid, timestamp]) => {
+            if (!userStats[uid]) return;
+
+            userStats[uid].completed += 1;
+            const date = timestamp?.toDate?.();
+            if (
+              !userStats[uid].lastActivity ||
+              date > userStats[uid].lastActivity
+            ) {
+              userStats[uid].lastActivity = date;
+            }
+          });
+        });
+
+        const finalData = await Promise.all(
+          Object.entries(userStats).map(async ([uid, stats]) => {
+            const userSnap = await getDoc(doc(db, "users", uid));
+            const userData = userSnap.exists() ? userSnap.data() : {};
+
+            return {
+              uid,
+              username: userData.name || "Unknown",
+              photoURL: userData.photoURL || defaultPhoto,
+              completed: stats.completed,
+              lastActivity: stats.lastActivity,
+              completionPercentage:
+                totalProblems > 0 ? (stats.completed / totalProblems) * 100 : 0,
+            };
+          })
+        );
+
+        finalData.sort((a, b) => {
+          if (b.completed !== a.completed) return b.completed - a.completed;
+          return a.lastActivity - b.lastActivity;
+        });
+
+        setLeaderboard(finalData.map((u, i) => ({ ...u, rank: i + 1 })));
+        setIsLoading(false);
+      }
+    );
+
+    return () => {
+      unsubscribeRoom();
+      unsubscribeProblems();
+    };
   }, [roomId]);
 
-  // const formatDate = (date) => {
-  //   if (!date) return "No Activity";
-  //   console.log(new Intl.DateTimeFormat("en-US", {
-  //     year: "numeric",
-  //     month: "numeric",
-  //     day: "numeric",
-  //     hour: "numeric",
-  //     minute: "numeric",
-  //     second: "numeric",
-  //     hour12: true,
-  //   }).format(date));
-  //   return new Intl.DateTimeFormat("en-US", {
-  //     year: "numeric",
-  //     month: "numeric",
-  //     day: "numeric",
-  //     hour: "numeric",
-  //     minute: "numeric",
-  //     second: "numeric",
-  //     hour12: true,
-  //   }).format(date);
-  // };
-
-  // const formatDate = (date) => {
-  //   console.log("Raw LastActivity:", date);
-  //   if (!date) return "No Activity";
-
-  //   console.log(
-  //     new Intl.DateTimeFormat("en-GB", {
-  //       year: "numeric",
-  //       month: "2-digit",
-  //       day: "2-digit",
-  //       hour: "numeric",
-  //       minute: "numeric",
-  //       second: "numeric",
-  //       hour12: true,
-  //     }).format(date)
-  //   );
-  //   return new Intl.DateTimeFormat("en-GB", {
-  //     year: "numeric",
-  //     month: "2-digit",
-  //     day: "2-digit",
-  //     hour: "numeric",
-  //     minute: "numeric",
-  //     second: "numeric",
-  //     hour12: true,
-  //   }).format(date);
-  // };
-
   const formatDate = (date) => {
-    if (!date) return "No Activity";
-
+    if (!date) return "-";
     const options = {
       day: "2-digit",
       month: "short",
-      year: "numeric",
       hour: "numeric",
       minute: "numeric",
       hour12: true,
     };
-
-    // Create formatted parts
-    const formatted = new Intl.DateTimeFormat("en-GB", options).format(date);
-
-    // formatted 👉 "17 Oct 2025, 7:16 pm"
-    // We convert "," into " · " and uppercase PM/AM
-
-    return formatted.replace(",", " · ").toUpperCase();
+    return new Intl.DateTimeFormat("en-GB", options)
+      .format(date)
+      .replace(",", " •");
   };
 
   const topThree = leaderboard.slice(0, 3);
@@ -320,82 +268,112 @@ export default function LeaderBoard() {
     topThree.find((p) => p.rank === 3),
   ].filter(Boolean);
 
-  return (
-    <div className="leaderboard-container">
-      <section className="podium">
-        {podiumOrder.map((player) => (
-          <div key={player.uid} className={`podium-card rank-${player.rank}`}>
-            <span className="podium-rank">{player.rank}</span>
-            <img
-              src={player.photoURL}
-              alt={player.username}
-              className="podium-avatar"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = defaultPhoto;
-              }}
-            />
-            <h3 className="podium-name">{player.username}</h3>
-            <p className="podium-problems">{player.completed} Problems</p>
-            {/* <p>{formatDate(player.lastActivity)}</p> */}
-          </div>
-        ))}
-      </section>
+  // ✅ 3. Render Loading State
+  if (isLoading) {
+    return (
+      <div className="leaderboard-wrapper">
+        <div className="loading-container">
+          <Spinner />
+        </div>
+      </div>
+    );
+  }
 
-      <section className="leaderboard-table-card">
-        <table className="leaderboard-table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>User</th>
-              <th>Problems Solved</th>
-              <th>Completion</th>
-              <th>Last Activity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {restOfBoard.map((player) => (
-              <tr key={player.uid}>
-                <td>
-                  <span className="rank-number">{player.rank}</span>
-                </td>
-                <td>
-                  <div className="user-cell">
-                    <img
-                      src={player.photoURL}
-                      alt={player.username}
-                      className="user-avatar-table"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = defaultPhoto;
-                      }}
-                    />
-                    <div>
-                      <span className="user-name">{player.username}</span>
-                      {/* <span className="user-id">
-                        {player.uid.substring(0, 6).toUpperCase()}
-                      </span> */}
+  return (
+    <div className="leaderboard-wrapper">
+      <div className="leaderboard-content">
+        {/* --- HERO PODIUM STAGE --- */}
+        {podiumOrder.length > 0 && (
+          <div className="podium-stage">
+            {podiumOrder.map((player) => (
+              <div
+                key={player.uid}
+                className={`podium-column rank-${player.rank}`}
+              >
+                {/* Glowing Avatar */}
+                <div className="podium-avatar-container">
+                  {player.rank === 1 && (
+                    <div className="crown-floating">
+                      <CrownIcon color="#facc15" />
                     </div>
+                  )}
+                  <img
+                    src={player.photoURL}
+                    alt={player.username}
+                    className="podium-avatar"
+                  />
+                  <div className="rank-pill">{player.rank}</div>
+                </div>
+
+                {/* Glass Info Card */}
+                <div className="podium-info">
+                  <h3 className="podium-name">{player.username}</h3>
+                  <div className="podium-score">
+                    <span className="score-num">{player.completed}</span>
+                    <span className="score-label">Problems Solved</span>
                   </div>
-                </td>
-                <td>{player.completed}</td>
-                <td>
-                  <div className="completion-cell">
-                    <div className="completion-bar-container">
-                      <div
-                        className="completion-bar-fill"
-                        style={{ width: `${player.completionPercentage}%` }}
-                      ></div>
-                    </div>
-                    <span>{Math.round(player.completionPercentage)}%</span>
-                  </div>
-                </td>
-                <td>{formatDate(player.lastActivity)}</td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
-      </section>
+          </div>
+        )}
+
+        {/* --- LIST SECTION --- */}
+        <div className="leaderboard-list-card">
+          <div className="list-header">
+            <span className="col-rank">Rank</span>
+            <span className="col-user">User</span>
+            <span className="col-solved">Solved</span>
+            <span className="col-progress">Progress</span>
+            <span className="col-time">Last Active</span>
+          </div>
+
+          <div className="list-body">
+            {restOfBoard.map((player) => (
+              <div key={player.uid} className="list-row">
+                <div className="col-rank">
+                  <span className="rank-text">#{player.rank}</span>
+                </div>
+
+                <div className="col-user">
+                  <img
+                    src={player.photoURL}
+                    alt=""
+                    className="list-avatar"
+                    onError={(e) => (e.target.src = defaultPhoto)}
+                  />
+                  <span className="list-name">{player.username}</span>
+                </div>
+
+                <div className="col-solved">
+                  <span className="solved-badge">{player.completed}</span>
+                </div>
+
+                <div className="col-progress">
+                  <div className="progress-track">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${player.completionPercentage}%` }}
+                    />
+                  </div>
+                  <span className="progress-text">
+                    {Math.round(player.completionPercentage)}%
+                  </span>
+                </div>
+
+                <div className="col-time">
+                  {formatDate(player.lastActivity)}
+                </div>
+              </div>
+            ))}
+
+            {/* Only show this if NOT loading and leaderboard is actually empty */}
+            {leaderboard.length === 0 && !isLoading && (
+              <div className="empty-message">No members in this room yet.</div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,153 +1,228 @@
-/* ChatMessage.css */
+/* src/ChatMessage.css */
 
+/* --- 1. Main Layout (Dark IDE Theme) --- */
 .chat-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: white;
-  animation: fadeIn 0.3s ease-in-out;
+  background-color: #0f172a; /* Deep Navy Background */
+  color: #f1f5f9;
+  font-family: 'Inter', system-ui, sans-serif;
+  animation: fadeIn 0.3s ease-out;
 }
 
-/* --- Chat Header (Fixed Top) --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- 2. Header (Glass Effect) --- */
 .chat-header {
   display: flex;
   align-items: center;
   gap: 16px;
   padding: 16px 24px;
-  border-bottom: 1px solid var(--border-color);
+  background: rgba(15, 23, 42, 0.8); /* Semi-transparent */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #1e293b;
   flex-shrink: 0;
+  z-index: 10;
 }
+
 .back-to-room-link-chat {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--primary-blue);
-  color: white;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
+
+.back-to-room-link-chat:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
 .chat-header-info h1 {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 700;
   margin: 0;
+  color: #f8fafc;
 }
+
 .chat-header-info p {
-  font-size: 0.875rem;
-  color: var(--text-muted);
+  font-size: 0.85rem;
+  color: #64748b; /* Muted Slate */
   margin: 2px 0 0 0;
 }
 
-/* --- Message List (Scrolling Middle) --- */
+/* --- 3. Message List --- */
 .messages-list {
   flex-grow: 1;
   overflow-y: auto;
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  
+  /* Custom Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
 }
+
+.messages-list::-webkit-scrollbar { width: 6px; }
+.messages-list::-webkit-scrollbar-track { background: transparent; }
+.messages-list::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 10px; }
+
+/* --- 4. Message Bubbles --- */
 .message-wrapper {
   display: flex;
   gap: 12px;
-  max-width: 75%;
+  max-width: 70%;
+  animation: slideIn 0.2s ease-out;
 }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .message-wrapper.sent {
   align-self: flex-end;
+  flex-direction: row-reverse; /* Avatar on right for sender */
 }
 .message-wrapper.received {
   align-self: flex-start;
 }
 
+/* Avatars */
 .message-avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  align-self: flex-end;
+  border: 2px solid #1e293b;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
 .message-content {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
+
+/* Sender Name */
 .message-sender-name {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: #94a3b8;
   margin-bottom: 4px;
+  margin-left: 4px;
 }
+.message-wrapper.sent .message-sender-name {
+  display: none; /* Hide name for self */
+}
+
+/* 🔵 SENT Bubble (Neon Blue Gradient) */
+.message-wrapper.sent .message-bubble {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #ffffff;
+  border-radius: 18px 18px 2px 18px; /* Sharp bottom-right */
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  border: none;
+}
+
+/* ⚫ RECEIVED Bubble (Dark Slate Glass) */
+.message-wrapper.received .message-bubble {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border-radius: 18px 18px 18px 2px; /* Sharp bottom-left */
+  border: 1px solid #334155;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
 .message-bubble {
-  padding: 10px 16px;
-  border-radius: 18px; /* This makes most corners rounded */
-  margin: 0;
+  padding: 12px 16px;
   font-size: 0.95rem;
   line-height: 1.5;
   word-wrap: break-word;
 }
 
-/* 👇 THIS IS THE CORRECTED RULE 👇 */
-.message-wrapper.received .message-bubble {
-  background-color: var(--card-bg); /* Changed to white */
-  color: var(--text-dark);
-  border: 1px solid var(--border-color); /* Added a border to make it visible */
-  border-top-left-radius: 4px; /* This makes the top-left corner sharp, creating the "point" */
-}
-
-.message-wrapper.sent .message-bubble {
-  background-color: var(--primary-blue);
-  color: white;
-  border-top-right-radius: 4px; /* This makes the top-right corner sharp, creating the "point" */
-}
-
+/* Timestamp */
 .message-timestamp {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 4px;
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-top: 6px;
+  opacity: 0.8;
 }
 .message-wrapper.sent .message-timestamp {
-  align-self: flex-end;
+  text-align: right;
+  margin-right: 2px;
 }
 .message-wrapper.received .message-timestamp {
-  align-self: flex-start;
+  text-align: left;
+  margin-left: 2px;
 }
 
-/* --- Chat Input Form (Fixed Bottom) --- */
+/* --- 5. Input Area (Floating Capsule) --- */
 .chat-form {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 24px;
-  border-top: 1px solid var(--border-color);
-  background-color: white;
+  gap: 12px;
+  padding: 20px 24px;
+  background-color: #0f172a; /* Seamless with body */
+  border-top: 1px solid #1e293b;
   flex-shrink: 0;
 }
+
 .chat-form input {
   flex-grow: 1;
-  border: 1px solid var(--border-color);
-  background-color: var(--content-bg);
-  padding: 12px 16px;
-  border-radius: 9999px;
-  font-size: 1rem;
+  background-color: #1e293b; /* Dark Input */
+  color: #f1f5f9;
+  border: 1px solid #334155;
+  padding: 14px 20px;
+  border-radius: 99px;
+  font-size: 0.95rem;
   outline: none;
+  transition: all 0.2s ease;
 }
+
+.chat-form input::placeholder {
+  color: #64748b;
+}
+
 .chat-form input:focus {
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+  background-color: #0f172a;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
+
 .send-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
   width: 48px;
   height: 48px;
   border-radius: 50%;
   border: none;
-  background-color: var(--primary-blue);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 }
+
 .send-btn:hover {
-  background-color: var(--primary-blue-hover);
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.5);
+}
+
+.send-btn svg {
+  margin-left: 2px; /* Visual optical alignment for the send icon */
 }

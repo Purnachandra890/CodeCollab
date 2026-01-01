@@ -187,7 +187,13 @@ const Dashboard = () => {
   return (
     <div
       className={`dashboard-container ${
-        isMobile && isSidebarOpen ? "mobile-sidebar-is-open" : ""
+        isMobile
+          ? isSidebarOpen
+            ? "mobile-sidebar-is-open"
+            : ""
+          : isSidebarOpen
+          ? ""
+          : "sidebar-closed"
       }`}
     >
       <MobileHeader
@@ -208,7 +214,9 @@ const Dashboard = () => {
         onCreateRoom={openCreateRoomModal}
       />
 
-      <Outlet />
+      <div className="main-content">
+        <Outlet />
+      </div>
 
       <CreateRoomModal
         isOpen={isModalOpen}

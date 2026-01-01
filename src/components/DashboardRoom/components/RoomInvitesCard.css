@@ -1,102 +1,160 @@
-/* RoomInvitesCard.css */
-
-.room-invites-card {
-  margin-top: 2rem;
+/* Container Spacing */
+.room-invites-container {
+  margin-bottom: 32px;
+  animation: slideDown 0.3s ease-out;
 }
 
-.room-invites-card h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-color-primary);
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 1rem;
-}
-
-.invites-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.invite-item {
+/* Header Section */
+.invites-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  /* Use a background that matches the other cards */
-  background-color: var(--card-dark-bg-color); 
-  color: var(--text-color-light);
-  margin-top: 10px;
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm); /* Add a subtle shadow */
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-left: 4px;
 }
 
-.invite-item:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md); /* Enhance shadow on hover */
+.invites-header h3 {
+  font-size: 1.1rem;
+  color: #94a3b8; /* Muted text like your "Created:" labels */
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.invite-info {
+.invite-count {
+  background-color: #ef4444; /* Red badge */
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* Grid Layout */
+.invites-grid {
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
-.invite-from {
-  font-size: 0.9rem;
-  color: var(--text-color-secondary);
+/* Individual Card Styling */
+.invite-card {
+  background-color: #1e293b; /* Matches your Room Cards */
+  border: 1px solid #334155;
+  border-left: 4px solid #3b82f6; /* Blue accent on left */
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s, border-color 0.2s;
 }
 
-.invite-room-name {
-  font-weight: 600;
-  margin-top: 5px;
+.invite-card:hover {
+  border-color: #3b82f6;
+  transform: translateX(4px);
 }
 
+/* Icon Styling */
+.invite-icon-wrapper {
+  background-color: rgba(59, 130, 246, 0.1);
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Text Content */
+.invite-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-grow: 1;
+}
+
+.invite-title {
+  color: #f8fafc;
+  font-size: 1rem;
+}
+
+.invite-title strong {
+  color: #3b82f6; /* Highlight room name in blue */
+}
+
+.invite-meta {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-family: monospace; /* Techy feel for IDs */
+}
+
+/* Action Buttons */
 .invite-actions {
   display: flex;
   gap: 10px;
-  /* Align items vertically centered */
-  align-items: center; 
 }
 
-/* Styles for the Accept button */
-.accept-invite-btn {
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 16px;
-  border: none;
   border-radius: 6px;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  /* Use your primary color for the background */
-  background-color: #2b70d7; 
-  color: white;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.accept-invite-btn:hover {
-  /* Darken the primary color on hover */
-  background-color: #2b70d7; 
-}
-
-/* Styles for the Decline button */
-.decline-invite-btn {
-  padding: 8px 16px;
   border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  /* Use your primary color for the background */
-  background-color: #2b70d7; 
+  transition: all 0.2s;
+}
+
+.accept-btn {
+  background-color: #3b82f6; /* Primary Blue */
   color: white;
-  transition: background-color 0.2s ease-in-out;
 }
 
-.decline-invite-btn:hover {
-  /* Fill the button with color on hover */
-  background-color: #2b70d7; 
+.accept-btn:hover {
+  background-color: #2563eb;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
 }
 
-.room-invites-card {
-  /* Change the top margin to remove the gap */
-  /* border: 2px solid blue; */
-  margin-top: 0;
+.decline-btn {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  border: 1px solid #334155;
+}
+
+.decline-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .invite-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .invite-icon-wrapper {
+    display: none; /* Save space on mobile */
+  }
+
+  .invite-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  
+  .action-btn {
+    flex-grow: 1;
+    justify-content: center;
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

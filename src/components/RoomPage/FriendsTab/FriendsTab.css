@@ -1,106 +1,145 @@
+/* src/components/RoomPage/FriendsTab/FriendsTab.css */
+
+/* --- Container Override --- */
 .friends-container {
-   display: flex; /* Enables flexbox layout */
-  flex-direction: column; /* Stacks children vertically */
-  height: 100%; /* Ensures container fills available vertical space */
-  padding: 24px; /* Adjust padding to apply to the whole card */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  
+  /* ✅ FIX: Changed padding to 0 on top */
+  padding: 0 24px 24px 24px; 
+  
+  background-color: transparent !important; 
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .friends-container h3 {
-  flex-shrink: 0; /* Prevents the heading from shrinking */
-  margin-bottom: 20px;
+  flex-shrink: 0;
+  
+  /* ✅ OPTIONAL: Reduce this if you want the grid closer to the title */
+  margin-bottom: 20px; 
+  
+  /* Fix alignment since we removed top padding */
+  margin-top: 4px; 
+
+  color: #f3f4f6;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
+/* --- Scrollable Area --- */
 .friend-grid-scroll-container {
-  flex-grow: 1; /* Allows this container to grow and fill remaining space */
-  overflow-y: auto; /* **This is the key to enable vertical scrolling** */
-  min-height: 0; /* Prevents flexbox from overriding height */
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-bottom: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #374151 transparent;
 }
 
+/* Custom Scrollbar */
+.friend-grid-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+.friend-grid-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.friend-grid-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #374151;
+  border-radius: 10px;
+}
+
+/* --- Grid Layout --- */
 .friend-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
+/* --- PREMIUM DARK CARD --- */
 .friend-card {
-  background-color: var(--background-color-dark); /* This should be a slightly darker shade */
-  /* border: 1px solid var(--border-color); */
-  border-radius: 8px;
-  padding: 15px;
+  background-color: #111827; 
+  border: 1px solid #374151; 
+  border-radius: 12px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
 }
+
 .friend-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md); /* Enhance shadow on hover */
+  transform: translateY(-4px);
+  border-color: #3b82f6;
+  background-color: #1f2937;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.2);
 }
 
 .friend-photo {
   width: 80px;
   height: 80px;
-  border-radius: 50%; /* Circular images */
+  border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 10px;
-  /* border: 2px solid var(--primary-color); Highlight with primary color */
+  margin-bottom: 16px;
+  border: 3px solid #374151;
+  background-color: #1f2937;
+  transition: border-color 0.2s ease;
+}
+
+.friend-card:hover .friend-photo {
+  border-color: #3b82f6;
 }
 
 .friend-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
 }
 
 .friend-name {
+  display: block;
   font-weight: 600;
-  color: var(--text-color-primary);
-  margin-bottom: 5px;
-  font-size: 1.1em;
-  word-break: break-word; /* Prevents long names from overflowing */
+  color: #f3f4f6;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
 }
 
-.friend-id {
-  font-size: 0.85em;
-  color: var(--text-color-secondary); /* Lighter color for ID */
-  font-family: monospace; /* Monospace for UIDs */
-  letter-spacing: 0.5px;
+.friend-status {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-weight: 500;
 }
 
-/* Styles for when there are no friends */
-.friends-container p {
-  color: var(--text-color-secondary);
+.empty-friends-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  border: 1px dashed #374151;
+  border-radius: 12px;
+  color: #9ca3af;
   text-align: center;
-  padding: 30px;
-  font-style: italic;
-  font-size: 1.1em;
+  background: rgba(255,255,255,0.02);
 }
 
-/* Responsive adjustments */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 768px) {
-  /* Change the grid to a flex container that allows wrapping */
-  .friend-grid {
-    display: flex;
-    flex-wrap: wrap; /* This is the key change: it allows items to wrap */
-    overflow-x: hidden; /* This hides the horizontal scrollbar */
-    justify-content: center; /* Centers the cards in the container */
-    gap: 16px; /* Space between the cards */
-    padding: 0 16px; /* Padding for the container */
-  }
-
-  /* Style the individual cards within the grid */
-  .friend-card {
-    flex-shrink: 0;
-    width: 150px; /* Adjust a fixed width for a better mobile card size */
-    box-sizing: content-box;
-  }
-}
-
-@media (max-width: 480px) {
-  .friend-grid {
-    grid-template-columns: 1fr; /* Single column on very small screens */
-  }
+  .friends-container { padding: 16px; }
+  .friend-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+  .friend-card { padding: 16px; }
+  .friend-photo { width: 64px; height: 64px; }
 }

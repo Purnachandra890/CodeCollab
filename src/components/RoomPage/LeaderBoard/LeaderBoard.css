@@ -1,318 +1,350 @@
-/* LeaderBoard.css */
+/* LeaderBoard.css - Nuclear Fix */
 
-.leaderboard-container {
-  /* background-color: var(--content-bg, #f9fafb); */
-  min-height: 100vh;
-  padding: 48px 24px;
-  font-family: var(--font-sans);
-  color: var(--text-dark);
-}
-
-/* --- Header --- */
-.leaderboard-header {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto 48px auto;
-}
-.leaderboard-header h1 {
-  font-size: 2.5rem;
-  margin: 8px 0;
-}
-.leaderboard-header p {
-  font-size: 1.125rem;
-  color: var(--text-muted);
+/* --- 1. Main Wrapper (The Root) --- */
+.leaderboard-wrapper {
+  /* ✅ ADD THIS: Creates the anchor for the absolute spinner */
+  position: relative; 
+  
+  width: 100%;
+  height: 100%;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #0f172a !important; 
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
   margin: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #0f172a;
 }
 
-/* --- Podium Section --- */
-.podium {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 16px;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
+.podium-container { /* or whatever class wraps the top 3 */
+    margin-top: 50px; /* <--- Add this */
 }
-.podium-card {
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
+/* --- 2. Scrollbar Styling (Webkit - Chrome/Edge) --- */
+/* Target the wrapper specifically */
+.leaderboard-wrapper::-webkit-scrollbar {
+  width: 10px;
+  background-color: #0f172a; /* Hides the white track */
+}
+
+.leaderboard-wrapper::-webkit-scrollbar-track {
+  background-color: #0f172a; /* Matches page bg */
+  border: none !important;
+}
+
+.leaderboard-wrapper::-webkit-scrollbar-thumb {
+  background-color: #334155; /* Dark Slate Pill */
+  border-radius: 10px;
+  border: 2px solid #0f172a; /* Creates the "floating" look */
+}
+
+.leaderboard-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
+
+/* --- 3. Content Container --- */
+.leaderboard-content {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #0f172a !important;
+  border: none !important;
+}
+
+/* --- 4. PODIUM STAGE --- */
+.podium-stage {
+  width: 100%;
+  padding: 60px 20px 60px 20px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
   position: relative;
-  width: 220px;
-  color: white;
+  
+  /* Spotlight Background */
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 50px 50px, 50px 50px;
+  
+  /* Remove border, use gradient fade instead if needed */
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.podium-column {
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-  border: 2px solid rgba(255,255,255,0.2);
+  position: relative;
+  width: 25%;
+  max-width: 280px;
+  transition: transform 0.3s ease;
+  z-index: 10;
 }
-.podium-card.rank-1 {
-  background: linear-gradient(145deg, #facc15, #eab308); /* Gold */
-  order: 2;
-  min-height: 230px;
-  transform: translateY(-20px);
-}
-.podium-card.rank-2 {
-  background: linear-gradient(145deg, #9ca3af, #6b7280); /* Silver */
-  order: 1;
-  min-height: 210px;
-}
-.podium-card.rank-3 {
-  background: linear-gradient(145deg, #fb923c, #f97316); /* Bronze */
-  order: 3;
-  min-height: 210px;
+.podium-column:hover { transform: translateY(-8px); }
+
+/* --- Avatars --- */
+.podium-avatar-container { position: relative; margin-bottom: 24px; }
+
+.podium-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border-style: solid;
+  background-color: #1e293b;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
-.podium-rank {
+.rank-pill {
   position: absolute;
-  top: 12px;
+  bottom: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0,0,0,0.2);
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
-}
-.podium-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 4px solid white;
-  object-fit: cover;
-  margin-top: 32px;
-}
-.podium-name {
-  margin: 12px 0 4px 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  white-space: nowrap;       /* keep text in one line */
-  overflow: hidden;          /* hide overflow */
-  text-overflow: ellipsis;   /* show ... at the end */
-  max-width: 180px;          /* adjust based on card width */
+  font-weight: 800;
+  font-size: 0.95rem;
+  border: 3px solid #0f172a;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  z-index: 20;
 }
 
-.podium-problems {
-  margin: 0;
-  font-size: 1rem;
-  opacity: 0.9;
+/* Rank Colors */
+.rank-1 .podium-avatar { width: 130px; height: 130px; border-width: 4px; border-color: #fbbf24; box-shadow: 0 0 50px rgba(251, 191, 36, 0.25); }
+.rank-1 .rank-pill { background: linear-gradient(135deg, #fbbf24, #d97706); color: #451a03; }
+.rank-1 { order: 2; margin-bottom: 30px; }
+
+.rank-2 .podium-avatar { width: 100px; height: 100px; border-width: 3px; border-color: #94a3b8; box-shadow: 0 0 30px rgba(148, 163, 184, 0.15); }
+.rank-2 .rank-pill { background: linear-gradient(135deg, #94a3b8, #64748b); color: #0f172a; }
+.rank-2 { order: 1; }
+
+.rank-3 .podium-avatar { width: 100px; height: 100px; border-width: 3px; border-color: #f97316; box-shadow: 0 0 30px rgba(249, 115, 22, 0.15); }
+.rank-3 .rank-pill { background: linear-gradient(135deg, #fb923c, #c2410c); color: #431407; }
+.rank-3 { order: 3; }
+
+.crown-floating {
+  position: absolute; top: -42px; left: 50%; transform: translateX(-50%) rotate(-10deg);
+  filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.6));
+  animation: floatCrown 3s ease-in-out infinite;
 }
 
-/* --- Table Section --- */
-.leaderboard-table-card {
-  background-color: white;
+/* --- Info Box --- */
+.podium-info {
+  background: rgba(30, 41, 59, 0.4); 
+  backdrop-filter: blur(4px);
+  padding: 16px 20px;
   border-radius: 12px;
-  padding: 3px;
-  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(255,255,255,0.03);
+  text-align: center;
+  width: 100%;
+}
+.podium-name { margin: 0 0 6px 0; font-size: 1.1rem; font-weight: 700; color: #f8fafc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.podium-score { display: flex; flex-direction: column; }
+.score-num { font-size: 1.3rem; font-weight: 800; color: #ffffff; }
+.score-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;}
+
+/* --- List Section --- */
+.leaderboard-list-card {
+  width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  overflow-x: auto;
+  padding: 0 20px 40px 20px;
+  border: none !important; /* Ensure no border here */
 }
-.leaderboard-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.leaderboard-table th, .leaderboard-table td {
-  padding: 16px;
-  text-align: left;
-  vertical-align: middle;
-}
-.leaderboard-table th {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border-color);
-}
-.leaderboard-table td {
-  border-top: 1px solid var(--border-color);
-  font-weight: 500;
-}
-.leaderboard-table tbody tr:first-child td { border-top: none; }
 
-.rank-number {
-    font-weight: 700;
-    font-size: 1.125rem;
-    color: var(--text-muted);
+.list-header {
+  display: grid;
+  grid-template-columns: 80px 2fr 100px 1.5fr 160px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #334155;
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;
+  margin-top: 10px;
 }
-.user-cell {
-  display: flex;
+
+.list-body { background: transparent; }
+
+.list-row {
+  display: grid;
+  grid-template-columns: 80px 2fr 100px 1.5fr 160px;
+  padding: 16px 24px;
   align-items: center;
-  gap: 12px;
+  border-bottom: 1px solid #1e293b;
+  transition: background-color 0.2s;
 }
-.user-avatar-table {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.user-name {
-    display: block;
-    font-weight: 600;
-}
-.user-id {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--text-muted);
+.list-row:hover { background-color: rgba(51, 65, 85, 0.3); }
+
+/* List Columns */
+.col-rank .rank-text { font-weight: 700; color: #64748b; font-size: 1rem; }
+.col-user { display: flex; align-items: center; gap: 16px; }
+.list-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid #475569; }
+.list-name { color: #e2e8f0; font-weight: 600; font-size: 0.95rem; }
+.col-solved .solved-badge { display: inline-block; background: rgba(59, 130, 246, 0.1); color: #60a5fa; font-weight: 700; padding: 4px 12px; border-radius: 99px; font-size: 0.85rem; }
+.col-progress { display: flex; align-items: center; gap: 12px; }
+.progress-track { flex-grow: 1; height: 6px; background-color: #334155; border-radius: 99px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); border-radius: 99px; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+.progress-text { font-size: 0.8rem; font-weight: 600; color: #94a3b8; width: 35px; text-align: right; }
+.col-time { font-size: 0.85rem; color: #94a3b8; text-align: right; }
+.empty-message { padding: 60px; text-align: center; color: #64748b; font-size: 1.1rem; }
+
+@keyframes floatCrown {
+  0% { transform: translateX(-50%) rotate(-10deg) translateY(0px); }
+  50% { transform: translateX(-50%) rotate(-5deg) translateY(-8px); }
+  100% { transform: translateX(-50%) rotate(-10deg) translateY(0px); }
 }
 
-.completion-cell {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.completion-bar-container {
-  width: 80px;
-  height: 6px;
-  background-color: #e5e7eb;
-  border-radius: 99px;
-}
-.completion-bar-fill {
-  height: 100%;
-  background-color: var(--primary-blue);
-  border-radius: 99px;
-}
-
-
-.leaderboard-container {
-  animation: fadeIn 0.5s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.leaderboard-table  {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-
-/* ========================================= */
-/* ---         Mobile Responsive         --- */
-/* ========================================= */
 @media (max-width: 768px) {
-  .leaderboard-container {
-    padding: 24px 12px; /* Reduce padding on smaller screens */
-  }
+  .podium-stage { flex-direction: column; align-items: center; gap: 48px; padding-bottom: 40px; }
+  .podium-column { width: 100%; max-width: 300px; }
+  .rank-1 { order: 1; margin-bottom: 0; } .rank-2 { order: 2; } .rank-3 { order: 3; }
+  .list-header { display: none; }
+  .list-row { display: flex; flex-wrap: wrap; gap: 12px; padding: 20px; border-bottom: 1px solid #334155; }
+  .col-user { width: 100%; order: -1; margin-bottom: 8px; }
+  .col-rank { margin-right: auto; } .col-time { margin-left: auto; font-size: 0.75rem; }
+  .col-progress { display: none; }
+}
 
-  /* --- Responsive Podium --- */
-  .podium {
-    flex-direction: column; /* Stack cards vertically */
-    align-items: center;   /* Center the stacked cards */
-    gap: 24px;
-    margin-bottom: 32px;
-  }
+.loading-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  background-color: transparent;
+  width: auto;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .podium-card {
-    width: 90%;          /* Make cards wider on mobile */
-    max-width: 350px;
-    min-height: auto;    /* Allow height to be determined by content */
-  }
+/* --- NEW SVG SPINNER --- */
+.spinner {
+  width: 50px; /* Standard size */
+  height: 50px;
+  margin-bottom: 0; /* Reset margin */
+  border: none; /* Remove old border styles */
+  animation: rotate 2s linear infinite;
+}
 
-  /* Reset the special desktop positioning for mobile */
-  .podium-card.rank-1 {
-    transform: translateY(0);
-    order: 1; /* Rank 1 appears first */
-  }
-  .podium-card.rank-2 {
-    order: 2; /* Rank 2 appears second */
-  }
-  .podium-card.rank-3 {
-    order: 3; /* Rank 3 appears third */
-  }
+.spinner .path {
+  stroke: #3b82f6; /* Make sure this color is set! */
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
 
-  .podium-avatar {
-    width: 70px; /* Slightly smaller avatar */
-    height: 70px;
-    margin-top: 24px;
-  }
+/* Re-add Keyframes (if not globally available) */
+@keyframes rotate {
+  100% { transform: rotate(360deg); }
+}
 
-  /* --- Responsive Table --- */
-  .leaderboard-table-card {
-      padding: 0; /* Remove padding from the card wrapper */
-  }
+@keyframes dash {
+  0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+  50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+  100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+}
 
-  /* Hide the table header, as we will add labels to each cell */
-  .leaderboard-table thead {
-    display: none;
+/* --- Mobile View: 4th Member Onwards Format Fix --- */
+@media (max-width: 768px) {
+  /* Keep podium stacked as is */
+  .podium-stage { 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 48px; 
+    padding-bottom: 40px; 
   }
+  
+  /* Hide the table header completely on mobile */
+  .list-header { display: none; }
 
-  .leaderboard-table tr {
-    display: block; /* Make each row a block-level element */
+  /* Transform each list row into a Card */
+  .list-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(30, 41, 59, 0.4); /* Glass card look */
+    border: 1px solid #334155;
+    border-radius: 12px;
     margin-bottom: 16px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 8px;
+    padding: 20px;
+    gap: 12px;
   }
-  
-  .leaderboard-table td {
-    display: flex; /* Use flexbox for easy alignment */
-    justify-content: space-between; /* Pushes the label and value apart */
+
+  /* User Info (Avatar + Name) stays at top of card */
+  .col-user {
+    width: 100%;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+  }
+
+  /* Force all other columns to behave like rows with labels */
+  .col-rank, .col-solved, .col-progress, .col-time {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 12px 8px;
-    border-top: none; /* Remove default borders */
-    text-align: right; /* Align the data value to the right */
+    width: 100%;
+    font-size: 0.9rem;
   }
 
-  .leaderboard-table tbody tr:first-child td:first-child {
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-  }
-    .leaderboard-table tbody tr:last-child td:last-child {
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-  }
-
-
-  /* Add data labels using the ::before pseudo-element */
-  .leaderboard-table td::before {
-    content: attr(data-label); /* We'll need to add a data-label attribute */
+  /* Inject Labels using ::before to match the 1st image format */
+  .col-rank::before {
+    content: "Rank";
+    color: #64748b;
     font-weight: 600;
-    color: #6b7280;
-    text-align: left;
-    margin-right: 16px;
   }
 
-  /* Specify the label for each column */
-  .leaderboard-table td:nth-of-type(1)::before { content: "Rank"; }
-  .leaderboard-table td:nth-of-type(2)::before { content: "User"; }
-  .leaderboard-table td:nth-of-type(3)::before { content: "Problems"; }
-  .leaderboard-table td:nth-of-type(4)::before { content: "Completion"; }
-  .leaderboard-table td:nth-of-type(5)::before { content: "Last Activity"; }
+  .col-solved::before {
+    content: "Problems";
+    color: #64748b;
+    font-weight: 600;
+  }
+
+  .col-progress::before {
+    content: "Completion";
+    color: #64748b;
+    font-weight: 600;
+  }
+
+  .col-time::before {
+    content: "Last Activity";
+    color: #64748b;
+    font-weight: 600;
+  }
+
+  /* Adjustments for the Progress Bar on Mobile */
+  .col-progress {
+    display: flex !important; /* Overriding your previous 'display: none' */
+  }
+
+  .progress-track {
+    max-width: 120px; /* Limits width of the bar inside the card */
+    margin-left: auto;
+    margin-right: 10px;
+  }
+
+  .progress-text {
+    width: 40px;
+  }
+
+  /* Remove rank hashtag to match your clean image format */
+  .rank-text {
+    color: #e2e8f0;
+  }
+
+  /* Ensure text alignment matches image 1 */
+  .col-time {
+    text-align: right;
+    color: #e2e8f0;
+  }
   
-  /* Special handling for the user cell to keep it left-aligned */
-  .leaderboard-table td:nth-of-type(2) {
-      justify-content: flex-start; /* Don't push user content to the right */
-  }
-  .leaderboard-table td:nth-of-type(2)::before {
-    display: none; /* Hide the "User" label for the cell with avatar */
-  }
-
-  /* Adjust the user cell content */
-  .user-cell {
-    gap: 16px;
-  }
-  .user-name {
-    font-size: 1rem;
-  }
-
-  .completion-cell {
-      justify-content: flex-end; /* Ensure completion bar stays on the right */
+  .solved-badge {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+    padding: 0 !important;
   }
 }

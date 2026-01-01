@@ -1,57 +1,196 @@
-/* InviteFriendsModal.css */
+/* src/components/RoomPage/InviteFriendsModal/InviteFriendsModal.css */
 
+/* --- 1. Modal Overlay (Glass Backdrop) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75); /* Darker dim */
+  backdrop-filter: blur(8px); /* Strong blur for focus */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* --- 2. Modal Content (Dark Card) --- */
+.modal-content {
+  background-color: #1e293b; /* Slate 800 */
+  color: #f1f5f9;
+  width: 95%;
+  max-width: 500px;
+  border-radius: 16px;
+  border: 1px solid #334155; /* Subtle border */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  padding: 32px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* Prevent overflow on mobile */
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Close Button */
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.modal-close-btn:hover {
+  background-color: rgba(255,255,255,0.05);
+  color: #f1f5f9;
+}
+
+/* Header */
+.modal-content h2 {
+  margin: 0 0 24px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.02em;
+}
+
+/* --- 3. Direct Invite Section --- */
+.direct-invite-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.direct-invite-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-left: 2px;
+}
+
+.direct-invite-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.direct-invite-input-group input {
+  flex-grow: 1;
+  background-color: #0f172a; /* Darker input bg */
+  border: 1px solid #334155;
+  color: #f1f5f9;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.direct-invite-input-group input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Send Button (Small) */
+.direct-invite-input-group button.send-btn {
+  padding: 0 20px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: auto; /* Allow styling to control height */
+}
+
+.direct-invite-input-group button.send-btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* --- 4. Friend List Section --- */
 .invite-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
-  padding-right: 15px; /* Added padding to align with the checkbox */
-  /* border: 1px solid red; */
-  margin-top: -8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #334155;
+  margin-bottom: 12px;
 }
 
 .invite-list-header span {
+  font-size: 0.95rem;
   font-weight: 600;
-  color: var(--text-color-primary);
+  color: #cbd5e1;
 }
 
 .select-all-btn {
   background: none;
   border: none;
-  color: var(--primary-color);
+  color: #3b82f6;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
 }
 
+.select-all-btn:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Scrollable List */
 .friend-invite-list {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
-  margin: 0;
-  max-height: 300px;
+  margin: 0 0 24px 0;
+  max-height: 280px;
   overflow-y: auto;
-  overflow-x: hidden;
-  margin-bottom: 20px;
+  border-radius: 8px;
+  /* Custom Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #475569 #1e293b;
 }
 
-/* This is the key element for the layout */
+.friend-invite-list::-webkit-scrollbar { width: 6px; }
+.friend-invite-list::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 4px; }
+.friend-invite-list::-webkit-scrollbar-track { background: #1e293b; }
+
+/* List Item */
 .invite-friend-item {
   display: flex;
-  justify-content: space-between; /* Pushes content to the ends */
   align-items: center;
-  padding: 10px 15px;
-  border-bottom: 1px solid var(--border-color);
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+  transition: background-color 0.2s;
 }
 
 .invite-friend-item:last-child {
   border-bottom: none;
 }
 
+.invite-friend-item:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
 .invite-friend-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .invite-friend-photo {
@@ -59,146 +198,90 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid #334155;
 }
 
-.invite-checkbox {
-  transform: scale(1.2);
-}
-
-.invite-send-btn {
-  width: 100%;
-  margin-top: 10px; /* Add some space above the button */
-}
-
-/* Modal-specific styles for the modal content */
-.modal-content {
-  color: var(--text-color-primary);
-  /* other styles... */
-}
-
-.modal-content h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-/* ... (existing styles) ... */
-
-.direct-invite-form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  margin-top: 10px;
-}
-
-.direct-invite-form label {
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-/* InviteFriendsModal.css */
-
-/* ... (other styles) ... */
-
-.direct-invite-input-group {
-  display: flex;
-  gap: 10px;
-  align-items: center; /* This is the key property for vertical alignment */
-}
-
-.direct-invite-input-group input {
-  flex-grow: 1;
-  /* Use explicit padding and height to ensure consistent sizing */
-  padding: 10px;
-  height: 40px; /* Set a consistent height */
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-}
-
-.direct-invite-input-group button {
-  margin-top:-15px ;
-  
-  padding: 10px 16px;
-  height: 40px; /* Set a consistent height */
-  border-radius: 6px;
-}
-.invite-separator {
-  border: 0;
-  height: 1px;
-  background-color: var(--border-color);
-  margin: 20px 0;
-}
-
-.send-btn {
-  background-color: var(--primary-blue);
-  color: white;
-  border: none;
-  border-radius: 6px; /* Corrected to a rectangular shape */
-  padding: 10px 16px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.send-btn:hover {
-  background-color: var(--primary-blue-hover);
-}
-
-
-/* ... (existing styles) ... */
-
-.email-check-status {
-  margin-top: 10px;
-  font-size: 0.9rem;
+.invite-friend-info span {
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  color: #f1f5f9;
 }
 
-.email-status-checking {
-  color: var(--text-muted);
-}
-
-.email-status-found {
-  color: #22c55e; /* Green for success */
-}
-
-.email-status-not-found,
-.email-status-error {
-  color: #ef4444; /* Red for errors */
-}
-
-/* Spinner styles */
-.spinner {
-  animation: rotate 2s linear infinite;
+/* Custom Checkbox */
+.invite-checkbox {
   width: 20px;
   height: 20px;
-  margin-right: 8px;
+  accent-color: #3b82f6; /* Native blue accent */
+  cursor: pointer;
+}
+
+/* --- 5. Main Action Buttons --- */
+.invite-send-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  margin-top: 8px;
+}
+
+.invite-send-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+}
+
+/* --- 6. Status & Spinner --- */
+.email-check-status {
+  font-size: 0.85rem;
+  min-height: 20px; /* Prevent layout jump */
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.email-status-checking { color: #94a3b8; display: flex; align-items: center; gap: 8px;}
+.email-status-found { color: #22c55e; font-weight: 600; }
+.email-status-not-found { color: #ef4444; font-weight: 600; }
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  animation: rotate 2s linear infinite;
 }
 .spinner .path {
-  stroke: var(--primary-blue);
+  stroke: #3b82f6;
   stroke-linecap: round;
   animation: dash 1.5s ease-in-out infinite;
 }
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
-}
+
+@keyframes rotate { 100% { transform: rotate(360deg); } }
 @keyframes dash {
-  0% {
-    stroke-dasharray: 1, 150;
-    stroke-dashoffset: 0;
-  }
-  50% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -35;
-  }
-  100% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -124;
-  }
+  0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+  50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+  100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
 }
 
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+/* --- Mobile Responsiveness --- */
+@media (max-width: 640px) {
+  .modal-content {
+    padding: 24px;
+    width: 90%;
+  }
+  
+  .direct-invite-input-group {
+    flex-direction: column;
+  }
+  
+  .direct-invite-input-group button.send-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}

@@ -1,303 +1,414 @@
-/* ProblemList.css */
+/* src/ProblemList.css */
 
-/* --- Custom Properties (Theme Variables) --- */
+/* --- 🎨 THEME VARIABLES (Dark IDE Mode) --- */
 :root {
-  --sidebar-bg: #111827;
-  --main-bg: #f9fafb; /* Light gray for card contrast */
-  --card-bg: #ffffff;
-  --primary-blue: #3b82f6;
-  --primary-blue-hover: #2563eb;
-  --text-dark: #1f2937;
-  --text-muted: #6b7280;
-  --border-color: #e5e7eb;
-  --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --main-bg: #0f172a;      /* Deep Navy */
+  --card-bg: #1e293b;      /* Slate 800 */
+  --card-hover: #334155;   /* Slate 700 */
+  --text-primary: #f8fafc; /* Almost White */
+  --text-secondary: #94a3b8; /* Muted Blue-Grey */
+  --border-color: #334155;
+  
+  --accent-blue: #3b82f6;
+  --accent-green: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 15px rgba(59, 130, 246, 0.15);
 }
 
+/* --- Layout Container --- */
 .personal-list-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 32px;
-  animation: fadeIn 0.3s ease-in-out;
-  background-color: var(--main-bg);
-  min-height: 100%;
+  padding: 40px 24px;
+  min-height: 100vh;
+  background-color: transparent; /* Let global dark bg show */
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  animation: fadeIn 0.4s ease-out;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Header Section --- */
 .personal-list-header {
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
+/* Back Link Button */
 .back-to-room-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
-  margin-bottom: 8px;
-  transition: color 0.2s;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
 }
+
 .back-to-room-link:hover {
-  color: var(--primary-blue);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-color);
+  transform: translateX(-4px);
+}
+
+.gfg {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
 }
 
 .personal-list-header h1 {
-  font-size: 2.25rem;
-  color: var(--text-dark);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
+  background: linear-gradient(to right, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-.gfg{
-  display: flex;
-  justify-content: space-between;
-}
-/* --- GFG Refresh Bar --- */
+
+/* --- GFG Refresh Button (Glass Style) --- */
 .gfg-refresh-bar {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
+  gap: 8px;
 }
 
-/* Refresh Button */
 .refresh-btn {
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
-  padding: 8px 14px;
+  background: rgba(16, 185, 129, 0.1); /* Low opacity green */
+  color: #34d399; /* Bright Green Text */
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 10px 18px;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: #b4f7c9;
+  backdrop-filter: blur(4px);
 }
 
 .refresh-btn:hover:not(:disabled) {
-  background-color: #67d09d;
-  border-color: #9ca3af;
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #34d399;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+  transform: translateY(-1px);
 }
 
 .refresh-btn:disabled {
-  opacity: 0.6;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border-color: transparent;
   cursor: not-allowed;
 }
 
-/* Timer text */
 .refresh-timer {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 
-/* --- Progress Card --- */
+/* --- Progress Card (Neon Glow) --- */
 .progress-card {
-  background-color: var(--card-bg);
+  background: linear-gradient(145deg, #1e293b, #0f172a);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: var(--card-shadow);
+  border-radius: 16px;
   padding: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
 }
+
+/* Subtle glow behind the card */
+.progress-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
 .progress-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-}
-.progress-title {
-  font-weight: 600;
-}
-.progress-count {
-  font-weight: 600;
-  color: var(--primary-blue);
-}
-.progress-bar-container {
-  width: 100%;
-  height: 8px;
-  background-color: var(--border-color);
-  border-radius: 99px;
-  overflow: hidden;
-}
-.progress-bar-fill {
-  height: 100%;
-  background-color: var(--primary-blue);
-  border-radius: 99px;
-  transition: width 0.5s ease-out;
+  margin-bottom: 16px;
 }
 
-/* --- Problem Item Cards --- */
+.progress-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.progress-count {
+  font-family: 'Inter', monospace;
+  font-weight: 700;
+  color: var(--accent-blue);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background-color: #0f172a; /* Darker than card */
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* Neon Glow */
+}
+
+/* --- Problem List Items --- */
 .problem-list-items {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+
 .problem-item-card {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* This pushes title left and label right */
+  align-items: center; /* Vertically centers them */
   padding: 20px 24px;
-  border-left: 4px solid;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  box-shadow: var(--card-shadow);
-  transition: transform 0.2s, box-shadow 0.2s;
-  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  position: relative;
+  gap: 20px; /* Ensures space between text and label if they get close */
 }
+
+/* Left Status Border Indicator */
+.problem-item-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+  background-color: var(--border-color);
+  transition: background-color 0.3s;
+}
+
+/* Hover Effects */
 .problem-item-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+  background-color: var(--card-hover);
+  border-color: #475569;
+  box-shadow: var(--shadow-md);
 }
-.problem-item-card.todo {
-  border-left-color: #f59e0b; /* Amber/Yellow */
+
+/* Status Colors (Left Border) */
+.problem-item-card.completed::after { background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+.problem-item-card.todo::after { background-color: var(--accent-amber); }
+
+.problem-item-info {
+  flex-grow: 1;
+  padding-left: 12px;
+  min-width: 0; /* Prevents text from pushing label out of card */
 }
-.problem-item-card.completed {
-  border-left-color: #22c55e; /* Green */
+
+.problem-item-info h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  /* Optional: Truncate long titles to keep label visible */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* View Link */
+.view-problem-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--accent-blue);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.view-problem-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* --- Action Section --- */
+.problem-item-action {
+  flex-shrink: 0; /* Prevents the label from squishing */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end; /* Ensures content stays right-aligned */
+}
+
+/* Status Pills (Completed / To Do) */
+.completed-label,
+.todo-label {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.02em;
+}
+
+/* COMPLETED PILL */
+.completed-label {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* TODO PILL */
+.todo-label {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+/* --- CONFIRM GFG BUTTON --- */
+.confirm-wrapper {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.2));
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.confirm-btn:hover {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #fbbf24;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+  transform: translateY(-1px);
+}
+
+.detected-text {
+  margin-top: 4px;
+  font-size: 0.7rem;
+  color: var(--accent-amber);
+  opacity: 0.8;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 640px) {
+  /* --- Problem List Items --- */
+.problem-item-card {
+  display: flex;
+  justify-content: space-between; /* This pushes title left and label right */
+  align-items: center; /* Vertically centers them */
+  padding: 20px 24px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  position: relative;
+  gap: 20px; /* Ensures space between text and label if they get close */
 }
 
 .problem-item-info {
   flex-grow: 1;
+  padding-left: 12px;
+  min-width: 0; /* Prevents text from pushing label out of card */
 }
 
 .problem-item-info h3 {
-  margin: 0 0 4px 0;
-  font-size: 1.125rem;
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
   font-weight: 600;
-}
-.view-problem-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--primary-blue);
-  text-decoration: none;
+  color: var(--text-primary);
+  /* Optional: Truncate long titles to keep label visible */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .problem-item-action {
-  flex-shrink: 0;
-}
-
-/* --- Action Buttons --- */
-.mark-completed-btn,
-.completed-btn {
-  border: none;
-  border-radius: 6px;
-  padding: 10px 16px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  flex-shrink: 0; /* Prevents the label from squishing */
   display: flex;
   align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-.mark-completed-btn {
-  background-color: var(--primary-blue);
-  color: white;
-}
-.mark-completed-btn:hover {
-  background-color: var(--primary-blue-hover);
-}
-.completed-btn {
-  background-color: #dcfce7; /* Light green */
-  color: #166534; /* Dark green */
+  gap: 12px;
+  justify-content: flex-end; /* Ensures content stays right-aligned */
 }
 
-/* --- Status Labels (To Do / Completed) --- */
-.todo-label,
-.completed-label {
-  padding: 6px 12px;
-  border-radius: 99px; /* Pill shape */
-  font-size: 0.875rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.completed-label {
-  background-color: #dcfce7; /* Light green */
-  color: #166534; /* Dark green text */
-}
-
-.todo-label {
-  background-color: #fee2e2; /* Light red */
-  color: #991b1b; /* Dark red text */
-}
-.confirm-btn {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  color: #92400e;
-  border: 1px solid #facc15;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 10px rgba(250, 204, 21, 0.35);
-}
-
-.confirm-btn:hover {
-  background: linear-gradient(135deg, #fde68a, #fcd34d);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(250, 204, 21, 0.45);
-}
-
-.confirm-btn:active {
-  transform: scale(0.97);
-}
-.detected-text {
-  margin-top: 6px;
-  font-size: 0.75rem;
-  color: #92400e;
-  opacity: 0.85;
-  margin-right: 25px;
-}
-
-/* =========================
-   📱 Mobile UI Fix (GFG Refresh Button)
-   ========================= */
+/* --- Mobile Responsiveness FIX --- */
 @media (max-width: 640px) {
-
-  /* Stack title and button */
-  .gfg {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
+  /* Keep them horizontal on mobile if they fit, 
+     or maintain flex-row but allow wrapping only if necessary */
+  .problem-item-card {
+    flex-direction: row; /* Force horizontal even on mobile */
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
   }
 
-  /* Center title */
-  .personal-list-header h1 {
-    font-size: 1.6rem;
-    text-align: center;
+  .problem-item-info h3 {
+    font-size: 1rem;
   }
 
-  /* Refresh bar full width */
-  .gfg-refresh-bar {
-    align-items: stretch;
-    width: 100%;
+  .problem-item-action {
+    width: auto;
+    border-top: none; /* Remove the top border from your previous mobile CSS */
+    padding-top: 0;
   }
 
-  /* Refresh button – mobile friendly */
-  .refresh-btn {
-    width: 100%;
-    padding: 14px 16px;
-    font-size: 0.95rem;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 6px 14px rgba(34, 197, 94, 0.35);
+  /* Shrink labels slightly for mobile if space is tight */
+  .completed-label,
+  .todo-label,
+  .confirm-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
   }
-
-  /* Disabled state clarity */
-  .refresh-btn:disabled {
-    background-color: #d1fae5;
-    color: #065f46;
-  }
-
-  /* Timer centered below button */
-  .refresh-timer {
-    text-align: center;
-    font-size: 0.8rem;
-  }
+}
 }

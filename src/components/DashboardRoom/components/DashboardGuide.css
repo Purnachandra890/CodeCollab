@@ -1,0 +1,268 @@
+/* DashboardGuide.css */
+
+.dashboard-guide-wrapper {
+  --guide-primary: #3b82f6;
+  --guide-primary-glow: rgba(59, 130, 246, 0.4);
+  --guide-bg-dark: #0f172a;
+  --guide-card-bg: #1e293b;
+  --guide-text-main: #f8fafc;
+  --guide-text-muted: #94a3b8;
+  --guide-border: #334155;
+
+  height: auto;
+  min-height: fit-content;
+  width: 100%;
+
+  /* FIXED: Use responsive padding */
+  padding: 20px 16px 0 16px;
+  margin-bottom: 30px;
+
+  box-sizing: border-box;
+  color: var(--guide-text-main);
+  font-family: "Inter", system-ui, sans-serif;
+  /* Prevent any accidental overflow from this component */
+  overflow-x: hidden;
+}
+
+/* --- Welcome Banner --- */
+.dashboard-guide-wrapper .welcome-banner {
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--guide-border);
+  border-left: 4px solid var(--guide-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  box-sizing: border-box;
+}
+
+.dashboard-guide-wrapper .banner-content h2 {
+  font-size: 1.5rem;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--guide-text-main);
+}
+
+.dashboard-guide-wrapper .banner-content p {
+  color: var(--guide-text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* --- Grid Layout --- */
+.dashboard-guide-wrapper .guide-grid {
+  display: grid;
+  /* CHANGED: minmax(0, 1fr) ensures it can shrink smaller than 350px on mobile */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+  gap: 12px;
+}
+
+/* --- Card Styles --- */
+.dashboard-guide-wrapper .guide-card {
+  background: var(--guide-card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--guide-border);
+  transition: all 0.2s ease;
+  height: fit-content;
+}
+
+.dashboard-guide-wrapper .guide-card:hover {
+  border-color: var(--guide-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-guide-wrapper .guide-card.active {
+  border-color: var(--guide-primary);
+  background: #253045;
+}
+
+/* --- Header --- */
+.dashboard-guide-wrapper .guide-header {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dashboard-guide-wrapper .guide-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .dashboard-guide-wrapper {
+    padding: 16px 12px 0 12px;
+  }
+
+  .dashboard-guide-wrapper .welcome-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .dashboard-guide-wrapper .banner-content h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Reduce left padding in content so text has more room on small screens */
+  .dashboard-guide-wrapper .guide-content {
+    padding: 0 16px 16px 44px;
+  }
+
+  /* Ensure the profile pill/banner elements don't overflow */
+  .dashboard-guide-wrapper .banner-profile {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: flex-start;
+  }
+}
+
+/* --- Rest of your existing styles (Card, Header, Arrow, etc.) --- */
+.dashboard-guide-wrapper .guide-card {
+  background: var(--guide-card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--guide-border);
+  transition: all 0.2s ease;
+  height: fit-content;
+  overflow: hidden; /* Ensures expanded content doesn't break corners */
+}
+.dashboard-guide-wrapper .icon-wrapper {
+  color: var(--guide-primary);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-guide-wrapper .guide-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--guide-text-main);
+}
+
+/* --- Content & Arrows --- */
+.dashboard-guide-wrapper .guide-arrow {
+  color: var(--guide-text-muted);
+  transition: transform 0.2s;
+  display: flex;
+}
+
+.dashboard-guide-wrapper .guide-arrow.open {
+  transform: rotate(180deg);
+  color: var(--guide-primary);
+}
+
+.dashboard-guide-wrapper .guide-content-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.dashboard-guide-wrapper .guide-content-wrapper.expanded {
+  max-height: 300px;
+}
+
+.dashboard-guide-wrapper .guide-content {
+  padding: 0 16px 16px 54px;
+  color: var(--guide-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.dashboard-guide-wrapper .guide-content li {
+  margin-bottom: 6px;
+  position: relative;
+  padding-left: 12px;
+  list-style: none;
+}
+
+.dashboard-guide-wrapper .guide-content li::before {
+  content: "•";
+  color: var(--guide-primary);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+/* --- Welcome Banner Fixes --- */
+.dashboard-guide-wrapper .welcome-banner {
+  display: flex;
+  justify-content: space-between;
+  /* CHANGED: Align items to the top so profile moves up */
+  align-items: flex-start; 
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 12px;
+  border-left: 4px solid var(--guide-primary);
+  box-sizing: border-box;
+}
+
+/* --- Profile Container --- */
+.dashboard-guide-wrapper .banner-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 14px 6px 6px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Ensures it stays at the top-right in desktop view */
+  align-self: flex-start; 
+  max-width: 100%;
+}
+
+/* --- Text Truncation (Prevents the "Email Overflow" in your images) --- */
+.dashboard-guide-wrapper .banner-user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Critical for truncation */
+}
+
+.dashboard-guide-wrapper .banner-user-info strong {
+  font-size: 0.9rem;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.dashboard-guide-wrapper .banner-user-info span {
+  font-size: 0.75rem;
+  color: var(--guide-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds "..." to long emails */
+  max-width: 160px; /* Limits width to keep the "pill" look */
+}
+
+/* --- Mobile Responsive (Fixes for the images provided) --- */
+@media (max-width: 600px) {
+  .dashboard-guide-wrapper .welcome-banner {
+    flex-direction: column; /* Stacks text and profile */
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  /* Moves profile directly under the "Follow this guide" text */
+  .dashboard-guide-wrapper .banner-profile {
+    margin-top: 8px; 
+    background: transparent; /* Cleaner look on mobile */
+    padding: 0;
+    border: none;
+  }
+
+  .dashboard-guide-wrapper .banner-user-info span {
+    max-width: 200px; /* Allows a bit more email visibility on mobile */
+  }
+}

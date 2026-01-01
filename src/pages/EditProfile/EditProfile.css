@@ -1,126 +1,178 @@
-/* EditProfile.css */
+/* src/components/EditProfile/EditProfile.css */
 
+/* --- 1. Main Layout --- */
 .edit-profile-container {
-    padding: 32px;
-    animation: fadeIn 0.3s ease-in-out;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: #0f172a; /* Deep Navy Background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Inter', system-ui, sans-serif;
+  animation: fadeIn 0.4s ease-out;
 }
 
+/* --- 2. Profile Card --- */
 .edit-profile-card {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: var(--card-bg, #ffffff);
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-    overflow: hidden; /* Ensures child elements conform to border radius */
+  width: 100%;
+  max-width: 550px;
+  background-color: #1e293b; /* Slate 800 */
+  border: 1px solid #334155;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
 }
 
+/* Header */
 .edit-profile-card .card-header {
-    padding: 24px;
-    border-bottom: 1px solid var(--border-color, #e5e7eb);
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid #334155;
+  background: linear-gradient(to bottom, #1e293b, #1a2436);
 }
 
 .edit-profile-card .card-header h2 {
-    font-size: 1.5rem;
-    margin: 0 0 8px 0;
-    color: var(--text-dark, #1f2937);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #f8fafc; /* White text */
+  letter-spacing: -0.02em;
 }
 
 .edit-profile-card .card-header p {
-    margin: 0;
-    color: var(--text-muted, #6b7280);
+  margin: 0;
+  color: #94a3b8; /* Muted Slate */
+  font-size: 0.95rem;
 }
 
+/* --- 3. Form Styling --- */
 .edit-profile-form {
-    padding: 24px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .form-group label {
-    font-weight: 500;
-    color: var(--text-dark, #1f2937);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-left: 2px;
 }
 
+/* Inputs (IDE Style) */
 .form-group input {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 8px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: 'JetBrains Mono', monospace; /* Monospace for code feel */
+  color: #f1f5f9;
+  background-color: #0f172a; /* Darker than card */
+  border: 1px solid #334155;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.form-group input::placeholder {
+  color: #475569;
 }
 
 .form-group input:focus {
-    outline: none;
-    border-color: var(--primary-blue, #3b82f6);
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  background-color: #0b1120;
 }
 
 .form-group input:disabled {
-    background-color: #f3f4f6;
-    cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
+/* --- 4. Footer & Buttons --- */
 .form-footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 16px;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border-color, #e5e7eb);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: 1px solid #334155;
 }
 
 .save-status {
-    color: var(--text-muted, #6b7280);
-    font-size: 0.875rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #10b981; /* Success Green */
+  animation: fadePulse 2s infinite;
 }
 
 .save-btn {
-    background-color: var(--primary-blue, #3b82f6);
-    color: var(--text-light, #f9fafb);
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.save-btn:hover {
-    background-color: var(--primary-blue-hover, #2563eb);
+.save-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(59, 130, 246, 0.3);
 }
 
 .save-btn:disabled {
-    background-color: #9ca3af;
-    cursor: not-allowed;
+  background: #334155;
+  color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* --- Animation --- */
+/* --- 5. Notifications (Premium Glass) --- */
+.notification-area {
+  width: 100%;
+  max-width: 550px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-message {
+  background: rgba(245, 158, 11, 0.1); /* Low opacity amber */
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-left: 4px solid #f59e0b;
+  color: #fbbf24;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(4px);
+}
+
+/* --- Animations --- */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-
-.notification-message {
-  background-color: #fffbeb; /* A soft yellow background */
-  border: 1px solid #fcd34d; /* A subtle yellow border */
-  color: #92400e; /* A dark brown text color */
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 24px;
-  text-align: center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.notification-message p {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 500;
+@keyframes fadePulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
 }

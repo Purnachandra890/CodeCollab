@@ -1,4 +1,3 @@
-// RequestsTab.jsx
 import React, { useState, useEffect } from "react";
 import { db } from "../../../firebase";
 import {
@@ -76,8 +75,10 @@ const RequestsTab = ({ user }) => {
   };
 
   return (
-    <div className="requests-container">
-      <h3>Incoming Friend Requests</h3>
+    // Added 'card' class to ensure full width/height behavior
+    <div className="requests-container card">
+      <h3>Incoming Friend Requests <span style={{ opacity: 0.5, fontSize: '0.8em' }}>({incomingRequests.length})</span></h3>
+      
       {incomingRequests.length > 0 ? (
         <ul className="requests-list">
           {incomingRequests.map((req) => (
@@ -87,11 +88,12 @@ const RequestsTab = ({ user }) => {
                   src={req.senderPhoto}
                   alt={req.senderName}
                   className="request-photo"
+                  onError={(e) => { e.target.src = defaultPhoto; }}
                 />
                 <span className="request-name">{req.senderName}</span>
               </div>
+              
               <div className="request-actions">
-                {/* Ensure both buttons are here */}
                 <button
                   className="accept-btn"
                   onClick={() => handleAcceptRequest(req.id, req.senderId)}
@@ -109,7 +111,10 @@ const RequestsTab = ({ user }) => {
           ))}
         </ul>
       ) : (
-        <p>No new friend requests.</p>
+        <div className="empty-requests">
+          <p>No new friend requests.</p>
+          <small>Check back later!</small>
+        </div>
       )}
     </div>
   );

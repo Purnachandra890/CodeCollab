@@ -93,18 +93,10 @@ const RoomPage = () => {
         );
 
       case "Requests":
-        return (
-          <div className="card">
-            <RequestsTab user={user} />
-          </div>
-        );
+        return <RequestsTab user={user} />;
 
       case "Friends":
-        return (
-          <div className="card">
-            <FriendsTab user={user} />
-          </div>
-        );
+        return <FriendsTab user={user} />;
 
       default:
         return null;
