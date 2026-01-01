@@ -165,69 +165,55 @@
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* src/components/RoomHeader/RoomHeader.css */
 
-/* Mobile */
 @media (max-width: 768px) {
   .room-header {
     position: relative;
-    /* Remove top padding/margin to pull the header area to the screen top */
     padding-top: 0;
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 0px; /* Reduced margin */
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Remove any border used for testing */
     border: none;
+    gap: 0;
   }
 
   .room-title {
-    /* 1. Position at the absolute top middle */
     position: absolute;
-    top: 10px; /* Adjust this value to move title higher or lower */
+    top: 5px; /* Moved slightly higher */
     left: 50%;
     transform: translateX(-50%);
-    
-    /* 2. Full width with horizontal safety padding for hamburger icon */
     width: 100%;
     text-align: center;
     padding: 0 60px; 
-    
-    /* 3. Modern Typography */
-    font-size: 1.25rem !important;
+    font-size: 1.2rem !important;
     font-weight: 800;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    
     color: #f8fafc;
     z-index: 10;
   }
 
-  /* 4. Action Buttons Group */
+  /* Key Fix: Reduce margin-top to close the gap */
   .right-side-group {
-    /* Increased margin-top creates the gap between the title and buttons */
-    margin-top: 5rem; 
+    margin-top: 60px; /* Changed from 5rem to 38px */
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
-    
-    /* Allow horizontal scroll for buttons if screen is very narrow */
     overflow-x: auto;
-    padding-bottom: 8px;
-    scrollbar-width: none; /* Hide scrollbar for cleaner look */
+    padding-bottom: 4px;
+    scrollbar-width: none; 
   }
 
-  /* Hide scrollbar for Chrome/Safari */
   .right-side-group::-webkit-scrollbar {
     display: none;
   }
   .profile-avatar{
     display: none;
-  }
-  .name-profile{
-    gap:1rem;
   }
 }

@@ -78,8 +78,9 @@
 
 @media (max-width: 768px) {
   .room-tabs {
-    gap: 24px;
+    gap: 1.5rem;
     padding: 0 16px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    margin-top: 0;
   }
 }
