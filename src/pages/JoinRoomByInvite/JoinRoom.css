@@ -1,69 +1,113 @@
 /* JoinRoom.css */
 
-/* --- Main Container --- */
+:root {
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent-blue: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.5);
+    --text-white: #f8fafc;
+    --text-slate: #94a3b8;
+}
+
+/* --- Premium Mesh Gradient Background --- */
 .join-room-container {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: var(--content-bg, #f9fafb);
+    background-color: #0f172a;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%), 
+        radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.1) 0, transparent 50%);
     padding: 24px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* --- The Card --- */
+/* --- Frosted Glass Card --- */
 .join-room-card {
-    background-color: var(--card-bg, #ffffff);
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 16px;
-    padding: 48px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 60px 40px;
     width: 100%;
-    max-width: 500px;
+    max-width: 480px;
     text-align: center;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-/* --- Card Content --- */
-.join-room-card h1 {
-    font-size: 2rem;
-    color: var(--text-dark, #1f2937);
-    margin: 8px 0;
-}
-.join-room-card h2 {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-muted, #6b7280);
-    margin: 0;
-}
-.join-room-card .room-description {
-    color: var(--text-muted, #6b7280);
-    margin: 8px 0 32px 0;
-    line-height: 1.6;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .room-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 12px;
-    background-color: var(--primary-blue, #3b82f6);
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--accent-blue), #2563eb);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    font-weight: 600;
-    margin: 0 auto 24px auto;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 auto 32px auto;
+    box-shadow: 0 0 20px var(--accent-glow);
+    animation: pulseGlow 3s infinite;
 }
 
-/* --- Buttons --- */
-.join-btn, .dashboard-btn {
+.join-room-card h2 {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent-blue);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.join-room-card h1 {
+    font-size: 2.25rem;
+    color: var(--text-white);
+    margin: 0 0 16px 0;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+}
+
+.join-room-card .room-description {
+    color: var(--text-slate);
+    font-size: 1.05rem;
+    margin: 0 0 40px 0;
+    line-height: 1.6;
+}
+
+/* --- Interactive Buttons --- */
+.join-btn {
     width: 100%;
+    background: var(--accent-blue);
+    color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.join-btn:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px var(--accent-glow);
+}
+
+.dashboard-btn {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-white);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
     padding: 14px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -71,60 +115,73 @@
     justify-content: center;
     gap: 8px;
 }
-.join-btn {
-    background-color: var(--primary-blue, #3b82f6);
-    color: white;
-}
-.join-btn:hover {
-    background-color: var(--primary-blue-hover, #2563eb);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-.dashboard-btn {
-    background-color: transparent;
-    color: var(--text-dark, #1f2937);
-    border: 1px solid var(--border-color, #e5e7eb);
-}
+
 .dashboard-btn:hover {
-    background-color: var(--content-bg, #f9fafb);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* --- Status Messages --- */
-.error-message {
-    color: #ef4444; /* red-500 */
-    font-weight: 500;
-}
 .already-joined-message {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 8px;
+    padding: 8px 16px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 99px;
+    color: #10b981;
+    font-size: 0.9rem;
     font-weight: 500;
-    color: #16a34a; /* green-600 */
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 }
 
-/* --- Spinner for Loading State --- */
-.spinner-container {
-    padding: 40px 0;
+/* --- Animations --- */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
+    50% { box-shadow: 0 0 35px var(--accent-glow); }
+}
+
+/* --- Spinner --- */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(59, 130, 246, 0.1);
+    border-top-color: var(--accent-blue);
+    border-radius: 50%;
+    animation: rotation 0.8s linear infinite;
+}
+/* --- Loading State UI --- */
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
 .spinner {
     width: 48px;
     height: 48px;
-    border: 5px solid var(--border-color, #e5e7eb);
-    border-bottom-color: var(--primary-blue, #3b82f6);
+    border: 4px solid rgba(59, 130, 246, 0.1); /* Subtle blue track */
+    border-top: 4px solid #3b82f6; /* Bright blue spinning part */
     border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-    margin: 0 auto;
+    animation: rotation 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    margin-bottom: 16px;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+.loading-text {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
 }
 
 @keyframes rotation {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
 }

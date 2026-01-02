@@ -37,7 +37,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<LoginPage />} /> */}
         <Route
           path="/"
           element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
