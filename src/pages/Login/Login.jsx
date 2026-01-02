@@ -5,7 +5,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase"; // 🧠 Make sure both are exported from firebase.js
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import "./Login.css";
 import React from "react";
@@ -13,6 +13,7 @@ import React from "react";
 const provider = new GoogleAuthProvider();
 
 function Login() {
+  const location = useLocation();
   const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
@@ -32,13 +33,13 @@ function Login() {
         });
       }
 
-      // ✅ Redirect back to intended page (invite link or dashboard)
-      const redirectPath =
-        sessionStorage.getItem("redirectAfterLogin") || "/dashboard/rooms";
+      // // ✅ Redirect back to intended page (invite link or dashboard)
+      // const redirectPath =
+      //   sessionStorage.getItem("redirectAfterLogin") || "/dashboard/rooms";
 
-      sessionStorage.removeItem("redirectAfterLogin");
-
-      navigate(redirectPath, { replace: true });
+      // sessionStorage.removeItem("redirectAfterLogin");
+      const from = location.state?.from?.pathname || "/dashboard/rooms";
+      navigate(from, { replace: true });
 
       // navigate("/dashboard");
     } catch (error) {

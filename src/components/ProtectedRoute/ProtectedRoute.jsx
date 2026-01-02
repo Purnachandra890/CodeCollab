@@ -21,14 +21,23 @@ const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
 
-  if (!user) {
-    // 🔴 Save where the user wanted to go
-    sessionStorage.setItem(
-      "redirectAfterLogin",
-      location.pathname + location.search
-    );
+  // if (!user) {
+  //   // 🔴 Save where the user wanted to go
+  //   sessionStorage.setItem(
+  //     "redirectAfterLogin",
+  //     location.pathname + location.search
+  //   );
 
-    return <Navigate to="/" replace />;
+  //   return <Navigate to="/" replace />;
+  // }
+  if (!user) {
+    return (
+      <Navigate
+        to="/"
+        replace
+        state={{ from: location }}
+      />
+    );
   }
 
   return children;
