@@ -6,7 +6,16 @@ import "./EditProfile.css";
 
 // --- Icons ---
 const SaveIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
     <polyline points="17 21 17 13 7 13 7 21"></polyline>
     <polyline points="7 3 7 8 15 8"></polyline>
@@ -14,7 +23,16 @@ const SaveIcon = () => (
 );
 
 const InfoIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <circle cx="12" cy="12" r="10"></circle>
     <line x1="12" y1="16" x2="12" y2="12"></line>
     <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -70,19 +88,24 @@ export default function EditProfile() {
 
   return (
     <div className="edit-profile-container">
-      
       {/* 1. Notification Area (Floating above card) */}
       <div className="notification-area">
         {username === "" && !loading && (
           <div className="notification-message">
             <InfoIcon />
-            <span>Please set your <strong>LeetCode Username</strong> to enable leaderboard tracking.</span>
+            <span>
+              Please set your <strong>LeetCode Username</strong> to enable
+              leaderboard tracking.
+            </span>
           </div>
         )}
         {gfgUsername === "" && !loading && (
           <div className="notification-message">
             <InfoIcon />
-            <span>Please set your <strong>GeeksforGeeks Username</strong> to enable progress syncing.</span>
+            <span>
+              Please set your <strong>GeeksforGeeks Username</strong> to enable
+              progress syncing.
+            </span>
           </div>
         )}
       </div>
@@ -117,6 +140,26 @@ export default function EditProfile() {
               placeholder="e.g. coding_master"
               disabled={!uid || loading}
             />
+            <div className="input-helper">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>
+                Visit the <strong>"My Problems"</strong> tab (located next to
+                Chat) to understand how GFG tracking works.
+              </span>
+            </div>
           </div>
 
           <div className="form-footer">
@@ -126,7 +169,13 @@ export default function EditProfile() {
               className="save-btn"
               disabled={loading || saveStatus === "Saving..."}
             >
-              {loading ? "Loading..." : <><SaveIcon /> Save Changes</>}
+              {loading ? (
+                "Loading..."
+              ) : (
+                <>
+                  <SaveIcon /> Save Changes
+                </>
+              )}
             </button>
           </div>
         </form>
