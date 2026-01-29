@@ -12,10 +12,12 @@
   border-radius: 16px;
   /* CHANGED: Dark Border */
   border: 1px solid #334155;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5),
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.5),
     0 2px 4px -1px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   margin: 0;
   box-sizing: border-box;
@@ -192,15 +194,16 @@
 
 /* --- Modern Difficulty Badges (Glass Style) --- */
 .difficulty-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex; /* Keeps badge size to content */
+  align-items: center; /* Vertically centers tick and text */
+  justify-content: center; /* Horizontally centers content */
+  gap: 6px; /* Adds space between tick and text */
+  white-space: nowrap; /* Forces everything onto one line */
   padding: 4px 12px;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  min-width: 65px;
+  min-width: fit-content; /* Allows badge to expand as needed */
 }
 
 /* CHANGED: Transparent backgrounds for dark mode */
@@ -241,6 +244,10 @@
   justify-content: center;
   align-items: center;
 }
+/* Force action icon visibility */
+.action-btn svg {
+  stroke: #94a3b8 !important;
+}
 
 /* --- Action Buttons (Hover Reveal) --- */
 .action-btn {
@@ -255,7 +262,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.6;
+  opacity: 1;
 }
 
 .problems-table tr:hover .action-btn {
@@ -297,7 +304,8 @@
   border: 1px solid rgba(148, 163, 184, 0.08);
 
   z-index: 9999;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55),
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   animation: tooltipFadeIn 0.18s ease-out;
@@ -495,4 +503,53 @@
       box-sizing: border-box;
     }
   }
+}
+/* --- Updated Action Buttons Style --- */
+
+.actions-cell {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px; /* Increased gap for better spacing */
+  min-width: 100px;
+  padding-right: 32px !important;
+}
+
+.action-btn {
+  /* This creates the subtle dark background seen in your screenshot */
+  background-color: rgba(51, 65, 85, 0.5); /* Slate-700 with transparency */
+  border: 1px solid rgba(71, 85, 105, 0.4); /* Subtle border */
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn svg {
+  /* Soft grey icons that turn bright on hover */
+  stroke: #94a3b8 !important;
+  transition: stroke 0.2s ease;
+}
+
+/* --- Hover States --- */
+
+.action-btn.edit:hover {
+  background-color: rgba(30, 58, 138, 0.8); /* Deep blue background */
+  border-color: #3b82f6;
+}
+
+.action-btn.edit:hover svg {
+  stroke: #60a5fa !important; /* Bright blue icon */
+}
+
+.action-btn.delete:hover {
+  background-color: rgba(127, 29, 29, 0.8); /* Deep red background */
+  border-color: #ef4444;
+}
+
+.action-btn.delete:hover svg {
+  stroke: #f87171 !important; /* Bright red icon */
 }
