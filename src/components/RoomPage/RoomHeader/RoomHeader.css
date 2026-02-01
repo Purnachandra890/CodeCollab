@@ -217,3 +217,77 @@
     display: none;
   }
 }
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.promo-btn-blue {
+  position: relative;
+  display: inline-flex;
+  padding: 2px; /* Thickness of the border */
+  border: none;
+  background: transparent;
+  border-radius: 100px;
+  cursor: pointer;
+  overflow: hidden; /* Clips the rotating square to the pill shape */
+  transition: transform 0.2s ease;
+  isolation: isolate; /* Ensures z-index behaves correctly */
+}
+
+/* The Animated Glowing Border */
+.promo-btn-blue::before {
+  content: "";
+  position: absolute;
+  /* Massive inset ensures the corners of the spinning square cover the pill */
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  
+  /* Conic gradient creates a "tail" of blue light */
+  background: conic-gradient(
+    from var(--angle),
+    transparent 70%, 
+    #3b82f6 85%, 
+    #06b6d4 95%, 
+    #3b82f6 100%
+  );
+  
+  animation: spin 3s linear infinite !important;
+  filter: blur(6px);
+  z-index: -1;
+  opacity: 1 !important; /* Forces visibility at all times */
+  visibility: visible !important;
+}
+
+.promo-btn-blue .btn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  border-radius: 100px;
+  background: #0b1220;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+@keyframes spin {
+  from { --angle: 0deg; }
+  to { --angle: 360deg; }
+}
+
+.promo-btn-blue:hover {
+  transform: scale(1.03);
+}
+@media (max-width: 768px) {
+  .promo-btn-blue {
+    display: none !important;
+  }
+}

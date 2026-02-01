@@ -21,6 +21,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 // EditProfile
 import EditProfile from "./pages/EditProfile/EditProfile";
+// dsa deck
+import DSADeck from "./components/RoomPage/components/DSADeck";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,6 +65,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/room/:roomId/dsa-deck"
+          element={
+            <ProtectedRoute>
+              <DSADeck />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/room/:roomId/problems"
           element={
