@@ -176,6 +176,7 @@ export const useRoomProblems = (roomId, user) => {
         youtubeLink: problem.youtubeLink?.trim() || null,
         difficulty,
         problemStatement: statement,
+        subtopic: problem.subtopic?.trim() || "",
       };
 
       if (editingProblem) {

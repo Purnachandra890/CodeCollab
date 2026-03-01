@@ -374,6 +374,79 @@
   font-weight: 500;
 }
 
+/* --- Subtopic Header Row (Collapsible) --- */
+.subtopic-header-row td {
+  padding: 12px 32px;
+  background: rgba(15, 23, 42, 0.8);
+  border-bottom: 1px solid #334155;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.subtopic-header-clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.subtopic-header-clickable:hover {
+  background-color: rgba(30, 41, 59, 0.95) !important;
+}
+
+.subtopic-header-clickable td {
+  padding: 14px 32px !important;
+}
+
+.subtopic-header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.subtopic-chevron {
+  display: inline-flex;
+  align-items: center;
+  color: #64748b;
+}
+
+.subtopic-title {
+  flex: 1;
+}
+
+.subtopic-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* --- Expand/Collapse All Buttons --- */
+.expand-collapse-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expand-collapse-btn {
+  background: transparent;
+  border: 1px solid #475569;
+  color: #94a3b8;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.expand-collapse-btn:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  color: #60a5fa;
+}
+
 /* --- Empty State --- */
 .empty-state p {
   color: #f8fafc; /* White text */

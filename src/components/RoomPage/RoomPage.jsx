@@ -57,6 +57,31 @@ const RoomPage = () => {
     setInviteModalOpen,
   } = useRoomModals();
 
+  /* --- Subtopics from problems (most recent first) --- */
+  const { availableSubtopics, defaultSubtopic } = (() => {
+    const seen = new Set();
+    const ordered = [];
+    for (let i = problems.length - 1; i >= 0; i--) {
+      const s = (problems[i].subtopic || "").trim();
+      if (s && !seen.has(s)) {
+        seen.add(s);
+        ordered.push(s);
+      }
+    }
+    if (editingProblem?.subtopic) {
+      const s = (editingProblem.subtopic || "").trim();
+      if (s && !seen.has(s)) ordered.push(s);
+    }
+    const mostRecent =
+      problems.length > 0
+        ? (problems[problems.length - 1].subtopic || "").trim()
+        : "";
+    return {
+      availableSubtopics: ordered,
+      defaultSubtopic: mostRecent || ordered[0] || "",
+    };
+  })();
+
   /* --- Tab Content Renderer --- */
   const renderContent = () => {
     switch (activeTab) {
@@ -120,6 +145,8 @@ const RoomPage = () => {
         onSave={(data) => saveProblem(data, editingProblem)}
         problem={editingProblem}
         isSaving={isSaving}
+        availableSubtopics={availableSubtopics}
+        defaultSubtopic={defaultSubtopic}
       />
 
       {/* ✅ Invite Friends Modal */}
