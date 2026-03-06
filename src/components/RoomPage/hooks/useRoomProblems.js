@@ -8,6 +8,8 @@ import {
   deleteDoc,
   getDocs,
   serverTimestamp,
+  query,
+  where,
 } from "firebase/firestore";
 
 export const useRoomProblems = (roomId, user) => {
@@ -204,5 +206,27 @@ export const useRoomProblems = (roomId, user) => {
     await deleteDoc(doc(db, "rooms", roomId, "problems", problemId));
   };
 
-  return { saveProblem, deleteProblem, isSaving };
+  const renameSubtopic = async (oldName, newName) => {
+    const from = String(oldName || "").trim();
+    const to = String(newName || "").trim();
+    if (!roomId || !from || !to || from === to) return;
+
+    try {
+      const q = query(
+        collection(db, "rooms", roomId, "problems"),
+        where("subtopic", "==", from)
+      );
+      const snap = await getDocs(q);
+      if (snap.empty) return;
+
+      const updates = snap.docs.map((d) =>
+        updateDoc(d.ref, { subtopic: to })
+      );
+      await Promise.all(updates);
+    } catch (err) {
+      console.error("Failed to rename subtopic:", err);
+    }
+  };
+
+  return { saveProblem, deleteProblem, renameSubtopic, isSaving };
 };

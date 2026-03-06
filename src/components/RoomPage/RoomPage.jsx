@@ -33,6 +33,7 @@ const RoomPage = () => {
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
   const [activeTab, setActiveTab] = useState("Problems");
+  const [expandedSections, setExpandedSections] = useState(new Set());
 
   /* 🔹 Data Hooks */
   const { room, members } = useRoomDetails(roomId, defaultPhoto);
@@ -41,10 +42,8 @@ const RoomPage = () => {
   const unreadCount = useUnreadMessages(roomId, user?.uid);
 
   /* 🔹 Logic Hooks */
-  const { saveProblem, deleteProblem, isSaving } = useRoomProblems(
-    roomId,
-    user
-  );
+  const { saveProblem, deleteProblem, renameSubtopic, isSaving } =
+    useRoomProblems(roomId, user);
 
   const { sendFriendRequest } = useRoomActions(user);
 
@@ -89,9 +88,12 @@ const RoomPage = () => {
         return (
           <ProblemsTab
             problems={problems}
+            expandedSections={expandedSections}
+            setExpandedSections={setExpandedSections}
             onAddProblem={() => openProblemModal()}
             onEditProblem={(problem) => openProblemModal(problem)}
             onDeleteProblem={deleteProblem}
+            onRenameSubtopic={renameSubtopic}
             currentUserId={user?.uid}
             roomAdminId={room.adminId}
           />

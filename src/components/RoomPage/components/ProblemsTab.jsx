@@ -91,9 +91,12 @@ const organizeBySubtopic = (problems) => {
 
 const ProblemsTab = ({
   problems,
+  expandedSections,
+  setExpandedSections,
   onAddProblem,
   onEditProblem,
   onDeleteProblem,
+  onRenameSubtopic,
   currentUserId,
   roomAdminId,
 }) => {
@@ -101,7 +104,8 @@ const ProblemsTab = ({
   const [showPreview, setShowPreview] = useState(
     localStorage.getItem("showProblemPreview") === "true",
   );
-  const [expandedSections, setExpandedSections] = useState(new Set());
+  const [editingTitle, setEditingTitle] = useState(null);
+  const [editingValue, setEditingValue] = useState("");
 
   const isSolvedByUser = (problem, userId) => {
     return !!problem.completedBy?.[userId];
@@ -129,15 +133,22 @@ const ProblemsTab = ({
     return list;
   }, [groups, noSubtopic]);
 
-  // Initialize expanded state when sections change (first section open by default)
+  // Initialize or sync expanded state when sections change (preserve user selection when returning to tab)
   const sectionKeys = sections.map((s) => s.title).join(",");
   React.useEffect(() => {
     if (sections.length === 0) {
       setExpandedSections(new Set());
       return;
     }
-    const firstTitle = sections[0].title;
-    setExpandedSections(new Set([firstTitle]));
+    const validTitles = new Set(sections.map((s) => s.title));
+    const filtered = new Set([...expandedSections].filter((t) => validTitles.has(t)));
+    if (filtered.size > 0) {
+      // Preserve user's expanded sections (e.g. when returning from another tab)
+      setExpandedSections(filtered);
+    } else {
+      // No valid selection (first load or sections changed) — default to first section
+      setExpandedSections(new Set([sections[0].title]));
+    }
   }, [sectionKeys, sections.length]);
 
   const toggleSection = (title) => {
@@ -151,6 +162,33 @@ const ProblemsTab = ({
 
   const expandAll = () => setExpandedSections(new Set(sections.map((s) => s.title)));
   const collapseAll = () => setExpandedSections(new Set());
+
+  const startEditing = (title) => {
+    if (title === "Other") return;
+    setEditingTitle(title);
+    setEditingValue(title);
+  };
+
+  const cancelEditing = () => {
+    setEditingTitle(null);
+    setEditingValue("");
+  };
+
+  const submitEditing = async () => {
+    const from = (editingTitle || "").trim();
+    const to = (editingValue || "").trim();
+    if (!from || !to || from === to) {
+      cancelEditing();
+      return;
+    }
+    try {
+      if (onRenameSubtopic) {
+        await onRenameSubtopic(from, to);
+      }
+    } finally {
+      cancelEditing();
+    }
+  };
 
   let serial = 1;
 
@@ -331,6 +369,7 @@ const ProblemsTab = ({
                 <>
                   {sections.map((section) => {
                     const isExpanded = expandedSections.has(section.title);
+                    const isEditing = editingTitle === section.title;
                     return (
                       <React.Fragment key={section.title}>
                         <tr
@@ -350,12 +389,61 @@ const ProblemsTab = ({
                               <span className="subtopic-chevron">
                                 <ChevronIcon expanded={isExpanded} />
                               </span>
-                              <span className="subtopic-title">
-                                {section.title}
-                              </span>
-                              <span className="subtopic-count">
-                                ({section.problems.length})
-                              </span>
+
+                              {isEditing ? (
+                                <>
+                                  <input
+                                    className="subtopic-edit-input"
+                                    type="text"
+                                    value={editingValue}
+                                    onChange={(e) =>
+                                      setEditingValue(e.target.value)
+                                    }
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                  <button
+                                    type="button"
+                                    className="subtopic-edit-save"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      submitEditing();
+                                    }}
+                                  >
+                                    Save
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="subtopic-edit-cancel"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      cancelEditing();
+                                    }}
+                                  >
+                                    Cancel
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="subtopic-title">
+                                    {section.title}
+                                  </span>
+                                  <span className="subtopic-count">
+                                    ({section.problems.length})
+                                  </span>
+                                  {section.title !== "Other" && (
+                                    <button
+                                      type="button"
+                                      className="subtopic-edit-btn"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        startEditing(section.title);
+                                      }}
+                                    >
+                                      Edit
+                                    </button>
+                                  )}
+                                </>
+                              )}
                             </div>
                           </td>
                         </tr>
