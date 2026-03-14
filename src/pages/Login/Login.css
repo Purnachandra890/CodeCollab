@@ -14,6 +14,11 @@ body {
     min-height: 100vh;
 }
 
+/* Old top-right CTA (no longer used visually) */
+.story-cta-top-right {
+    display: none;
+}
+
 /* --- Branding Panel (Top on Mobile, Left on Desktop) --- */
 .branding-panel {
     display: flex; /* Changed from none to flex */
@@ -70,6 +75,128 @@ body {
     display: none;
 }
 
+/* --- Product Story Section (scroll below the fold) --- */
+.product-story {
+    position: relative;
+    background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(129, 140, 248, 0.2), transparent 55%),
+        #020617;
+    color: #e5e7eb;
+    padding: 3rem 1.5rem 3.5rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.product-story::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(to right, rgba(15, 23, 42, 0.7) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.7) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.product-story-inner {
+    position: relative;
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+.product-story-header {
+    max-width: 720px;
+    margin-bottom: 2.5rem;
+}
+
+.product-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #60a5fa;
+    margin-bottom: 1.5rem; /* extra space below the pill tag */
+}
+
+.product-story-header h2 {
+    font-size: 1.9rem;
+    font-weight: 750;
+    margin: 0 0 0.9rem;
+    letter-spacing: -0.03em;
+    background: linear-gradient(to right, #e5e7eb, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.product-story-header p {
+    margin: 0;
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 1.04rem;
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+    color: #cbd5e1;
+    max-width: 62ch;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.product-card {
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.16), transparent 60%),
+        rgba(15, 23, 42, 0.96);
+    border-radius: 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    padding: 1.5rem 1.4rem;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(16px);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.product-card h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.product-card ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.95rem;
+    color: #cbd5f5;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.product-card li {
+    line-height: 1.5;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 26px 70px rgba(15, 23, 42, 1);
+    border-color: rgba(59, 130, 246, 0.9);
+    background:
+        radial-gradient(circle at top left, rgba(59, 130, 246, 0.24), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.18), transparent 60%),
+        rgba(15, 23, 42, 0.98);
+}
+
+.product-footer-note {
+    margin-top: 0.9rem;
+    font-size: 0.86rem;
+    color: #9ca3af;
+}
+
 /* --- Login Form (Bottom on Mobile, Right on Desktop) --- */
 .login-form-panel {
     width: 100%;
@@ -101,6 +228,256 @@ body {
 .welcome-subtitle {
     color: #6b7280;
     margin-top: 0.75rem;
+}
+
+.login-header-actions {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.tour-link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(37, 99, 235, 0.35);
+    background: rgba(37, 99, 235, 0.08);
+    color: #1d4ed8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tour-link-button:hover {
+    background: rgba(37, 99, 235, 0.14);
+    border-color: rgba(37, 99, 235, 0.8);
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+    transform: translateY(-1px);
+}
+
+.story-link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    background: rgba(15, 23, 42, 0.9);
+    color: #0f172a;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #0f172a;
+    background: #e5edff;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.story-link-button:hover {
+    border-color: rgba(59, 130, 246, 0.9);
+    background: #dbeafe;
+    box-shadow: 0 6px 14px rgba(59, 130, 246, 0.25);
+    transform: translateY(-1px);
+}
+
+/* --- Intro Modal Overlay --- */
+.intro-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1.5rem;
+}
+
+.intro-modal {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    background: #020617;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    padding: 1.4rem 1.4rem 1.2rem;
+    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.75);
+    color: #e5e7eb;
+}
+
+.intro-modal-close {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    border: none;
+    background: rgba(15, 23, 42, 0.85);
+    color: #e5e7eb;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.intro-modal-close:hover {
+    background: rgba(30, 64, 175, 0.9);
+    transform: scale(1.05);
+}
+
+.intro-modal-header {
+    margin-bottom: 0.75rem;
+}
+
+.intro-modal-header h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.intro-modal-header p {
+    margin: 0.35rem 0 0;
+    font-size: 0.9rem;
+    color: #9ca3af;
+}
+
+.intro-modal-body {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.intro-modal-main {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #020617;
+    border: 1px solid rgba(15, 23, 42, 0.9);
+    /* Fix the preview area height so the window does not jump
+       when images with different aspect ratios are shown */
+    height: min(520px, 60vh);
+}
+
+.intro-modal-main img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.intro-modal-nav {
+    border: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.9);
+    color: #e5e7eb;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.intro-modal-nav:hover {
+    background: rgba(37, 99, 235, 0.95);
+    transform: translateY(-1px);
+}
+
+.intro-modal-thumbs {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    overflow-x: auto;
+    padding-top: 0.25rem;
+}
+
+.intro-thumb {
+    border: none;
+    padding: 0;
+    background: transparent;
+    border-radius: 0.6rem;
+    overflow: hidden;
+    width: 90px;
+    height: 54px;
+    flex: 0 0 auto;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.5;
+    transition: opacity 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.intro-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.intro-thumb.active {
+    opacity: 1;
+    border-color: #3b82f6;
+    transform: translateY(-1px);
+}
+
+/* --- Mobile tweaks for intro modal --- */
+@media (max-width: 640px) {
+    .intro-modal-overlay {
+        padding: 1rem;
+    }
+
+    .intro-modal {
+        max-width: 100%;
+        max-height: 80vh; /* don't cover full height on mobile */
+        border-radius: 1.25rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .intro-modal-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .intro-modal-header p {
+        font-size: 0.8rem;
+    }
+
+    .intro-modal-body {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+        flex: 1;
+        align-items: stretch;
+    }
+
+    /* Hide side arrows on very small screens, rely on swipe/thumbnail tap */
+    .intro-modal-nav {
+        display: none;
+    }
+
+    .intro-modal-main {
+        height: 45vh; /* give room for header and thumbnails */
+    }
+
+    .intro-modal-thumbs {
+        margin-top: 0.5rem;
+    }
+
+    .intro-thumb {
+        width: 72px;
+        height: 44px;
+    }
 }
 
 .google-login-button {
@@ -174,6 +551,14 @@ body {
     .subtitle {
         margin-left: 0; /* Align subtitle to the left */
         margin-right: 0;
+    }
+
+    .product-story {
+        padding: 4rem 2rem 4.5rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .features-list {

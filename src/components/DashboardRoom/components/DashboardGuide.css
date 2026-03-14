@@ -181,6 +181,11 @@
   line-height: 1.5;
 }
 
+.dashboard-guide-wrapper .guide-content ul {
+  margin: 0;
+  padding: 0;
+}
+
 .dashboard-guide-wrapper .guide-content li {
   margin-bottom: 6px;
   position: relative;
@@ -228,7 +233,7 @@
 .dashboard-guide-wrapper .banner-user-info {
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Critical for truncation */
+  min-width: 0;
 }
 
 .dashboard-guide-wrapper .banner-user-info strong {
@@ -240,10 +245,10 @@
 .dashboard-guide-wrapper .banner-user-info span {
   font-size: 0.75rem;
   color: var(--guide-text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* Adds "..." to long emails */
-  max-width: 160px; /* Limits width to keep the "pill" look */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 320px;
 }
 
 /* --- Mobile Responsive (Fixes for the images provided) --- */
@@ -263,6 +268,6 @@
   }
 
   .dashboard-guide-wrapper .banner-user-info span {
-    max-width: 200px; /* Allows a bit more email visibility on mobile */
+    max-width: 220px;
   }
 }

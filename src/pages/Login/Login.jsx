@@ -6,7 +6,7 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase"; // 🧠 Make sure both are exported from firebase.js
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./Login.css";
 import React from "react";
 
@@ -15,6 +15,17 @@ const provider = new GoogleAuthProvider();
 function Login() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [showIntroModal, setShowIntroModal] = useState(false);
+  const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
+
+  // Landing tour images: Dashboard → Problems → Leaderboard → Friends
+  const previewImages = [
+    { url: "/tour-dashboard.png", title: "Dashboard Overview" },
+    { url: "/tour-problems.png", title: "Problems Tab" },
+    { url: "/tour-leaderboard.png", title: "Leaderboard View" },
+    { url: "/tour-friends.png", title: "Friends & Requests" },
+  ];
 
   const handleGoogleLogin = async () => {
     try {
@@ -58,6 +69,38 @@ function Login() {
 
     return () => unsubscribe(); // cleanup
   }, []);
+
+  useEffect(() => {
+    // Always show the intro modal when the login page loads
+    setShowIntroModal(true);
+  }, []);
+
+  const closeIntroModal = () => {
+    setShowIntroModal(false);
+  };
+
+  const openIntroModal = () => {
+    setShowIntroModal(true);
+  };
+
+  const scrollToStory = () => {
+    const el = document.getElementById("product-story-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const goToNextPreview = (e) => {
+    e.stopPropagation();
+    setCurrentPreviewIndex((prev) => (prev + 1) % previewImages.length);
+  };
+
+  const goToPrevPreview = (e) => {
+    e.stopPropagation();
+    setCurrentPreviewIndex(
+      (prev) => (prev - 1 + previewImages.length) % previewImages.length,
+    );
+  };
 
   // --- Icon Component (remains the same) ---
   const Icon = ({ path, className = "w-6 h-6" }) => (
@@ -142,6 +185,22 @@ function Login() {
           <p className="welcome-subtitle">
             The easiest way to get started is with Google.
           </p>
+          <div className="login-header-actions">
+            <button
+              type="button"
+              className="tour-link-button"
+              onClick={openIntroModal}
+            >
+              View quick tour
+            </button>
+            <button
+              type="button"
+              className="story-link-button"
+              onClick={scrollToStory}
+            >
+              Why CodeCollab?
+            </button>
+          </div>
         </div>
 
         <button className="google-login-button" onClick={handleGoogleLogin}>
@@ -175,10 +234,143 @@ function Login() {
   );
 
   return (
-    <div className="login-page-wrapper">
-      <BrandingPanel />
-      <LoginForm />
-    </div>
+    <>
+      <div className="login-page-wrapper">
+        <BrandingPanel />
+        <LoginForm />
+
+        {showIntroModal && (
+          <div
+            className="intro-modal-overlay"
+            onClick={closeIntroModal}
+            role="dialog"
+            aria-modal="true"
+            aria-label="CodeCollab overview"
+          >
+            <div
+              className="intro-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="intro-modal-close"
+                onClick={closeIntroModal}
+                aria-label="Close introduction"
+              >
+                ×
+              </button>
+
+              <div className="intro-modal-header">
+                <h2>See CodeCollab in action</h2>
+                <p>
+                  Take a quick visual tour of the main pages before you sign in.
+                </p>
+              </div>
+
+              <div className="intro-modal-body">
+                <button
+                  type="button"
+                  className="intro-modal-nav intro-modal-nav-left"
+                  onClick={goToPrevPreview}
+                  aria-label="Previous preview"
+                >
+                  ‹
+                </button>
+
+                <div className="intro-modal-main">
+                  <img
+                    src={previewImages[currentPreviewIndex].url}
+                    alt={previewImages[currentPreviewIndex].title}
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  className="intro-modal-nav intro-modal-nav-right"
+                  onClick={goToNextPreview}
+                  aria-label="Next preview"
+                >
+                  ›
+                </button>
+              </div>
+
+              <div className="intro-modal-thumbs">
+                {previewImages.map((img, idx) => (
+                  <button
+                    type="button"
+                    key={img.url}
+                    className={`intro-thumb ${
+                      idx === currentPreviewIndex ? "active" : ""
+                    }`}
+                    onClick={() => setCurrentPreviewIndex(idx)}
+                    aria-label={img.title}
+                  >
+                    <img src={img.url} alt={img.title} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Product story / details section visible on scroll */}
+      <section className="product-story" id="product-story-section">
+        <div className="product-story-inner">
+          <div className="product-story-header">
+            <p className="product-tag">Built from a student problem</p>
+            <h2>Practice DSA together, not alone.</h2>
+            <p>
+              While doing DSA, many students experience the same
+              pattern—after a few days of solving problems alone, motivation
+              slowly drops. CodeCollab was created to change that by turning DSA
+              practice into a collaborative experience with rooms, shared
+              problems, and friendly competition.
+            </p>
+          </div>
+
+          <div className="product-grid">
+            <div className="product-card">
+              <h3>How CodeCollab works</h3>
+              <ul>
+                <li>Create rooms for your class, friends, or college group.</li>
+                <li>Add LeetCode and GeeksforGeeks problems into each room.</li>
+                <li>
+                  When you solve a problem on the original site, it
+                  automatically updates in CodeCollab.
+                </li>
+                <li>
+                  Everyone can see who solved what, daily streaks, and
+                  leaderboards.
+                </li>
+                <li>
+                  This friendly competition keeps the whole group active and
+                  accountable.
+                </li>
+              </ul>
+            </div>
+
+            <div className="product-card">
+              <h3>What students get</h3>
+              <ul>
+                <li>Practice DSA together instead of feeling stuck alone.</li>
+                <li>
+                  Stay motivated by seeing real progress from friends every day.
+                </li>
+                <li>
+                  Build interview-ready consistency with rooms, topics, and
+                  problem lists.
+                </li>
+                <li>
+                  Clear, visual dashboards that show rankings, growth, and
+                  recent activity.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
 
