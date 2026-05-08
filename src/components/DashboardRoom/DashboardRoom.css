@@ -1,4 +1,4 @@
-/* src/DashboardRoom.css */
+/* src/components/DashboardRoom/DashboardRoom.css */
 
 /* --- Global & Container --- */
 .dashboard-scroll-container {
@@ -38,77 +38,9 @@
   background: #475569;
 }
 
-/* --- Guide Wrapper Styles --- */
-.dashboard-guide-wrapper .welcome-banner {
-  margin-bottom: 24px;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  padding: 20px 24px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
-  border-left: 4px solid #3b82f6; /* Primary Blue */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
 
-.dashboard-guide-wrapper .banner-content h2 {
-  font-size: 1.5rem;
-  margin: 0 0 8px 0;
-  color: #f8fafc; /* Light Text */
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.dashboard-guide-wrapper .banner-content p {
-  color: #94a3b8; /* Muted Text */
-  font-size: 0.95rem;
-  margin: 0;
-}
-
-/* Banner Profile Inside Guide */
-.dashboard-guide-wrapper .banner-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 8px 16px 8px 8px;
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);
-}
-
-.dashboard-guide-wrapper .banner-profile img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.dashboard-guide-wrapper .banner-user-info {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.3;
-}
-
-.dashboard-guide-wrapper .banner-user-info strong {
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.dashboard-guide-wrapper .banner-user-info span {
-  color: #94a3b8;
-  font-size: 0.75rem;
-}
-
-/* src/DashboardRoom.css */
-
-/* --- Loading Container (Keeps it perfectly centered) --- */
+/* --- Loading Container --- */
 .loading-container {
   position: absolute;
   top: 50%;

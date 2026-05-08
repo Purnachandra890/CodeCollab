@@ -229,6 +229,18 @@
   max-width: 100%;
 }
 
+.dashboard-guide-wrapper .banner-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-guide-wrapper svg {
+  flex-shrink: 0;
+}
+
 /* --- Text Truncation (Prevents the "Email Overflow" in your images) --- */
 .dashboard-guide-wrapper .banner-user-info {
   display: flex;
