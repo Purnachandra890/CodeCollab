@@ -19,11 +19,11 @@ I'd like to report a bug.
 Thank you.
     `;
 
-    const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(
+    const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipientEmail}&su=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body.trim())}`;
 
-    window.location.href = mailtoLink;
+    window.open(gmailLink, '_blank');
   };
 
   return (

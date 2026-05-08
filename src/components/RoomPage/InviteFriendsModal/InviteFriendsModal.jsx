@@ -30,6 +30,7 @@ const Spinner = () => (
 
 const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
   const [friendsList, setFriendsList] = useState([]);
+  const [isLoadingFriends, setIsLoadingFriends] = useState(true);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [newInviteRecipient, setNewInviteRecipient] = useState("");
   const [emailCheckStatus, setEmailCheckStatus] = useState("idle");
@@ -65,6 +66,7 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
 
   useEffect(() => {
     if (!isOpen || !user?.uid) return;
+    setIsLoadingFriends(true);
     const unsub = onSnapshot(doc(db, "users", user.uid), async (userSnap) => {
       if (userSnap.exists()) {
         const userData = userSnap.data();
@@ -76,7 +78,10 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
           })
         );
         setFriendsList(friendsDetails.filter(Boolean));
+      } else {
+        setFriendsList([]);
       }
+      setIsLoadingFriends(false);
     });
     return () => unsub();
   }, [isOpen, user]);
@@ -185,26 +190,37 @@ const InviteFriendsModal = ({ isOpen, onClose, user, roomId }) => {
         </div>
 
         <ul className="friend-invite-list">
-          {friendsList.map((friend) => (
-            <li key={friend.id} className="invite-friend-item">
-              <div className="invite-friend-info">
-                <img
-                  src={friend.photoURL || defaultPhoto}
-                  alt={friend.name}
-                  className="invite-friend-photo"
-                  onError={(e) => e.target.src = defaultPhoto}
+          {isLoadingFriends ? (
+            Array.from({ length: 3 }).map((_, idx) => (
+              <li key={idx} className="skeleton-loader">
+                <div className="skeleton-info">
+                  <div className="skeleton-avatar"></div>
+                  <div className="skeleton-text"></div>
+                </div>
+                <div className="skeleton-checkbox"></div>
+              </li>
+            ))
+          ) : friendsList.length > 0 ? (
+            friendsList.map((friend) => (
+              <li key={friend.id} className="invite-friend-item">
+                <div className="invite-friend-info">
+                  <img
+                    src={friend.photoURL || defaultPhoto}
+                    alt={friend.name}
+                    className="invite-friend-photo"
+                    onError={(e) => e.target.src = defaultPhoto}
+                  />
+                  <span>{friend.name}</span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={selectedFriends.includes(friend.id)}
+                  onChange={() => handleSelectFriend(friend.id)}
+                  className="invite-checkbox"
                 />
-                <span>{friend.name}</span>
-              </div>
-              <input
-                type="checkbox"
-                checked={selectedFriends.includes(friend.id)}
-                onChange={() => handleSelectFriend(friend.id)}
-                className="invite-checkbox"
-              />
-            </li>
-          ))}
-          {friendsList.length === 0 && (
+              </li>
+            ))
+          ) : (
              <li style={{padding:'20px', textAlign:'center', color:'#94a3b8'}}>No friends found.</li>
           )}
         </ul>

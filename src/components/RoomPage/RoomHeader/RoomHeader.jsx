@@ -105,12 +105,6 @@ const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
         <h1 className="room-title">{room?.name || "Room"}</h1>
 
         <div className="right-side-group">
-          <button
-            className="header-btn promo-btn-blue"
-            onClick={() => navigate(`/room/${roomId}/dsa-deck`)}
-          >
-            <span className="btn-inner">Know about DSA Deck Notes</span>
-          </button>
 
           {/* My Problems Button */}
           <button

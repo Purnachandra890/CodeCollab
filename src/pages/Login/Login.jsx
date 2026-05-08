@@ -7,14 +7,23 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase"; // 🧠 Make sure both are exported from firebase.js
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../AuthContext";
 import "./Login.css";
 import React from "react";
 
 const provider = new GoogleAuthProvider();
 
 function Login() {
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      const from = location.state?.from?.pathname || "/dashboard/rooms";
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, location.state]);
 
   const [showIntroModal, setShowIntroModal] = useState(false);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
@@ -44,15 +53,7 @@ function Login() {
         });
       }
 
-      // // ✅ Redirect back to intended page (invite link or dashboard)
-      // const redirectPath =
-      //   sessionStorage.getItem("redirectAfterLogin") || "/dashboard/rooms";
-
-      // sessionStorage.removeItem("redirectAfterLogin");
-      const from = location.state?.from?.pathname || "/dashboard/rooms";
-      navigate(from, { replace: true });
-
-      // navigate("/dashboard");
+      // The redirect is now handled by the useEffect watching the 'user' state from AuthContext
     } catch (error) {
       console.error("Login failed", error);
     }

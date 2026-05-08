@@ -1,11 +1,22 @@
 /* src/components/ProblemList/components/GfgInfoBox.css */
 
-/* --- 💎 Glass Container --- */
-.gfg-fixed-box {
-  position: fixed;
-  right: 2.5rem;
-  top: 5rem; /* Adjusted slightly to sit below headers */
-  width: 280px;
+/* --- Container --- */
+.gfg-info-container {
+  position: relative;
+  z-index: 1000;
+  font-family: 'Inter', sans-serif;
+  color: #f1f5f9;
+}
+
+/* --- Header / Trigger --- */
+.gfg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
   
   /* Glass Background */
   background: rgba(15, 23, 42, 0.85); /* Dark Navy with transparency */
@@ -14,62 +25,23 @@
   
   /* Border & Shadow */
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Deep shadow for floating effect */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
   
-  z-index: 1000;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #f1f5f9;
-  font-family: 'Inter', sans-serif;
-  overflow: hidden;
+  gap: 12px;
 }
 
-/* Hover Effect on the Container */
-.gfg-fixed-box:hover {
+.gfg-info-container:hover .gfg-header {
   border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* --- Header --- */
-.gfg-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 16px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  
-  /* Remove gradient from here so hover doesn't break it */
-  border-bottom: 1px solid transparent;
-  transition: background-color 0.2s;
-}
-
-/* ✅ FIX: Apply gradient ONLY to the text span */
 .gfg-header > span:first-child {
   background: linear-gradient(90deg, #4ade80, #22c55e);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-/* ✅ FIX: Hover now changes background-color safely */
-.gfg-header:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* When open, add a separator line */
-.gfg-fixed-box.is-open .gfg-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.gfg-header:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-/* When open, add a separator line */
-.gfg-fixed-box.is-open .gfg-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* --- Arrow --- */
@@ -78,20 +50,37 @@
   font-size: 12px;
   color: #94a3b8; /* Muted Slate */
   -webkit-text-fill-color: #94a3b8; /* Override gradient */
+  display: flex;
+  align-items: center;
 }
 
 .gfg-arrow.open {
-  transform: rotate(180deg); /* Flip up/down standard chevron behavior */
-  color: #4ade80; /* Turn green when open */
+  transform: rotate(180deg);
+  color: #4ade80; 
 }
 
-/* --- Content Area --- */
+/* --- Dropdown Content --- */
 .gfg-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
   padding: 16px;
   font-size: 0.85rem;
-  color: #cbd5e1; /* Light Slate text */
+  color: #cbd5e1; 
   line-height: 1.6;
-  animation: slideDown 0.3s ease-out;
+  
+  /* Glass Background */
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  
+  animation: slideDown 0.2s ease-out;
+  z-index: 1001;
 }
 
 .gfg-content p {
@@ -108,18 +97,17 @@
   margin-top: 16px;
   padding: 12px;
   
-  /* Dark Green Glass Background */
   background: rgba(16, 185, 129, 0.1); 
   border: 1px solid rgba(16, 185, 129, 0.2);
-  border-left: 3px solid #10b981; /* Neon Green Stripe */
+  border-left: 3px solid #10b981; 
   
   border-radius: 8px;
   font-size: 0.8rem;
-  color: #d1fae5; /* Very light green text */
+  color: #d1fae5; 
 }
 
 .gfg-tip-box strong {
-  color: #34d399; /* Bright Green Title */
+  color: #34d399; 
   display: block;
   margin-bottom: 4px;
 }
@@ -131,7 +119,7 @@
 
 /* --- Animation --- */
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-5px); }
+  from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -139,29 +127,11 @@
 /* ===== RESPONSIVE ======== */
 /* ========================= */
 
-/* Tablets */
-@media (max-width: 1024px) {
-  .gfg-fixed-box {
-    right: 1.5rem;
-    width: 250px;
-  }
-}
-
-/* Mobile screens */
 @media (max-width: 768px) {
-  .gfg-fixed-box {
-    position: static;        /* Stop fixed */
-    width: 100%;
-    margin: 0 0 24px 0;      /* Margin bottom to separate from list */
-    
-    /* Simplified look for inline mobile */
-    background: rgba(255, 255, 255, 0.03); 
-    box-shadow: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  .gfg-content {
+    right: auto;
+    left: 0;
+    width: calc(100vw - 48px); /* Full width minus padding */
+    max-width: 320px;
   }
-  
-  .gfg-header {
-    background: none;
-    -webkit-text-fill-color: #4ade80; /* Solid green text on mobile */
-  }
-}
+}

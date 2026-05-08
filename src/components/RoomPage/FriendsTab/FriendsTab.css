@@ -143,3 +143,30 @@
   .friend-card { padding: 16px; }
   .friend-photo { width: 64px; height: 64px; }
 }
+
+/* --- Skeleton Loader --- */
+.skeleton-card {
+  pointer-events: none;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeleton-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #374151;
+  margin-bottom: 16px;
+}
+
+.skeleton-text-short {
+  width: 100px;
+  height: 18px;
+  border-radius: 4px;
+  background-color: #374151;
+  margin: 0 auto;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}

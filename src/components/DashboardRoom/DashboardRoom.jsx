@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../../firebase"; // Removed 'auth' if not directly used here
 import { useAuth } from "../../AuthContext";
+import { useRooms } from "../../RoomsContext";
 import "./DashboardRoom.css";
 import {
   collection,
@@ -16,12 +17,23 @@ import {
 // Components
 import DashboardGuide from "./components/DashboardGuide";
 import DashboardRoomsGrid from "./components/DashboardRoomsGrid";
+import ConfirmModal from "../ui/ConfirmModal";
+import ToastNotification from "../ui/ToastNotification";
 
 export default function DashboardRoom() {
   const { user } = useAuth();
-  const [userRooms, setUserRooms] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { userRooms, loadingRooms } = useRooms();
+  const [loadingLeetcode, setLoadingLeetcode] = useState(true);
   const [leetcodeUsername, setLeetcodeUsername] = useState("");
+  
+  // UI States
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [roomToDelete, setRoomToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+
+  const loading = loadingRooms || loadingLeetcode;
 
   const Spinner = () => (
     <svg className="spinner" viewBox="0 0 50 50">
@@ -38,7 +50,7 @@ export default function DashboardRoom() {
 
   // --- Fetch Data ---
   useEffect(() => {
-    const fetchUserRooms = async () => {
+    const fetchUserData = async () => {
       if (!user) return;
       try {
         // 1. Get User Data for LeetCode Username
@@ -47,38 +59,36 @@ export default function DashboardRoom() {
         if (userDocSnap.exists()) {
           setLeetcodeUsername(userDocSnap.data().leetcodeUsername || "");
         }
-
-        // 2. Get Rooms
-        const q = query(
-          collection(db, "rooms"),
-          where("members", "array-contains", user.uid),
-          orderBy("createdAt", "desc")
-        );
-        const querySnapshot = await getDocs(q);
-        const rooms = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate().toLocaleDateString("en-GB"),
-        }));
-        setUserRooms(rooms);
-        setTimeout(() => setLoading(false), 50);
       } catch (error) {
-        console.error("Error fetching user rooms:", error);
-        setLoading(false);
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoadingLeetcode(false);
       }
     };
-    fetchUserRooms();
+    fetchUserData();
   }, [user]);
 
   // --- Actions ---
-  const handleDeleteRoom = async (roomId) => {
-    if (!window.confirm("Are you sure? This action cannot be undone.")) return;
+  const handleDeleteClick = (roomId) => {
+    setRoomToDelete(roomId);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDeleteRoom = async () => {
+    if (!roomToDelete) return;
+    setIsDeleting(true);
     try {
-      await deleteDoc(doc(db, "rooms", roomId));
-      setUserRooms((prev) => prev.filter((room) => room.id !== roomId));
+      await deleteDoc(doc(db, "rooms", roomToDelete));
+      setDeleteModalOpen(false);
+      setRoomToDelete(null);
     } catch (error) {
       console.error("Error deleting room:", error);
-      alert("Failed to delete room.");
+      setToastMessage("Failed to delete room.");
+      setToastVisible(true);
+      setDeleteModalOpen(false);
+      setRoomToDelete(null);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -86,8 +96,15 @@ export default function DashboardRoom() {
     const link = `${window.location.origin}/join/ir/${inviteCode}`;
     navigator.clipboard
       .writeText(link)
-      .then(() => alert("Copied to clipboard!"))
-      .catch((err) => console.error("Failed to copy:", err));
+      .then(() => {
+        setToastMessage("Link copied!");
+        setToastVisible(true);
+      })
+      .catch((err) => {
+        console.error("Failed to copy:", err);
+        setToastMessage("Failed to copy link.");
+        setToastVisible(true);
+      });
   };
 
   return (
@@ -107,8 +124,27 @@ export default function DashboardRoom() {
             user={user}
             rooms={userRooms}
             leetcodeUsername={leetcodeUsername}
-            onDelete={handleDeleteRoom}
+            onDelete={handleDeleteClick}
             onCopy={handleCopyLink}
+          />
+
+          {/* 3. Modals and Toasts */}
+          <ConfirmModal 
+            isOpen={deleteModalOpen}
+            onClose={() => {
+              setDeleteModalOpen(false);
+              setRoomToDelete(null);
+            }}
+            onConfirm={confirmDeleteRoom}
+            title="Delete Room"
+            message="Are you sure you want to delete this room? This action cannot be undone."
+            isLoading={isDeleting}
+          />
+          
+          <ToastNotification 
+            message={toastMessage}
+            isVisible={toastVisible}
+            onClose={() => setToastVisible(false)}
           />
         </>
       )}

@@ -285,3 +285,45 @@
     padding: 12px;
   }
 }
+
+/* --- 7. Skeleton Loader --- */
+.skeleton-loader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeleton-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #334155;
+}
+
+.skeleton-text {
+  width: 120px;
+  height: 16px;
+  border-radius: 4px;
+  background-color: #334155;
+}
+
+.skeleton-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background-color: #334155;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}

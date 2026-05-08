@@ -5,12 +5,14 @@ import "./FriendsTab.css";
 
 const FriendsTab = ({ user }) => {
   const [friendsList, setFriendsList] = useState([]);
+  const [isLoadingFriends, setIsLoadingFriends] = useState(true);
 
   const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
   useEffect(() => {
     if (!user?.uid) return;
+    setIsLoadingFriends(true);
 
     const unsub = onSnapshot(doc(db, "users", user.uid), async (userSnap) => {
       if (userSnap.exists()) {
@@ -26,7 +28,10 @@ const FriendsTab = ({ user }) => {
           })
         );
         setFriendsList(friendsDetails.filter(Boolean));
+      } else {
+        setFriendsList([]);
       }
+      setIsLoadingFriends(false);
     });
 
     return () => unsub();
@@ -39,7 +44,16 @@ const FriendsTab = ({ user }) => {
       <h3>Your Friends <span style={{ opacity: 0.5, fontSize: '0.8em' }}>({friendsList.length})</span></h3>
 
       <div className="friend-grid-scroll-container">
-        {friendsList.length > 0 ? (
+        {isLoadingFriends ? (
+          <div className="friend-grid">
+            {Array.from({ length: 4 }).map((_, idx) => (
+              <div key={idx} className="friend-card skeleton-card">
+                <div className="skeleton-avatar-large"></div>
+                <div className="skeleton-text-short"></div>
+              </div>
+            ))}
+          </div>
+        ) : friendsList.length > 0 ? (
           <div className="friend-grid">
             {friendsList.map((friend) => (
               <div key={friend.id} className="friend-card">

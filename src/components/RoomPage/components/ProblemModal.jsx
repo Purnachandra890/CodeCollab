@@ -63,12 +63,16 @@ const ProblemModal = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await onSave({
+    const result = await onSave({
       link,
       youtubeLink,
       difficulty,
       subtopic: getFinalSubtopic(),
     });
+
+    if (result && result.success === false) {
+      return; // Do not close modal if there's an error
+    }
 
     onClose();
   };

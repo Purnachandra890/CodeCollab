@@ -91,6 +91,7 @@ const organizeBySubtopic = (problems) => {
 
 const ProblemsTab = ({
   problems,
+  loadingProblems,
   expandedSections,
   setExpandedSections,
   onAddProblem,
@@ -356,7 +357,19 @@ const ProblemsTab = ({
               </tr>
             </thead>
             <tbody>
-              {!hasProblems ? (
+              {loadingProblems ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <tr key={`skeleton-${i}`} className="skeleton-row">
+                    <td><div className="skeleton-box skeleton-sno" /></td>
+                    <td><div className="skeleton-box skeleton-title" /></td>
+                    <td style={{ textAlign: "center" }}><div className="skeleton-box skeleton-badge" /></td>
+                    <td><div className="skeleton-box skeleton-badge" /></td>
+                    <td style={{ textAlign: "center" }}><div className="skeleton-box skeleton-icon" /></td>
+                    <td style={{ textAlign: "center" }}><div className="skeleton-box skeleton-icon" /></td>
+                    <td className="actions-cell"><div className="skeleton-box skeleton-actions" /></td>
+                  </tr>
+                ))
+              ) : !hasProblems ? (
                 <tr>
                   <td colSpan="7" className="empty-state">
                     <p>No problems added yet</p>

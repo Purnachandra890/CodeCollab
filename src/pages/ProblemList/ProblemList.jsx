@@ -66,6 +66,7 @@ export default function ProblemList() {
   const { roomId } = useParams();
 
   const [problems, setProblems] = useState([]);
+  const [loadingProblems, setLoadingProblems] = useState(true);
   const [roomName, setRoomName] = useState("");
   const [solvedSlugs, setSolvedSlugs] = useState([]);
   const [leetcodeUsername, setLeetcodeUsername] = useState(null);
@@ -106,6 +107,7 @@ export default function ProblemList() {
     const qProblems = query(collection(db, "rooms", roomId, "problems"), orderBy("createdAt", "asc"));
     const unsub = onSnapshot(qProblems, (snapshot) => {
       setProblems(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+      setLoadingProblems(false);
     });
     return () => unsub();
   }, [roomId]);
@@ -251,24 +253,25 @@ export default function ProblemList() {
           <BackArrowIcon /> Back to {roomName}
         </Link>
         
-        <GfgInfoBox />
-        
         <div className="gfg">
           <h1>My Personal Problem List</h1>
-          <div className="gfg-refresh-bar">
-            <button
-              className={`refresh-btn ${!canRefreshGfg ? "disabled" : ""}`}
-              disabled={!canRefreshGfg || loadingGfg}
-              onClick={() => fetchGfgSolved(true)}
-            >
-              {loadingGfg ? "Refreshing..." : "Refresh GFG Data"}
-            </button>
+          <div className="gfg-actions-container" style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+            <GfgInfoBox />
+            <div className="gfg-refresh-bar">
+              <button
+                className={`refresh-btn ${!canRefreshGfg ? "disabled" : ""}`}
+                disabled={!canRefreshGfg || loadingGfg}
+                onClick={() => fetchGfgSolved(true)}
+              >
+                {loadingGfg ? "Refreshing..." : "Refresh GFG Data"}
+              </button>
 
-            {!canRefreshGfg && nextRefreshIn && (
-              <div className="refresh-timer">
-                Available in {formatTime(nextRefreshIn)}
-              </div>
-            )}
+              {!canRefreshGfg && nextRefreshIn && (
+                <div className="refresh-timer">
+                  Available in {formatTime(nextRefreshIn)}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -297,7 +300,23 @@ export default function ProblemList() {
 
       {/* PROBLEM LIST */}
       <div className="problem-list-items">
-        {problems.map((problem) => {
+        {loadingProblems ? (
+          [...Array(5)].map((_, i) => (
+            <div key={`skeleton-${i}`} className="problem-item-card skeleton-card">
+              <div className="problem-item-info">
+                <div className="skeleton-title"></div>
+                <div className="skeleton-link"></div>
+              </div>
+              <div className="problem-item-action">
+                <div className="skeleton-label"></div>
+              </div>
+            </div>
+          ))
+        ) : problems.length === 0 ? (
+          <div className="no-problems-message" style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '40px 0' }}>
+            No problems have been added to this list yet.
+          </div>
+        ) : problems.map((problem) => {
           const slug = getProblemSlug(problem);
           const isCompleted = !!problem?.completedBy?.[user?.uid];
           const solvedByLeetCode = slug && solvedSlugs.includes(slug);

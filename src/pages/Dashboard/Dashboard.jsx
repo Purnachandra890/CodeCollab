@@ -3,6 +3,7 @@ import { auth, db } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
+import { useRooms } from "../../RoomsContext";
 import "./Dashboard.css";
 import {
   collection,
@@ -11,7 +12,6 @@ import {
   query,
   where,
   getDocs,
-  orderBy,
   doc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
@@ -27,7 +27,7 @@ import CreateRoomModal from "./components/Sidebar/CreateRoomModal/CreateRoomModa
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [userRooms, setUserRooms] = useState([]);
+  const { userRooms, setUserRooms } = useRooms();
   const [roomName, setRoomName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -81,28 +81,7 @@ const Dashboard = () => {
     }
   }, [isMobile]);
 
-  useEffect(() => {
-    const fetchUserRooms = async () => {
-      if (!user) return;
-      try {
-        const q = query(
-          collection(db, "rooms"),
-          where("members", "array-contains", user.uid),
-          orderBy("createdAt", "desc") // Add this line to order by creation date descending
-        );
-        const querySnapshot = await getDocs(q);
-        const rooms = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate().toLocaleDateString(),
-        }));
-        setUserRooms(rooms);
-      } catch (error) {
-        console.error("Error fetching user rooms:", error);
-      }
-    };
-    fetchUserRooms();
-  }, [user]);
+
 
   useEffect(() => {
     if (!user?.uid) return;

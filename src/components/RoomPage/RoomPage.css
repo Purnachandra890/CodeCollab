@@ -108,11 +108,48 @@
   background: #9ca3af;
 }
 
-.welcome-placeholder {
-  width: 100%;
+/* --- Modern SaaS Loading --- */
+.modern-loading-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh; /* Fill the remaining height */
+  width: 100%;
+  gap: 16px;
+}
+
+.modern-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--card-bg); /* Darker background ring */
+  border-top: 4px solid var(--primary-blue); /* Primary blue highlight */
+  border-radius: 50%;
+  animation: modern-spin 1s linear infinite, modern-glow 2s ease-in-out infinite alternate;
+}
+
+.modern-loading-container h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-light);
+  letter-spacing: 0.5px;
+}
+
+.modern-loading-container p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+@keyframes modern-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes modern-glow {
+  0% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+  100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
 }
 
 /* ========================================= */

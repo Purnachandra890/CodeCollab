@@ -12,6 +12,7 @@ import InviteFriendsModal from "./InviteFriendsModal/InviteFriendsModal";
 import ProblemModal from "./components/ProblemModal";
 import ProblemsTab from "./components/ProblemsTab";
 import MembersTab from "./components/MembersTab";
+import ToastNotification from "../ui/ToastNotification";
 import RoomHeader from "./RoomHeader/RoomHeader";
 import RoomTabs from "./RoomTabs/RoomTabs";
 
@@ -34,10 +35,12 @@ const RoomPage = () => {
 
   const [activeTab, setActiveTab] = useState("Problems");
   const [expandedSections, setExpandedSections] = useState(new Set());
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   /* 🔹 Data Hooks */
   const { room, members } = useRoomDetails(roomId, defaultPhoto);
-  const problems = useProblems(roomId);
+  const { problems, loadingProblems } = useProblems(roomId);
   const { friends, sentRequests, pendingRequestCount } = useFriends(user);
   const unreadCount = useUnreadMessages(roomId, user?.uid);
 
@@ -55,6 +58,18 @@ const RoomPage = () => {
     closeProblemModal,
     setInviteModalOpen,
   } = useRoomModals();
+
+  const handleSaveProblem = async (data, editing) => {
+    const result = await saveProblem(data, editing);
+    if (result && result.success === false) {
+      setToastMessage(result.error || "Failed to save problem.");
+      setToastVisible(true);
+    } else {
+      setToastMessage(editing ? "Problem updated!" : "Problem added successfully!");
+      setToastVisible(true);
+    }
+    return result;
+  };
 
   /* --- Subtopics from problems (most recent first) --- */
   const { availableSubtopics, defaultSubtopic } = (() => {
@@ -88,6 +103,7 @@ const RoomPage = () => {
         return (
           <ProblemsTab
             problems={problems}
+            loadingProblems={loadingProblems}
             expandedSections={expandedSections}
             setExpandedSections={setExpandedSections}
             onAddProblem={() => openProblemModal()}
@@ -132,8 +148,10 @@ const RoomPage = () => {
 
   if (!room) {
     return (
-      <div className="welcome-placeholder">
-        <h3>Loading Room...</h3>
+      <div className="modern-loading-container">
+        <div className="modern-spinner"></div>
+        <h3>Loading Workspace...</h3>
+        <p>Fetching room details</p>
       </div>
     );
   }
@@ -144,7 +162,7 @@ const RoomPage = () => {
       <ProblemModal
         isOpen={problemModalOpen}
         onClose={closeProblemModal}
-        onSave={(data) => saveProblem(data, editingProblem)}
+        onSave={(data) => handleSaveProblem(data, editingProblem)}
         problem={editingProblem}
         isSaving={isSaving}
         availableSubtopics={availableSubtopics}
@@ -178,6 +196,13 @@ const RoomPage = () => {
 
       {/* ✅ Tab Content */}
       <div className="tab-content">{renderContent()}</div>
+
+      {/* ✅ Toast Notification */}
+      <ToastNotification 
+        message={toastMessage}
+        isVisible={toastVisible}
+        onClose={() => setToastVisible(false)}
+      />
     </div>
   );
 };

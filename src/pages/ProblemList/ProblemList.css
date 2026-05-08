@@ -342,8 +342,44 @@
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 640px) {
+  /* Fix header layout */
+  .gfg {
+    display: grid;
+    grid-template-areas: 
+      "info info"
+      "title refresh";
+    grid-template-columns: 1fr auto;
+    gap: 20px 12px;
+    align-items: center;
+  }
+  
+  .gfg h1 {
+    grid-area: title;
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .gfg-actions-container {
+    display: contents; /* Let children participate in grid */
+  }
+
+  .gfg-info-container {
+    grid-area: info;
+    width: 100%;
+  }
+
+  .gfg-refresh-bar {
+    grid-area: refresh;
+  }
+
+  /* Make refresh button slightly smaller on mobile */
+  .refresh-btn {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
   /* --- Problem List Items --- */
-.problem-item-card {
+  .problem-item-card {
   display: flex;
   justify-content: space-between; /* This pushes title left and label right */
   align-items: center; /* Vertically centers them */
@@ -411,4 +447,58 @@
     font-size: 0.75rem;
   }
 }
+
+/* --- Skeleton Loaders --- */
+.skeleton-card {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  border-color: transparent;
+  pointer-events: none;
+}
+
+.skeleton-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.1) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-title {
+  height: 20px;
+  width: 60%;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.skeleton-link {
+  height: 14px;
+  width: 30%;
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+}
+
+.skeleton-label {
+  height: 28px;
+  width: 80px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
 }

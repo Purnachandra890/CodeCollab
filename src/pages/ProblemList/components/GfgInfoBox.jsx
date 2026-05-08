@@ -13,7 +13,7 @@ export default function GfgInfoBox() {
 
   return (
     // Added conditional class 'is-open' for styling hooks
-    <div className={`gfg-fixed-box ${open ? "is-open" : ""}`}>
+    <div className={`gfg-info-container ${open ? "is-open" : ""}`}>
       <div className="gfg-header" onClick={() => setOpen(!open)}>
         <span>GFG Working</span>
         <span className={`gfg-arrow ${open ? "open" : ""}`}>

@@ -213,8 +213,25 @@
   .right-side-group::-webkit-scrollbar {
     display: none;
   }
-  .profile-avatar{
-    display: none;
+  .profile-wrapper {
+    position: absolute;
+    top: 5px;
+    right: 16px;
+    margin-left: 0;
+    z-index: 20;
+  }
+
+  .profile-avatar {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-width: 1.5px;
+  }
+
+  .profile-dropdown {
+    top: 40px;
+    right: 0;
+    min-width: 140px;
   }
 }
 @property --angle {

@@ -1,10 +1,27 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import "./EditProfile.css";
 
 // --- Icons ---
+const BackIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="19" y1="12" x2="5" y2="12"></line>
+    <polyline points="12 19 5 12 12 5"></polyline>
+  </svg>
+);
+
 const SaveIcon = () => (
   <svg
     width="20"
@@ -40,6 +57,7 @@ const InfoIcon = () => (
 );
 
 export default function EditProfile() {
+  const navigate = useNavigate();
   const [uid, setUid] = useState(null);
   const [username, setUsername] = useState(""); // LeetCode
   const [gfgUsername, setGfgUsername] = useState(""); // GFG
@@ -88,6 +106,11 @@ export default function EditProfile() {
 
   return (
     <div className="edit-profile-container">
+      {/* Back Button */}
+      <button className="back-btn" onClick={() => navigate(-1)}>
+        <BackIcon /> Back
+      </button>
+
       {/* 1. Notification Area (Floating above card) */}
       <div className="notification-area">
         {username === "" && !loading && (

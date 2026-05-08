@@ -150,14 +150,12 @@ export const useRoomProblems = (roomId, user) => {
       const slug = extractTitleFromLink(normalized);
 
       if (!slug) {
-        alert("Invalid problem link");
-        return;
+        return { success: false, error: "Invalid problem link" };
       }
 
       // ✅ YouTube validation
       if (!isValidYoutubeLink(problem.youtubeLink)) {
-        alert("Please enter a valid YouTube video link.");
-        return;
+        return { success: false, error: "Please enter a valid YouTube video link." };
       }
 
       let difficulty = problem.difficulty || "Unknown";
@@ -194,8 +192,10 @@ export const useRoomProblems = (roomId, user) => {
           createdAt: serverTimestamp(),
         });
       }
+      return { success: true };
     } catch (err) {
       console.error(err);
+      return { success: false, error: "Failed to save problem." };
     } finally {
       setIsSaving(false);
     }
