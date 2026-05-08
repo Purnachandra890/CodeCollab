@@ -378,46 +378,7 @@
     font-size: 0.75rem;
   }
 
-  /* --- Problem List Items --- */
-  .problem-item-card {
-  display: flex;
-  justify-content: space-between; /* This pushes title left and label right */
-  align-items: center; /* Vertically centers them */
-  padding: 20px 24px;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
-  position: relative;
-  gap: 20px; /* Ensures space between text and label if they get close */
 }
-
-.problem-item-info {
-  flex-grow: 1;
-  padding-left: 12px;
-  min-width: 0; /* Prevents text from pushing label out of card */
-}
-
-.problem-item-info h3 {
-  margin: 0 0 6px 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  /* Optional: Truncate long titles to keep label visible */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.problem-item-action {
-  flex-shrink: 0; /* Prevents the label from squishing */
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: flex-end; /* Ensures content stays right-aligned */
-}
-
 /* --- Mobile Responsiveness FIX --- */
 @media (max-width: 640px) {
   /* Keep them horizontal on mobile if they fit, 
