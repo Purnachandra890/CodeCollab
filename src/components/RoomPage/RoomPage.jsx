@@ -189,8 +189,8 @@ const RoomPage = () => {
       <RoomTabs
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        problemsCount={problems.length}
-        membersCount={members.length}
+        problemsCount={loadingProblems ? "..." : problems.length}
+        membersCount={room?.members?.length || 0}
         pendingRequestCount={pendingRequestCount}
       />
 
