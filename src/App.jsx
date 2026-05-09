@@ -18,14 +18,20 @@ import LeaderBoard from "./components/RoomPage/LeaderBoard/LeaderBoard";
 import ChatMessage from "./pages/ChatMessage/ChatMessage";
 import DashboardRoom from "./components/DashboardRoom/DashboardRoom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "./firebase";
 // EditProfile
 import EditProfile from "./pages/EditProfile/EditProfile";
 // dsa deck
 import DSADeck from "./components/RoomPage/components/DSADeck";
+import ToastNotification from "./components/ui/ToastNotification";
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [showProfileWarning, setShowProfileWarning] = useState(false);
+  const [isWarningDismissed, setIsWarningDismissed] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -34,6 +40,26 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    const unsub = onSnapshot(doc(db, "users", user.uid), (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        const leetcodeMissing = !data.leetcodeUsername || data.leetcodeUsername.trim() === "";
+        const gfgMissing = !data.gfgUsername || data.gfgUsername.trim() === "";
+        
+        if ((leetcodeMissing || gfgMissing) && !isWarningDismissed) {
+          setShowProfileWarning(true);
+        } else {
+          setShowProfileWarning(false);
+        }
+      }
+    });
+
+    return () => unsub();
+  }, [user?.uid, isWarningDismissed]);
 
   if (loading) return null; // or loading spinner
   return (
@@ -100,6 +126,13 @@ function App() {
         />
         <Route path="/editProfile" element={<EditProfile />} />
       </Routes>
+      <ToastNotification
+        message="Please add your LeetCode or GeeksforGeeks username in Edit Profile."
+        isVisible={showProfileWarning}
+        onClose={() => setIsWarningDismissed(true)}
+        duration={null}
+        type="warning"
+      />
     </BrowserRouter>
   );
 }

@@ -1,7 +1,7 @@
 .toast-container {
   position: fixed;
   bottom: 24px;
-  left: 24px;
+  right: 24px;
   z-index: 10000;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -58,4 +58,13 @@
 .toast-close-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #f8fafc;
+}
+
+.toast-content.glass-effect.toast-warning {
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-left: 4px solid #f59e0b;
+}
+
+.toast-icon.warning-icon {
+  color: #f59e0b;
 }
