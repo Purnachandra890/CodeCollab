@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { CheckCircle2, X, AlertCircle } from 'lucide-react';
 import './ToastNotification.css';
 
 const ToastNotification = ({ message, isVisible, onClose, duration = 3000, type = 'success' }) => {
   const [show, setShow] = useState(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (isVisible) {
@@ -11,14 +13,16 @@ const ToastNotification = ({ message, isVisible, onClose, duration = 3000, type 
       if (duration) {
         const timer = setTimeout(() => {
           setShow(false);
-          setTimeout(onClose, 300); // Wait for fade out animation
+          setTimeout(() => {
+            if (onCloseRef.current) onCloseRef.current();
+          }, 300); // Wait for fade out animation
         }, duration);
         return () => clearTimeout(timer);
       }
     } else {
       setShow(false);
     }
-  }, [isVisible, duration, onClose]);
+  }, [isVisible, duration]);
 
   if (!isVisible && !show) return null;
 

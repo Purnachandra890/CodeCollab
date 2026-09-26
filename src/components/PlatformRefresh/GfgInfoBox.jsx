@@ -1,14 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import "./GfgInfoBox.css";
 
-// Optional: Chevron Icon for a cleaner look than "➤"
 const ChevronIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
     <path d="M6 9l6 6 6-6" />
   </svg>
 );
 
-export default function GfgInfoBox() {
+export default function GfgInfoBox({ compact = false }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
 
@@ -28,10 +27,9 @@ export default function GfgInfoBox() {
   }, [open]);
 
   return (
-    // Added conditional class 'is-open' for styling hooks
     <div
       ref={containerRef}
-      className={`gfg-info-container ${open ? "is-open" : ""}`}
+      className={`gfg-info-container ${compact ? "header-toolbar" : ""} ${open ? "is-open" : ""}`}
     >
       <div className="gfg-header" onClick={() => setOpen(!open)}>
         <span>How Sync Works</span>

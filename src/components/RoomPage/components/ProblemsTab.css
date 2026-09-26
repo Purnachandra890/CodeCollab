@@ -49,46 +49,6 @@
   gap: 24px;
 }
 
-.preview-toggle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #94a3b8; /* CHANGED: Light Grey */
-}
-
-/* --- Premium Toggle Switch --- */
-.toggle-switch {
-  width: 44px;
-  height: 24px;
-  background-color: #475569; /* CHANGED: Darker grey for off state */
-  border-radius: 99px;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-switch.on {
-  background-color: #3b82f6; /* Primary Blue */
-}
-
-.toggle-knob {
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-.toggle-switch.on .toggle-knob {
-  transform: translateX(20px);
-}
 
 /* --- Gradient Action Button --- */
 .add-prob-btn {
@@ -222,6 +182,24 @@
   color: #f87171;
   border: 1px solid rgba(248, 113, 113, 0.2);
 }
+.difficulty-completed {
+  background-color: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  outline: none;
+}
+.difficulty-completed:hover {
+  background-color: rgba(251, 191, 36, 0.28);
+  border-color: #fbbf24;
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.35);
+  transform: translateY(-1px);
+}
+.difficulty-completed:active {
+  transform: translateY(0);
+}
 
 /* --- Icons --- */
 .platform-logo {
@@ -281,86 +259,6 @@
   border-color: #7f1d1d;
 }
 
-/* --- Floating Tooltip --- */
-.problem-tooltip-fixed {
-  position: fixed;
-  top: 160px;
-
-  left: 50%;
-  transform: translateX(-40%);
-
-  width: 750px;
-  max-width: 90vw;
-  max-height: 60vh;
-
-  overflow-y: auto;
-
-  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
-
-  color: #e5e7eb;
-  padding: 18px;
-  border-radius: 12px;
-
-  border: 1px solid rgba(148, 163, 184, 0.08);
-
-  z-index: 9999;
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-
-  animation: tooltipFadeIn 0.18s ease-out;
-}
-
-/* Tooltip Formatting */
-.problem-tooltip-fixed code {
-  background-color: #0f172a; /* Deep background */
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-family: monospace;
-  color: #e2e8f0;
-}
-
-.problem-tooltip-fixed pre {
-  background-color: #0f172a;
-  color: #f8fafc;
-  padding: 12px;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin-top: 12px;
-  border: 1px solid #334155;
-}
-.problem-tooltip-fixed::-webkit-scrollbar {
-  width: 8px;
-}
-
-.problem-tooltip-fixed::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.problem-tooltip-fixed::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
-  border-radius: 9999px;
-}
-
-.problem-tooltip-fixed::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.55);
-}
-
-/* Firefox */
-.problem-tooltip-fixed {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
-}
-@keyframes tooltipSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 /* --- Footer --- */
 .helper-message {
@@ -515,9 +413,6 @@
     display: none !important;
   }
 
-  .preview-toggle span {
-    display: none;
-  }
 
   .problems-table th,
   .problems-table td {
@@ -560,10 +455,6 @@
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
-  /* 1. Remove Preview Toggle in Mobile */
-  .preview-toggle {
-    display: none !important;
-  }
 
   /* 2. Fix Header Layout: Text and Button in one line */
   .problems-header {

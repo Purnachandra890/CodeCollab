@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 
 import "./RoomPage.css";
@@ -24,16 +24,29 @@ import { useUnreadMessages } from "./hooks/useUnreadMessages";
 import { useRoomProblems } from "./hooks/useRoomProblems";
 import { useRoomActions } from "./hooks/useRoomActions";
 import { useRoomModals } from "./hooks/useRoomModals";
+import { usePlatformRefresh } from "../PlatformRefresh/usePlatformRefresh";
 
 const RoomPage = () => {
   const { roomId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
 
-  const [activeTab, setActiveTab] = useState("Problems");
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || "Problems"
+  );
+  const platformRefresh = usePlatformRefresh(user, roomId);
+  const { gfgSolvedSlugs } = platformRefresh;
+
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state?.activeTab, location.pathname, navigate]);
   const [expandedSections, setExpandedSections] = useState(new Set());
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -72,7 +85,7 @@ const RoomPage = () => {
   };
 
   /* --- Subtopics from problems (most recent first) --- */
-  const { availableSubtopics, defaultSubtopic } = (() => {
+  const { availableSubtopics, defaultSubtopic } = React.useMemo(() => {
     const seen = new Set();
     const ordered = [];
     for (let i = problems.length - 1; i >= 0; i--) {
@@ -94,7 +107,7 @@ const RoomPage = () => {
       availableSubtopics: ordered,
       defaultSubtopic: mostRecent || ordered[0] || "",
     };
-  })();
+  }, [problems, editingProblem]);
 
   /* --- Tab Content Renderer --- */
   const renderContent = () => {
@@ -112,6 +125,8 @@ const RoomPage = () => {
             onRenameSubtopic={renameSubtopic}
             currentUserId={user?.uid}
             roomAdminId={room.adminId}
+            roomId={roomId}
+            gfgSolvedSlugs={gfgSolvedSlugs}
           />
         );
 
@@ -183,6 +198,8 @@ const RoomPage = () => {
         roomId={roomId}
         unreadCount={unreadCount}
         setIsInviteModalOpen={setInviteModalOpen}
+        onOpenLeaderboard={() => setActiveTab("Leaderboard")}
+        platformRefresh={platformRefresh}
       />
 
       {/* ✅ Tabs */}

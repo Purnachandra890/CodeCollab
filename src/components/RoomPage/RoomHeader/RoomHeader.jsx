@@ -1,26 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../AuthContext"; // Adjust path as needed
+import { useAuth } from "../../../AuthContext";
 import { signOut } from "firebase/auth";
-import { auth } from "../../../firebase"; // Adjust path as needed
+import { auth } from "../../../firebase";
+import PlatformRefreshActions from "../../PlatformRefresh/PlatformRefreshActions";
 import "./RoomHeader.css";
-
-// --- Icons ---
-const ListIcon = () => (
-  <svg
-    className="btn-icon"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M4 6h16M4 10h16M4 14h16M4 18h16"
-    />
-  </svg>
-);
 
 const ChatIcon = () => (
   <svg
@@ -70,7 +54,14 @@ const LogoutIcon = () => (
   </svg>
 );
 
-const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
+const RoomHeader = ({
+  room,
+  roomId,
+  unreadCount,
+  setIsInviteModalOpen,
+  onOpenLeaderboard,
+  platformRefresh,
+}) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -88,7 +79,6 @@ const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
     }
   };
 
-  // Close dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -105,18 +95,12 @@ const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
         <h1 className="room-title">{room?.name || "Room"}</h1>
 
         <div className="right-side-group">
+          {platformRefresh && (
+            <PlatformRefreshActions variant="header" {...platformRefresh} />
+          )}
 
-          {/* My Problems Button */}
           <button
-            className="header-btn secondary-btn"
-            onClick={() => navigate(`/room/${roomId}/problems`)}
-            title="View My Problems"
-          >
-            <ListIcon /> My Problems
-          </button>
-
-          {/* Chat Button */}
-          <button
+            type="button"
             className="header-btn primary-btn chat-btn-wrapper"
             onClick={() => navigate(`/room/${roomId}/chatMessages`)}
             title="Open Chat"
@@ -127,8 +111,8 @@ const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
             )}
           </button>
 
-          {/* Invite Button */}
           <button
+            type="button"
             className="header-btn secondary-btn"
             onClick={() => setIsInviteModalOpen(true)}
             title="Invite Members"
@@ -136,7 +120,6 @@ const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
             <InviteIcon /> Invite
           </button>
 
-          {/* Profile Dropdown */}
           <div className="profile-wrapper" ref={profileRef}>
             <img
               src={user?.photoURL || defaultPhoto}
@@ -149,6 +132,7 @@ const RoomHeader = ({ room, roomId, unreadCount, setIsInviteModalOpen }) => {
             {isProfileOpen && (
               <div className="profile-dropdown">
                 <button
+                  type="button"
                   className="profile-dropdown-item logout"
                   onClick={handleLogout}
                 >

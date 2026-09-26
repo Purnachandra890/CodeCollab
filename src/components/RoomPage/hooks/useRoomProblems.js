@@ -71,13 +71,11 @@ export const useRoomProblems = (roomId, user) => {
       const data = await res.json();
       return {
         difficulty: data?.difficulty || "Unknown",
-        statement: data?.question || "", // ✅ problem statement
       };
     } catch (error) {
       console.log("Fetch failed:", error);
       return {
         difficulty: "Unknown",
-        statement: "",
       };
     }
   }
@@ -159,13 +157,11 @@ export const useRoomProblems = (roomId, user) => {
       }
 
       let difficulty = problem.difficulty || "Unknown";
-      let statement = "";
 
       // ✅ Fetch ONLY for LeetCode
       if (platform === "leetcode") {
         const res = await fetchDifficultyFromAPI(slug);
         difficulty = res.difficulty;
-        statement = res.statement;
       }
 
       const problemToSave = {
@@ -175,7 +171,6 @@ export const useRoomProblems = (roomId, user) => {
         platform, // ✅ STORE PLATFORM HERE
         youtubeLink: problem.youtubeLink?.trim() || null,
         difficulty,
-        problemStatement: statement,
         subtopic: problem.subtopic?.trim() || "",
       };
 

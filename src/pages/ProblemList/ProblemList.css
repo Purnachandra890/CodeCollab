@@ -83,47 +83,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* --- GFG Refresh Button (Glass Style) --- */
-.gfg-refresh-bar {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.refresh-btn {
-  background: rgba(16, 185, 129, 0.1); /* Low opacity green */
-  color: #34d399; /* Bright Green Text */
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(4px);
-}
-
-.refresh-btn:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: #34d399;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
-  transform: translateY(-1px);
-}
-
-.refresh-btn:disabled {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
-  border-color: transparent;
-  cursor: not-allowed;
-}
-
-.refresh-timer {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
-}
-
 /* --- Progress Card (Neon Glow) --- */
 .progress-card {
   background: linear-gradient(145deg, #1e293b, #0f172a);
@@ -345,9 +304,10 @@
   /* Fix header layout */
   .gfg {
     display: grid;
-    grid-template-areas: 
+    grid-template-areas:
       "info info"
-      "title refresh";
+      "title title"
+      "refresh refresh";
     grid-template-columns: 1fr auto;
     gap: 20px 12px;
     align-items: center;
@@ -359,8 +319,8 @@
     line-height: 1.2;
   }
 
-  .gfg-actions-container {
-    display: contents; /* Let children participate in grid */
+  .platform-refresh-actions {
+    display: contents;
   }
 
   .gfg-info-container {
@@ -368,14 +328,9 @@
     width: 100%;
   }
 
-  .gfg-refresh-bar {
+  .refresh-buttons-row {
     grid-area: refresh;
-  }
-
-  /* Make refresh button slightly smaller on mobile */
-  .refresh-btn {
-    padding: 8px 12px;
-    font-size: 0.75rem;
+    width: 100%;
   }
 
 }

@@ -5,14 +5,9 @@ import {
   doc,
   onSnapshot,
   getDoc,
-  getDocs,
-  query,
-  updateDoc,
-  serverTimestamp,
 } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../../AuthContext";
-import axios from "axios";
 import "./LeaderBoard.css";
 
 const defaultPhoto =
@@ -39,125 +34,13 @@ const Spinner = () => (
   </svg>
 );
 
-// ... (Keep helper functions: slugFromLink, slugifyTitle, getProblemSlug) ...
-const slugFromLink = (link) => {
-  if (!link || typeof link !== "string") return "";
-  try {
-    const m = link.match(/\/problems\/([^\/?#]+)/i);
-    if (m && m[1]) return m[1].toLowerCase();
-    const parts = link.split("/").filter(Boolean);
-    const last = (parts[parts.length - 1] || "").toLowerCase();
-    if (
-      [
-        "description",
-        "solution",
-        "solutions",
-        "submissions",
-        "discussion",
-      ].includes(last)
-    ) {
-      const prev = (parts[parts.length - 2] || "").toLowerCase();
-      return prev;
-    }
-    return last;
-  } catch {
-    return "";
-  }
-};
-
-const slugifyTitle = (title) =>
-  (title || "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-const getProblemSlug = (problem) => {
-  const fromLink = slugFromLink(problem?.link);
-  if (fromLink) return fromLink;
-  const t = problem?.title || "";
-  if (!t) return "";
-  return t.includes("-") || t === t.toLowerCase()
-    ? t.toLowerCase()
-    : slugifyTitle(t);
-};
-
 export default function LeaderBoard() {
   const { roomId } = useParams();
   const { user } = useAuth();
   const [leaderboard, setLeaderboard] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // ✅ 1. Add Loading State
+  const [isLoading, setIsLoading] = useState(true);
 
-  // ----- useEffect 1: Sync (Unchanged) -----
-  useEffect(() => {
-    const fetchWithFailover = async (endpoints) => {
-      let lastError = null;
-      for (const url of endpoints) {
-        try {
-          return await axios.get(url);
-        } catch (error) {
-          lastError = error;
-        }
-      }
-      throw new Error("All API servers are unavailable.", { cause: lastError });
-    };
-
-    const syncSubmissions = async () => {
-      if (!user?.uid || !roomId) return;
-      const userDocSnap = await getDoc(doc(db, "users", user.uid));
-      if (!userDocSnap.exists()) return;
-      const leetcodeUsername = userDocSnap.data().leetcodeUsername;
-      if (!leetcodeUsername) return;
-
-      try {
-        const endpoints = [
-          `https://leetcode-api-u9ko.onrender.com/${leetcodeUsername}/acSubmission`,
-          `https://leetcode-api-xesz.onrender.com/${leetcodeUsername}/acSubmission`,
-        ];
-        const res = await fetchWithFailover(endpoints);
-        const submissions = Array.isArray(res.data?.submission)
-          ? res.data.submission
-          : [];
-        const solvedSlugs = new Set(
-          submissions
-            .map((s) => (s.titleSlug || "").toLowerCase())
-            .filter(Boolean)
-        );
-
-        if (solvedSlugs.size === 0) return;
-
-        const problemsSnapshot = await getDocs(
-          collection(db, "rooms", roomId, "problems")
-        );
-        const problems = problemsSnapshot.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-        }));
-
-        const updates = [];
-        for (const p of problems) {
-          const slug = getProblemSlug(p);
-          if (!slug) continue;
-          const isSolvedInAPI = solvedSlugs.has(slug);
-          const alreadyMarked = !!p?.completedBy?.[user.uid];
-
-          if (isSolvedInAPI && !alreadyMarked) {
-            updates.push(
-              updateDoc(doc(db, "rooms", roomId, "problems", p.id), {
-                [`completedBy.${user.uid}`]: serverTimestamp(),
-              })
-            );
-          }
-        }
-        if (updates.length > 0) await Promise.all(updates);
-      } catch (err) {
-        console.error("Error syncing LeetCode submissions:", err);
-      }
-    };
-    syncSubmissions();
-  }, [roomId, user?.uid]);
-
-  // ----- useEffect 2: Fetch Data (Updated) -----
+  // ----- Fetch leaderboard data from Firestore -----
   useEffect(() => {
     if (!roomId) return;
     setIsLoading(true);
@@ -268,20 +151,16 @@ export default function LeaderBoard() {
     topThree.find((p) => p.rank === 3),
   ].filter(Boolean);
 
-  // ✅ 3. Render Loading State
-  if (isLoading) {
-    return (
-      <div className="leaderboard-wrapper">
-        <div className="loading-container">
-          <Spinner />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="leaderboard-wrapper">
       <div className="leaderboard-content">
+
+        {isLoading ? (
+          <div className="loading-container">
+            <Spinner />
+          </div>
+        ) : (
+          <>
         {/* --- HERO PODIUM STAGE --- */}
         {podiumOrder.length > 0 && (
           <div className="podium-stage">
@@ -368,11 +247,13 @@ export default function LeaderBoard() {
             ))}
 
             {/* Only show this if NOT loading and leaderboard is actually empty */}
-            {leaderboard.length === 0 && !isLoading && (
+            {leaderboard.length === 0 && (
               <div className="empty-message">No members in this room yet.</div>
             )}
           </div>
         </div>
+          </>
+        )}
       </div>
     </div>
   );

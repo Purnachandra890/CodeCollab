@@ -1,0 +1,153 @@
+.platform-refresh-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.refresh-buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.gfg-refresh-bar {
+  display: flex;
+  align-items: center;
+}
+
+.refresh-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+/* LeetCode Refresh Button: Orange glass theme */
+.refresh-btn.refresh-btn-leetcode {
+  background: rgba(255, 161, 22, 0.1);
+  color: #ffa116;
+  border: 1px solid rgba(255, 161, 22, 0.3);
+  font-weight: 600;
+}
+
+.refresh-btn.refresh-btn-leetcode:hover:not(:disabled) {
+  background: rgba(255, 161, 22, 0.2);
+  border-color: #ffa116;
+  color: #ffa116;
+  box-shadow: 0 0 12px rgba(255, 161, 22, 0.25);
+  transform: translateY(-1px);
+}
+
+.refresh-btn.refresh-btn-leetcode:disabled {
+  background: rgba(255, 161, 22, 0.12);
+  color: #ffa116;
+  border: 1px solid rgba(255, 161, 22, 0.25);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* GFG Refresh Button: Green glass theme */
+.refresh-btn.refresh-btn-gfg {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-weight: 600;
+}
+
+.refresh-btn.refresh-btn-gfg:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #34d399;
+  color: #34d399;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+  transform: translateY(-1px);
+}
+
+.refresh-btn.refresh-btn-gfg:disabled {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.refresh-timer {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.platform-refresh-hint {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.platform-refresh-hint p {
+  margin: 0;
+}
+
+.platform-refresh-actions.header-toolbar {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.platform-refresh-actions.header-toolbar .refresh-buttons-row {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.platform-refresh-actions.header-toolbar .gfg-refresh-bar {
+  display: flex;
+  align-items: center;
+}
+
+.platform-refresh-actions.header-toolbar .refresh-btn {
+  height: 40px;
+  padding: 0 14px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  min-width: 104px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .platform-refresh-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .refresh-buttons-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gfg-refresh-bar {
+    align-items: stretch;
+  }
+
+  .refresh-btn {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    width: 100%;
+  }
+}

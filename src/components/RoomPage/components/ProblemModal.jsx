@@ -36,6 +36,8 @@ const ProblemModal = ({
   const [newSubtopicName, setNewSubtopicName] = useState("");
 
   useEffect(() => {
+    if (!isOpen) return;
+
     if (problem) {
       setLink(problem.link || "");
       setYoutubeLink(problem.youtubeLink || "");
@@ -49,7 +51,7 @@ const ProblemModal = ({
       setSelectedSubtopic(defaultSubtopic || (availableSubtopics[0] ?? ""));
       setNewSubtopicName("");
     }
-  }, [problem, isOpen, defaultSubtopic, availableSubtopics]);
+  }, [isOpen, problem]);
 
   if (!isOpen) return null;
 

@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { getProblemSlug } from "../../../utils/problemSlug";
 import leetcodeLogo from "../../../assets/leetcode.png";
 import youtubeLogo from "../../../assets/youtube.png";
 import gfgLogo from "../../../assets/gfg.png";
@@ -100,11 +103,9 @@ const ProblemsTab = ({
   onRenameSubtopic,
   currentUserId,
   roomAdminId,
+  roomId,
+  gfgSolvedSlugs = [],
 }) => {
-  const [hoveredId, setHoveredId] = useState(null);
-  const [showPreview, setShowPreview] = useState(
-    localStorage.getItem("showProblemPreview") === "true",
-  );
   const [editingTitle, setEditingTitle] = useState(null);
   const [editingValue, setEditingValue] = useState("");
 
@@ -114,11 +115,21 @@ const ProblemsTab = ({
 
   const isAdmin = currentUserId === roomAdminId;
 
-  const handleTogglePreview = () => {
-    setShowPreview((prev) => {
-      localStorage.setItem("showProblemPreview", !prev);
-      return !prev;
-    });
+  const gfgSolvedSet = React.useMemo(() => {
+    return new Set(
+      (gfgSolvedSlugs || []).map((s) => (s || "").trim().toLowerCase())
+    );
+  }, [gfgSolvedSlugs]);
+
+  const handleConfirmGfgCompletion = async (problemId) => {
+    if (!roomId || !currentUserId || !problemId) return;
+    try {
+      await updateDoc(doc(db, "rooms", roomId, "problems", problemId), {
+        [`completedBy.${currentUserId}`]: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error("Error marking problem as solved:", err);
+    }
   };
 
   const { groups, noSubtopic } = organizeBySubtopic(problems);
@@ -193,16 +204,20 @@ const ProblemsTab = ({
 
   let serial = 1;
 
-  const renderProblemRow = (p) => (
-    <tr key={p.id}>
-      <td>{serial++}</td>
+  const renderProblemRow = (p) => {
+    const isSolved = isSolvedByUser(p, currentUserId);
+    const isGfg =
+      p.platform === "gfg" ||
+      (p.link && p.link.toLowerCase().includes("geeksforgeeks.org"));
+    const slug = getProblemSlug(p)?.toLowerCase();
+    const detectedInGfg = !isSolved && isGfg && slug && gfgSolvedSet.has(slug);
 
-      {/* Title & Tooltip */}
-      <td style={{ position: "relative" }}>
-        <div
-          onMouseEnter={() => setHoveredId(p.id)}
-          onMouseLeave={() => setHoveredId(null)}
-        >
+    return (
+      <tr key={p.id}>
+        <td>{serial++}</td>
+
+        {/* Problem Title */}
+        <td>
           <a
             href={p.link}
             target="_blank"
@@ -211,36 +226,33 @@ const ProblemsTab = ({
           >
             {p.title}
           </a>
+        </td>
 
-          {/* Tooltip Popup */}
-          {showPreview && hoveredId === p.id && p.problemStatement && (
-            <div className="problem-tooltip-fixed">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: p.problemStatement,
-                }}
-              />
-            </div>
+        <td style={{ textAlign: "center" }}>
+          {isSolved ? (
+            <span className="difficulty-badge difficulty-easy">✓ Solved</span>
+          ) : detectedInGfg ? (
+            <button
+              type="button"
+              className="difficulty-badge difficulty-completed"
+              onClick={() => handleConfirmGfgCompletion(p.id)}
+              title="Solved on GeeksforGeeks. Click to mark as Solved"
+            >
+              Completed
+            </button>
+          ) : (
+            <span className="difficulty-badge difficulty-hard">✖ To-Do</span>
           )}
-        </div>
-      </td>
+        </td>
 
-      <td style={{ textAlign: "center" }}>
-        {isSolvedByUser(p, currentUserId) ? (
-          <span className="difficulty-badge difficulty-easy">✓ Solved</span>
-        ) : (
-          <span className="difficulty-badge difficulty-hard">✖ To-Do</span>
-        )}
-      </td>
-
-      {/* Difficulty */}
-      <td>
-        <span
-          className={`difficulty-badge ${getDifficultyClass(p.difficulty)}`}
-        >
-          {p.difficulty}
-        </span>
-      </td>
+        {/* Difficulty */}
+        <td>
+          <span
+            className={`difficulty-badge ${getDifficultyClass(p.difficulty)}`}
+          >
+            {p.difficulty}
+          </span>
+        </td>
 
       {/* Platform */}
       <td style={{ textAlign: "center" }}>
@@ -298,7 +310,8 @@ const ProblemsTab = ({
         )}
       </td>
     </tr>
-  );
+    );
+  };
 
   return (
     <div className="problems-container">
@@ -325,15 +338,6 @@ const ProblemsTab = ({
               </button>
             </div>
           )}
-          <div className="preview-toggle" title="Show problem preview on hover">
-            <span>Preview on Hover</span>
-            <div
-              className={`toggle-switch ${showPreview ? "on" : ""}`}
-              onClick={handleTogglePreview}
-            >
-              <div className="toggle-knob" />
-            </div>
-          </div>
 
           <button className="add-prob-btn" onClick={onAddProblem}>
             + Add Problem
