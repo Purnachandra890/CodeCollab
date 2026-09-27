@@ -14,13 +14,118 @@
   width: 100%;
 }
 
+.room-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .room-title {
   font-size: 2rem;
+  line-height: 1.15;
   margin: 0;
   font-weight: 800; /* Extra bold */
-  color: #f8fafc; /* CHANGED: Pure White for visibility */
+  color: #f8fafc; /* Pure White for visibility */
   letter-spacing: -0.025em;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Adds depth on dark bg */
+}
+
+/* Modern SaaS Copy Room Link Button */
+.copy-room-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-top: 4px;
+  padding: 0;
+  background: rgba(30, 41, 59, 0.7);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.copy-room-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.25), 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px) scale(1.04);
+}
+
+.copy-room-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.copy-room-btn.copied {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+  animation: pulseCopy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes pulseCopy {
+  0% { transform: scale(0.92); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.copy-btn-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.copy-btn-icon.check-icon {
+  color: #34d399;
+  stroke-width: 2.5;
+}
+
+/* Tooltip */
+.copy-tooltip {
+  position: absolute;
+  bottom: -34px;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #0f172a;
+  color: #f1f5f9;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 60;
+}
+
+.copy-room-btn:hover .copy-tooltip,
+.copy-room-btn:focus-visible .copy-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.copy-room-btn.copied .copy-tooltip {
+  background: #064e3b;
+  border-color: rgba(52, 211, 153, 0.4);
+  color: #6ee7b7;
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
 .right-side-group {
@@ -180,21 +285,45 @@
     gap: 0;
   }
 
-  .room-title {
+  .room-title-wrapper {
     position: absolute;
-    top: 5px; /* Moved slightly higher */
+    top: 5px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    max-width: calc(100% - 100px);
+    z-index: 10;
+  }
+
+  .room-title {
+    position: static;
+    transform: none;
+    width: auto;
+    max-width: calc(100% - 40px);
     text-align: center;
-    padding: 0 60px; 
+    padding: 0;
     font-size: 1.2rem !important;
     font-weight: 800;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     color: #f8fafc;
-    z-index: 10;
+  }
+
+  .copy-room-btn {
+    width: 28px;
+    height: 28px;
+    margin-top: 2px;
+    border-radius: 7px;
+    flex-shrink: 0;
+  }
+
+  .copy-btn-icon {
+    width: 14px;
+    height: 14px;
   }
 
   /* Key Fix: Reduce margin-top to close the gap */

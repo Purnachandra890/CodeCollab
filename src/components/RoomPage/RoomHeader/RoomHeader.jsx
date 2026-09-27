@@ -54,6 +54,38 @@ const LogoutIcon = () => (
   </svg>
 );
 
+const CopyIcon = () => (
+  <svg
+    className="copy-btn-icon"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+    />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg
+    className="copy-btn-icon check-icon"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth="2.5"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M5 13l4 4L19 7"
+    />
+  </svg>
+);
+
 const RoomHeader = ({
   room,
   roomId,
@@ -65,10 +97,38 @@ const RoomHeader = ({
   const navigate = useNavigate();
   const { user } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const profileRef = useRef(null);
 
   const defaultPhoto =
     "https://static.vecteezy.com/system/resources/previews/000/550/731/original/user-icon-vector.jpg";
+
+  const handleCopyLink = async () => {
+    const inviteCode = room?.inviteCode;
+    const link = inviteCode
+      ? `${window.location.origin}/join/ir/${inviteCode}`
+      : `${window.location.origin}/dashboard/room/${roomId}`;
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(link);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = link;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -92,7 +152,21 @@ const RoomHeader = ({
   return (
     <header className="room-header">
       <div className="name-profile">
-        <h1 className="room-title">{room?.name || "Room"}</h1>
+        <div className="room-title-wrapper">
+          <h1 className="room-title">{room?.name || "Room"}</h1>
+          <button
+            type="button"
+            className={`copy-room-btn ${copied ? "copied" : ""}`}
+            onClick={handleCopyLink}
+            aria-label="Copy room link"
+            title={copied ? "Link Copied!" : "Copy room invite link"}
+          >
+            {copied ? <CheckIcon /> : <CopyIcon />}
+            <span className="copy-tooltip">
+              {copied ? "Copied!" : "Copy Link"}
+            </span>
+          </button>
+        </div>
 
         <div className="right-side-group">
           {platformRefresh && (
