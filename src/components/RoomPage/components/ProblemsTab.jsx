@@ -105,6 +105,8 @@ const ProblemsTab = ({
   roomAdminId,
   roomId,
   gfgSolvedSlugs = [],
+  highlightedProblemIds = new Set(),
+  onProblemSolved,
 }) => {
   const [editingTitle, setEditingTitle] = useState(null);
   const [editingValue, setEditingValue] = useState("");
@@ -121,12 +123,15 @@ const ProblemsTab = ({
     );
   }, [gfgSolvedSlugs]);
 
-  const handleConfirmGfgCompletion = async (problemId) => {
-    if (!roomId || !currentUserId || !problemId) return;
+  const handleConfirmGfgCompletion = async (problem) => {
+    if (!roomId || !currentUserId || !problem?.id) return;
     try {
-      await updateDoc(doc(db, "rooms", roomId, "problems", problemId), {
+      await updateDoc(doc(db, "rooms", roomId, "problems", problem.id), {
         [`completedBy.${currentUserId}`]: serverTimestamp(),
       });
+      if (onProblemSolved) {
+        onProblemSolved(problem);
+      }
     } catch (err) {
       console.error("Error marking problem as solved:", err);
     }
@@ -211,9 +216,18 @@ const ProblemsTab = ({
       (p.link && p.link.toLowerCase().includes("geeksforgeeks.org"));
     const slug = getProblemSlug(p)?.toLowerCase();
     const detectedInGfg = !isSolved && isGfg && slug && gfgSolvedSet.has(slug);
+    const isHighlighted = highlightedProblemIds?.has?.(p.id);
+
+    const highlightClass = isHighlighted
+      ? isSolved
+        ? "newly-solved-row"
+        : detectedInGfg
+        ? "newly-detected-row"
+        : ""
+      : "";
 
     return (
-      <tr key={p.id}>
+      <tr key={p.id} id={`problem-row-${p.id}`} className={highlightClass}>
         <td>{serial++}</td>
 
         {/* Problem Title */}
@@ -235,7 +249,7 @@ const ProblemsTab = ({
             <button
               type="button"
               className="difficulty-badge difficulty-completed"
-              onClick={() => handleConfirmGfgCompletion(p.id)}
+              onClick={() => handleConfirmGfgCompletion(p)}
               title="Solved on GeeksforGeeks. Click to mark as Solved"
             >
               Completed

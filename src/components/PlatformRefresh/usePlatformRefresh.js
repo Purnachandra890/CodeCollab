@@ -53,7 +53,7 @@ const checkCacheRefreshStatus = (cache, setCanRefresh, setNextRefreshIn) => {
   }
 };
 
-export function usePlatformRefresh(user, roomId) {
+export function usePlatformRefresh(user, roomId, onSyncResult) {
   const userId = user?.uid;
 
   const [leetcodeUsername, setLeetcodeUsername] = useState(null);
@@ -144,17 +144,21 @@ export function usePlatformRefresh(user, roomId) {
   }, [leetcodeUsername, userId]);
 
   const syncLeetcodeCompletions = async (slugs) => {
-    if (!userId || !roomId || !slugs?.length) return;
-    const slugSet = new Set(slugs);
+    if (!userId || !roomId || !slugs?.length) return [];
+    const slugSet = new Set(
+      slugs.map((s) => (s || "").trim().toLowerCase())
+    );
     const problemsSnapshot = await getDocs(
       collection(db, "rooms", roomId, "problems")
     );
     const updates = [];
+    const newlySolved = [];
     for (const docSnap of problemsSnapshot.docs) {
       const p = { id: docSnap.id, ...docSnap.data() };
-      const slug = getProblemSlug(p);
+      const slug = getProblemSlug(p)?.toLowerCase();
       if (!slug) continue;
       if (slugSet.has(slug) && !p?.completedBy?.[userId]) {
+        newlySolved.push(p);
         updates.push(
           updateDoc(doc(db, "rooms", roomId, "problems", p.id), {
             [`completedBy.${userId}`]: serverTimestamp(),
@@ -163,6 +167,29 @@ export function usePlatformRefresh(user, roomId) {
       }
     }
     if (updates.length) await Promise.all(updates);
+    return newlySolved;
+  };
+
+  const checkGfgMatches = async (slugs) => {
+    if (!userId || !roomId || !slugs?.length) return [];
+    const slugSet = new Set(
+      slugs.map((s) => (s || "").trim().toLowerCase())
+    );
+    const problemsSnapshot = await getDocs(
+      collection(db, "rooms", roomId, "problems")
+    );
+    const matched = [];
+    for (const docSnap of problemsSnapshot.docs) {
+      const p = { id: docSnap.id, ...docSnap.data() };
+      const slug = getProblemSlug(p)?.toLowerCase();
+      const isGfg =
+        p.platform === "gfg" ||
+        (p.link && p.link.toLowerCase().includes("geeksforgeeks.org"));
+      if (isGfg && slug && slugSet.has(slug) && !p?.completedBy?.[userId]) {
+        matched.push(p);
+      }
+    }
+    return matched;
   };
 
   const refreshLeetcode = async (force = false) => {
@@ -176,7 +203,14 @@ export function usePlatformRefresh(user, roomId) {
       if (!force && cache?.slugs && cache?.lastFetchedAt) {
         const lastFetched = getMillis(cache.lastFetchedAt);
         if (lastFetched && Date.now() - lastFetched < CACHE_DURATION) {
-          await syncLeetcodeCompletions(cache.slugs);
+          const newlySolved = await syncLeetcodeCompletions(cache.slugs);
+          if (onSyncResult) {
+            onSyncResult({
+              platform: "leetcode",
+              newlySolved: newlySolved || [],
+              totalChecked: (cache.slugs || []).length,
+            });
+          }
           return;
         }
       }
@@ -195,7 +229,14 @@ export function usePlatformRefresh(user, roomId) {
         leetcodeCache: { slugs, lastFetchedAt: serverTimestamp() },
       });
       checkLeetcodeCacheStatus({ lastFetchedAt: { toMillis: () => Date.now() } });
-      await syncLeetcodeCompletions(slugs);
+      const newlySolved = await syncLeetcodeCompletions(slugs);
+      if (onSyncResult) {
+        onSyncResult({
+          platform: "leetcode",
+          newlySolved: newlySolved || [],
+          totalChecked: slugs.length,
+        });
+      }
     } catch (e) {
       console.error("LeetCode refresh failed:", e);
       alert("Could not refresh LeetCode data. Please try again later.");
@@ -216,7 +257,16 @@ export function usePlatformRefresh(user, roomId) {
       if (!force && cache?.slugs && cache?.lastFetchedAt) {
         const lastFetched = getMillis(cache.lastFetchedAt);
         if (lastFetched && Date.now() - lastFetched < CACHE_DURATION) {
-          setGfgSolvedSlugs(cache.slugs);
+          const rawSlugs = cache.slugs || [];
+          setGfgSolvedSlugs(rawSlugs);
+          const newlyDetected = await checkGfgMatches(rawSlugs);
+          if (onSyncResult) {
+            onSyncResult({
+              platform: "gfg",
+              newlyDetected: newlyDetected || [],
+              totalChecked: rawSlugs.length,
+            });
+          }
           return;
         }
       }
@@ -227,11 +277,20 @@ export function usePlatformRefresh(user, roomId) {
       );
 
       if (res.data?.success) {
-        setGfgSolvedSlugs(res.data.slugs || []);
+        const rawSlugs = res.data.slugs || [];
+        setGfgSolvedSlugs(rawSlugs);
         await updateDoc(userRef, {
-          gfgCache: { slugs: res.data.slugs || [], lastFetchedAt: serverTimestamp() },
+          gfgCache: { slugs: rawSlugs, lastFetchedAt: serverTimestamp() },
         });
         checkGfgCacheStatus({ lastFetchedAt: { toMillis: () => Date.now() } });
+        const newlyDetected = await checkGfgMatches(rawSlugs);
+        if (onSyncResult) {
+          onSyncResult({
+            platform: "gfg",
+            newlyDetected: newlyDetected || [],
+            totalChecked: rawSlugs.length,
+          });
+        }
       }
     } catch (e) {
       if (e.response?.status === 429) {

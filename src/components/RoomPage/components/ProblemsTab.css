@@ -593,3 +593,65 @@
   0% { background-position: -200px 0; }
   100% { background-position: calc(200px + 100%) 0; }
 }
+
+/* ======================================================== */
+/* --- Newly Solved & Detected Problem Highlight Effects --- */
+/* ======================================================== */
+@keyframes solvedRowGlow {
+  0% {
+    background-color: rgba(16, 185, 129, 0.4);
+    box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.45);
+  }
+  30% {
+    background-color: rgba(16, 185, 129, 0.22);
+    box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.25);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+@keyframes detectedRowGlow {
+  0% {
+    background-color: rgba(251, 191, 36, 0.35);
+    box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.4);
+  }
+  30% {
+    background-color: rgba(251, 191, 36, 0.2);
+    box-shadow: inset 0 0 12px rgba(251, 191, 36, 0.25);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0.85);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.problems-table tbody tr.newly-solved-row td {
+  animation: solvedRowGlow 4.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.problems-table tbody tr.newly-solved-row .difficulty-badge {
+  animation: badgePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.problems-table tbody tr.newly-detected-row td {
+  animation: detectedRowGlow 4.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.problems-table tbody tr.newly-detected-row .difficulty-badge {
+  animation: badgePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
