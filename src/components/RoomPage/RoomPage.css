@@ -30,11 +30,17 @@
   margin-bottom: 12px;
 }
 
+.room-tabs-bar {
+  flex-shrink: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .room-tabs {
   flex-shrink: 0;
   margin-top: 0;
   margin-bottom: 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: none;
   padding-bottom: 0;
 }
 

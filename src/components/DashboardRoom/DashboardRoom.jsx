@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../firebase"; // Removed 'auth' if not directly used here
 import { useAuth } from "../../AuthContext";
 import { useRooms } from "../../RoomsContext";
@@ -23,6 +24,8 @@ import ToastNotification from "../ui/ToastNotification";
 export default function DashboardRoom() {
   const { user } = useAuth();
   const { userRooms, loadingRooms } = useRooms();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [loadingLeetcode, setLoadingLeetcode] = useState(true);
   const [leetcodeUsername, setLeetcodeUsername] = useState("");
   
@@ -32,6 +35,24 @@ export default function DashboardRoom() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
+  const [toastDuration, setToastDuration] = useState(3000);
+
+  useEffect(() => {
+    if (location.state?.toastMessage) {
+      const incomingType = location.state.toastType || "error";
+      const incomingDuration = location.state.duration !== undefined
+        ? location.state.duration
+        : (incomingType === "error" ? null : 3000);
+
+      setToastMessage(location.state.toastMessage);
+      setToastType(incomingType);
+      setToastDuration(incomingDuration);
+      setToastVisible(true);
+      // Clean up the location state so it doesn't persist on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, location.pathname, navigate]);
 
   const loading = loadingRooms || loadingLeetcode;
 
@@ -84,6 +105,8 @@ export default function DashboardRoom() {
     } catch (error) {
       console.error("Error deleting room:", error);
       setToastMessage("Failed to delete room.");
+      setToastType("error");
+      setToastDuration(null);
       setToastVisible(true);
       setDeleteModalOpen(false);
       setRoomToDelete(null);
@@ -98,11 +121,15 @@ export default function DashboardRoom() {
       .writeText(link)
       .then(() => {
         setToastMessage("Link copied!");
+        setToastType("success");
+        setToastDuration(3000);
         setToastVisible(true);
       })
       .catch((err) => {
         console.error("Failed to copy:", err);
         setToastMessage("Failed to copy link.");
+        setToastType("error");
+        setToastDuration(null);
         setToastVisible(true);
       });
   };
@@ -145,6 +172,8 @@ export default function DashboardRoom() {
             message={toastMessage}
             isVisible={toastVisible}
             onClose={() => setToastVisible(false)}
+            type={toastType}
+            duration={toastDuration}
           />
         </>
       )}

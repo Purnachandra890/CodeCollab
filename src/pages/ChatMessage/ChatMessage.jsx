@@ -14,7 +14,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useAuth } from "../../AuthContext";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import "./ChatMessage.css";
 
 // ---- Icons ----
@@ -34,6 +34,7 @@ const BackArrowIcon = () => (
 const ChatMessage = () => {
   const { user } = useAuth();
   const { roomId } = useParams();
+  const navigate = useNavigate();
 
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -48,39 +49,68 @@ const ChatMessage = () => {
 
   useEffect(scrollToBottom, [messages]);
 
-  // Reset unread counts
+  // Load Room & Messages with Access Control
   useEffect(() => {
-    if (!roomId || !user) return;
-    const resetUnread = async () => {
-      const roomRef = doc(db, "rooms", roomId);
-      const snap = await getDoc(roomRef);
-      if (snap.exists()) {
+    if (!roomId || !user?.uid) return;
+
+    let unsubMessages = () => {};
+
+    const checkAccessAndLoad = async () => {
+      try {
+        const snap = await getDoc(doc(db, "rooms", roomId));
+        if (!snap.exists()) {
+          navigate("/dashboard/rooms", {
+            replace: true,
+            state: {
+              toastMessage: "Room not found.",
+              toastType: "error",
+              duration: null,
+            },
+          });
+          return;
+        }
+
         const data = snap.data();
+        if (!data.members?.includes(user.uid)) {
+          navigate("/dashboard/rooms", {
+            replace: true,
+            state: {
+              toastMessage: "You are not a member of this room. Please ask the host for an invite link.",
+              toastType: "error",
+              duration: null,
+            },
+          });
+          return;
+        }
+
+        setRoomName(data.name || "");
+
+        // Reset unread count for current user
         const unreadCounts = data.unreadCounts || {};
-        unreadCounts[user.uid] = 0;
-        await updateDoc(roomRef, { unreadCounts });
+        if (unreadCounts[user.uid]) {
+          unreadCounts[user.uid] = 0;
+          await updateDoc(doc(db, "rooms", roomId), { unreadCounts });
+        }
+
+        // Listen for messages only once membership is confirmed
+        const q = query(collection(db, "rooms", roomId, "messages"), orderBy("timestamp"));
+        unsubMessages = onSnapshot(q, (snapshot) => {
+          const msgs = snapshot.docs.map((d) => ({
+            id: d.id,
+            ...d.data(),
+            timestamp: d.data().timestamp?.toDate(),
+          }));
+          setMessages(msgs);
+        });
+      } catch (err) {
+        console.error("Error loading chat:", err);
       }
     };
-    resetUnread();
-  }, [roomId, user]);
 
-  // Load Messages
-  useEffect(() => {
-    if (!roomId) return;
-    getDoc(doc(db, "rooms", roomId)).then((snap) => {
-      if (snap.exists()) setRoomName(snap.data().name);
-    });
-    const q = query(collection(db, "rooms", roomId, "messages"), orderBy("timestamp"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const msgs = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        timestamp: doc.data().timestamp?.toDate(),
-      }));
-      setMessages(msgs);
-    });
-    return () => unsubscribe();
-  }, [roomId]);
+    checkAccessAndLoad();
+
+    return () => unsubMessages();
+  }, [roomId, user?.uid, navigate]);
 
   // Send Message
   const handleSend = async (e) => {

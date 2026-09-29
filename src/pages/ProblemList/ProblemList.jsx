@@ -11,7 +11,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { useAuth } from "../../AuthContext";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import "./ProblemList.css";
 import { getProblemSlug } from "../../utils/problemSlug";
 import { usePlatformRefresh } from "../../components/PlatformRefresh/usePlatformRefresh";
@@ -37,6 +37,7 @@ const CheckIcon = () => (
 export default function ProblemList() {
   const { user } = useAuth();
   const { roomId } = useParams();
+  const navigate = useNavigate();
 
   const [problems, setProblems] = useState([]);
   const [loadingProblems, setLoadingProblems] = useState(true);
@@ -47,17 +48,55 @@ export default function ProblemList() {
   const gfgSolvedSet = React.useMemo(() => new Set(gfgSolvedSlugs), [gfgSolvedSlugs]);
 
   useEffect(() => {
-    if (!roomId) return;
-    getDoc(doc(db, "rooms", roomId)).then((docSnap) => {
-      if (docSnap.exists()) setRoomName(docSnap.data().name || "");
-    });
-    const qProblems = query(collection(db, "rooms", roomId, "problems"), orderBy("createdAt", "asc"));
-    const unsub = onSnapshot(qProblems, (snapshot) => {
-      setProblems(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
-      setLoadingProblems(false);
-    });
+    if (!roomId || !user?.uid) return;
+
+    let unsub = () => {};
+
+    const checkAccessAndLoad = async () => {
+      try {
+        const docSnap = await getDoc(doc(db, "rooms", roomId));
+        if (!docSnap.exists()) {
+          navigate("/dashboard/rooms", {
+            replace: true,
+            state: {
+              toastMessage: "Room not found.",
+              toastType: "error",
+              duration: null,
+            },
+          });
+          return;
+        }
+
+        const data = docSnap.data();
+        if (!data.members?.includes(user.uid)) {
+          navigate("/dashboard/rooms", {
+            replace: true,
+            state: {
+              toastMessage: "You are not a member of this room. Please ask the host for an invite link.",
+              toastType: "error",
+              duration: null,
+            },
+          });
+          return;
+        }
+
+        setRoomName(data.name || "");
+
+        const qProblems = query(collection(db, "rooms", roomId, "problems"), orderBy("createdAt", "asc"));
+        unsub = onSnapshot(qProblems, (snapshot) => {
+          setProblems(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+          setLoadingProblems(false);
+        });
+      } catch (err) {
+        console.error("Error loading problem list:", err);
+        setLoadingProblems(false);
+      }
+    };
+
+    checkAccessAndLoad();
+
     return () => unsub();
-  }, [roomId]);
+  }, [roomId, user?.uid, navigate]);
 
   const completedCount = problems.filter((p) => !!p?.completedBy?.[user?.uid]).length;
   const totalCount = problems.length;

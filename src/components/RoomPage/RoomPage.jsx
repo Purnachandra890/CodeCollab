@@ -52,10 +52,29 @@ const RoomPage = () => {
   const [toastMessage, setToastMessage] = useState("");
 
   /* 🔹 Data Hooks */
-  const { room, members } = useRoomDetails(roomId, defaultPhoto);
-  const { problems, loadingProblems } = useProblems(roomId);
+  const {
+    room,
+    members,
+    loading: loadingRoom,
+    error: roomError,
+  } = useRoomDetails(roomId, defaultPhoto, user?.uid);
+
+  useEffect(() => {
+    if (roomError) {
+      navigate("/dashboard/rooms", {
+        replace: true,
+        state: {
+          toastMessage: roomError,
+          toastType: "error",
+          duration: null,
+        },
+      });
+    }
+  }, [roomError, navigate]);
+
+  const { problems, loadingProblems } = useProblems(room ? roomId : null);
   const { friends, sentRequests, pendingRequestCount } = useFriends(user);
-  const unreadCount = useUnreadMessages(roomId, user?.uid);
+  const unreadCount = useUnreadMessages(room ? roomId : null, user?.uid);
 
   /* 🔹 Logic Hooks */
   const { saveProblem, deleteProblem, renameSubtopic, isSaving } =
@@ -109,6 +128,12 @@ const RoomPage = () => {
     };
   }, [problems, editingProblem]);
 
+  /* --- User Solved Count --- */
+  const userSolvedCount = React.useMemo(() => {
+    if (!user?.uid || !problems || problems.length === 0) return 0;
+    return problems.filter((p) => !!p.completedBy?.[user.uid]).length;
+  }, [problems, user?.uid]);
+
   /* --- Tab Content Renderer --- */
   const renderContent = () => {
     switch (activeTab) {
@@ -124,7 +149,7 @@ const RoomPage = () => {
             onDeleteProblem={deleteProblem}
             onRenameSubtopic={renameSubtopic}
             currentUserId={user?.uid}
-            roomAdminId={room.adminId}
+            roomAdminId={room?.adminId}
             roomId={roomId}
             gfgSolvedSlugs={gfgSolvedSlugs}
           />
@@ -161,7 +186,7 @@ const RoomPage = () => {
     }
   };
 
-  if (!room) {
+  if (loadingRoom || (!room && !roomError)) {
     return (
       <div className="modern-loading-container">
         <div className="modern-spinner"></div>
@@ -169,6 +194,10 @@ const RoomPage = () => {
         <p>Fetching room details</p>
       </div>
     );
+  }
+
+  if (roomError || !room) {
+    return null;
   }
 
   return (
@@ -209,6 +238,8 @@ const RoomPage = () => {
         problemsCount={loadingProblems ? "..." : problems.length}
         membersCount={room?.members?.length || 0}
         pendingRequestCount={pendingRequestCount}
+        solvedCount={userSolvedCount}
+        totalProblems={problems.length}
       />
 
       {/* ✅ Tab Content */}

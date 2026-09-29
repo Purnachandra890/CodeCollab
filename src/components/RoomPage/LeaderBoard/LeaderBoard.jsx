@@ -6,7 +6,7 @@ import {
   onSnapshot,
   getDoc,
 } from "firebase/firestore";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../AuthContext";
 import "./LeaderBoard.css";
 
@@ -37,6 +37,7 @@ const Spinner = () => (
 export default function LeaderBoard() {
   const { roomId } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [leaderboard, setLeaderboard] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -55,9 +56,31 @@ export default function LeaderBoard() {
       if (!roomSnap.exists()) {
         setLeaderboard([]);
         setIsLoading(false);
+        navigate("/dashboard/rooms", {
+          replace: true,
+          state: {
+            toastMessage: "Room not found.",
+            toastType: "error",
+            duration: null,
+          },
+        });
         return;
       }
-      memberUIDs = roomSnap.data().members || [];
+      const data = roomSnap.data();
+      if (user?.uid && !data.members?.includes(user.uid)) {
+        setLeaderboard([]);
+        setIsLoading(false);
+        navigate("/dashboard/rooms", {
+          replace: true,
+          state: {
+            toastMessage: "You are not a member of this room. Please ask the host for an invite link.",
+            toastType: "error",
+            duration: null,
+          },
+        });
+        return;
+      }
+      memberUIDs = data.members || [];
     });
 
     // 2️⃣ Listen to problems independently
