@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { getProblemSlug } from "../../../utils/problemSlug";
@@ -111,6 +111,12 @@ const ProblemsTab = ({
   const [editingTitle, setEditingTitle] = useState(null);
   const [editingValue, setEditingValue] = useState("");
 
+  /* --- Smart Directional Header (Hybrid UX) --- */
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const lastScrollTopRef = useRef(0);
+  const headerRef = useRef(null);
+
   const isSolvedByUser = (problem, userId) => {
     return !!problem.completedBy?.[userId];
   };
@@ -139,6 +145,35 @@ const ProblemsTab = ({
 
   const { groups, noSubtopic } = organizeBySubtopic(problems);
   const hasProblems = problems.length > 0;
+
+  useEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+  }, [hasProblems]);
+
+  const handleTableScroll = (e) => {
+    const currentScrollTop = e.currentTarget.scrollTop;
+    const delta = currentScrollTop - lastScrollTopRef.current;
+
+    // Always keep header visible when near the top of table
+    if (currentScrollTop <= 15) {
+      setIsHeaderVisible(true);
+      lastScrollTopRef.current = currentScrollTop;
+      return;
+    }
+
+    // Scroll Down -> smoothly collapse card header
+    if (delta > 8 && currentScrollTop > 40) {
+      setIsHeaderVisible(false);
+    }
+    // Scroll Up -> smoothly reveal card header
+    else if (delta < -8) {
+      setIsHeaderVisible(true);
+    }
+
+    lastScrollTopRef.current = currentScrollTop;
+  };
 
   // Build sections: [{ title, problems }] — "Other" for ungrouped, then subtopic groups
   const sections = React.useMemo(() => {
@@ -329,8 +364,14 @@ const ProblemsTab = ({
 
   return (
     <div className="problems-container">
-      {/* Header */}
-      <div className="problems-header">
+      {/* Header (Smart Directional Slide) */}
+      <div
+        ref={headerRef}
+        className={`problems-header ${!isHeaderVisible ? "header-hidden" : ""}`}
+        style={{
+          marginTop: isHeaderVisible ? 0 : `-${headerHeight || 78}px`,
+        }}
+      >
         <h3>Problems in this Room</h3>
 
         <div className="toggle-addprobtm">
@@ -360,7 +401,7 @@ const ProblemsTab = ({
       </div>
 
       {/* Table Scroll Area */}
-      <div className="table-scroll-container">
+      <div className="table-scroll-container" onScroll={handleTableScroll}>
         <div className="table-inner">
           <table className="problems-table">
             <thead>

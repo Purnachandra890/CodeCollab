@@ -23,7 +23,7 @@
   box-sizing: border-box;
 }
 
-/* --- Header Section --- */
+/* --- Header Section (Smart Directional Slide) --- */
 .problems-header {
   flex-shrink: 0;
   display: flex;
@@ -32,6 +32,15 @@
   padding: 20px 32px;
   background-color: #1e293b; /* Matches container */
   border-bottom: 1px solid #334155; /* Dark divider */
+  transition: margin-top 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.2s ease;
+  will-change: margin-top, opacity;
+  z-index: 20;
+}
+
+.problems-header.header-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .problems-header h3 {
@@ -100,9 +109,9 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  /* CHANGED: Dark Slate with high opacity for readability */
-  background: rgba(30, 41, 59, 0.95);
-  backdrop-filter: blur(8px);
+  /* Dark Slate with high opacity for clean scrolling readability */
+  background: rgba(30, 41, 59, 0.98);
+  backdrop-filter: blur(12px);
   box-shadow: 0 1px 0 #334155; /* Dark bottom border */
 }
 
